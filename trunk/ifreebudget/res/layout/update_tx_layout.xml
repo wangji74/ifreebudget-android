@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#ffffff">
+        <TextView
+            android:id="@+id/title_lbl"
+            android:text="@string/view_tx_title_lbl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold|italic"
+            android:textColor="#FFFFFF"
+            android:background="#6F8BBA"
+            android:paddingTop="5dip"
+            android:paddingBottom="5dip"
+            android:layout_alignParentTop="true" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:id="@android:id/android:list"
+            android:layout_below="@id/title_lbl">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="@string/from_acct_lbl"
+                    android:paddingLeft="5dip"
+                    android:textColor="#000000"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content" />
+                <TextView
+                    android:id="@+id/from_acct_val"
+                    android:paddingLeft="5dip"
+                    android:textColor="#000000"
+                    android:minLines="2"
+                    android:textStyle="bold|italic"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="@string/to_acct_lbl"
+                    android:paddingLeft="5dip"
+                    android:textColor="#000000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <Spinner
+                    android:id="@+id/to_acct_spinner"
+                    android:paddingLeft="5dip"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:prompt="@string/to_acct_lbl" />
+            </LinearLayout>
+            <TableLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+                <TableRow>
+                    <TextView
+                        android:text="@string/date_lbl"
+                        android:textColor="#000000"
+                        android:paddingLeft="5dip"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5" />
+                    <TextView
+                        android:text="@string/tx_amt_lbl"
+                        android:textColor="#000000"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5" />
+                </TableRow>
+                <TableRow>
+                    <Button
+                        android:id="@+id/tx_date_btn"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:onClick="@string/launch_date_dlg"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:layout_gravity="center_vertical|center_horizontal|center"
+                        android:layout_weight="0.5" />
+                    <EditText
+                        android:id="@+id/tx_amt_tf"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:singleLine="true"
+                        android:numeric="decimal"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="0.5" />
+                </TableRow>
+            </TableLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_span="2">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/tx_tags_lbl"
+                    android:layout_weight="0.2"
+                    android:textColor="#000000" />
+                <EditText
+                    android:id="@+id/tx_tags_tf"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:minLines="5"
+                    android:layout_weight="1.0"
+                    android:editable="true"
+                    android:gravity="top" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+            <Button
+                android:id="@+id/save_button"
+                android:layout_height="wrap_content"
+                android:text="@string/save"
+                android:layout_weight="1.0"
+                android:layout_width="0dip"
+                android:onClick="@string/update_tx_action" />
+            <Button
+                android:id="@+id/cancel_button"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:layout_weight="1.0"
+                android:layout_width="0dip"
+                android:onClick="@string/cancel_action" />
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>

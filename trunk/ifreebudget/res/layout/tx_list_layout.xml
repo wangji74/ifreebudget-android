@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff">
+    <RelativeLayout
+        android:id="@+id/north_panel"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tx_list_title_lbl"
+            android:text="@string/tx_list_lbl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold|italic"
+            android:background="#6F8BBA"
+            android:textColor="#FFFFFF"
+            android:paddingTop="5dip"
+            android:paddingBottom="5dip" />
+        <TextView
+            android:id="@+id/tx_list_filter_lbl"
+            android:gravity="left"
+            android:textStyle="italic"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dip"
+            android:textColor="#FFFFFF"
+            android:background="#6F8BBA"
+            android:layout_below="@id/tx_list_title_lbl"
+            android:textSize="12dip" />
+    </RelativeLayout>
+    <ListView
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:id="@android:id/android:list"
+        android:layout_below="@id/north_panel"
+        android:layout_above="@+id/south_panel"
+        android:cacheColorHint="#ffffff" />
+    <LinearLayout
+        android:id="@+id/south_panel"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:layout_span="2"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/home_button"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/home_lbl"
+            android:layout_weight="0.5"
+            android:width="80px"
+            android:onClick="@string/goto_home" />
+        <Button
+            android:id="@+id/transactions_button"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/add_tx_lbl"
+            android:layout_weight="0.5"
+            android:width="80px"
+            android:onClick="@string/add_tx_action" />
+    </LinearLayout>
+</RelativeLayout>

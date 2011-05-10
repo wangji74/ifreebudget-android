@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff">
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="@string/add_acct_title_lbl"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold|italic"
+                android:textColor="#FFFFFF"
+                android:background="#6F8BBA"
+                android:paddingTop="5dip"
+                android:paddingBottom="5dip" />
+            <TextView
+                android:text="@string/acct_name_lbl"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000" />
+            <EditText
+                android:id="@+id/acct_name_tf"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:editable="true" />
+            <TextView
+                android:text="@string/acct_number_lbl"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000" />
+            <EditText
+                android:id="@+id/acct_number_tf"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:editable="true" />
+            <TextView
+                android:text="@string/acct_current_bal_lbl"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000" />
+            <EditText
+                android:id="@+id/acct_start_bal_tf"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:editable="true"
+                android:numeric="decimal" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_span="2">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/acct_notes_lbl"
+                    android:layout_weight="0.2"
+                    android:textColor="#000000" />
+                <EditText
+                    android:id="@+id/acct_notes_tf"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:minLines="5"
+                    android:layout_weight="0.8"
+                    android:editable="true"
+                    android:gravity="top" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:layout_span="2"
+                android:layout_gravity="bottom">
+                <Button
+                    android:id="@+id/save_button"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/save"
+                    android:layout_weight="0.5"
+                    android:width="80px"
+                    android:onClick="@string/update_account"/>
+                <Button
+                    android:id="@+id/cancel_button"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/cancel"
+                    android:layout_weight="0.5"
+                    android:width="80px"
+                    android:onClick="@string/cancel_action"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mItemHome"
+        android:title="Home"
+        android:titleCondensed="Home"></item>
+    <item
+        android:id="@+id/mItemAddAcct"
+        android:title="Add account"
+        android:titleCondensed="Add account"></item>
+    <item
+        android:id="@+id/mItemAddCatgr"
+        android:title="Add category"
+        android:titleCondensed="Add category"></item>
+</menu>

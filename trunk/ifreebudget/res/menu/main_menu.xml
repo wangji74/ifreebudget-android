@@ -1,0 +1,28 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mItemReports"
+        android:title="Reports"
+        android:icon="@drawable/reports"
+        android:titleCondensed="Reports" />
+    <!-- item
+        android:id="@+id/mItemAbout"
+        android:title="About"
+        android:icon="@drawable/about"
+        android:titleCondensed="About" /-->
+    <!-- item
+        android:id="@+id/mItemRate"
+        android:title="Rate me"
+        android:icon="@drawable/rateme"
+        android:titleCondensed="Rate me"></item -->
+    <item
+        android:titleCondensed="Backups"
+        android:id="@+id/mItemDbManager"
+        android:icon="@drawable/backup"
+        android:title="Backups" />
+    <item
+        android:titleCondensed="Clear all"
+        android:id="@+id/mItemClear"
+        android:icon="@drawable/reset"
+        android:title="Clear all" />
+</menu>
