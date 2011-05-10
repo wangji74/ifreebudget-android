@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff">
+    <TextView
+        android:id="@+id/bkups_title_lbl"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold|italic"
+        android:textColor="#FFFFFF"
+        android:background="#6F8BBA"
+        android:paddingTop="5dip"
+        android:paddingLeft="2dip"
+        android:paddingBottom="5dip" />
+    <ListView
+        android:id="@+id/db_bkup_list_view"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:cacheColorHint="#ffffff"
+        android:layout_below="@id/bkups_title_lbl"
+        android:layout_above="@+id/south_panel" />
+    <LinearLayout
+        android:id="@+id/south_panel"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:layout_span="2"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/home_button"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/home_lbl"
+            android:width="80dip"
+            android:layout_weight="0.5"
+            android:onClick="@string/goto_home" />
+        <Button
+            android:id="@+id/backup_db_button"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/backup_db"
+            android:width="80dip"
+            android:layout_weight="0.5"
+            android:onClick="@string/backup_db_action" />
+    </LinearLayout>
+</RelativeLayout>

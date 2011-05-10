@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string
+        name="app_name">iFreeBudget</string>
+    <string
+        name="newTxHandler">newTxHandler</string>
+    <string
+        name="acct_name_lbl">* Name</string>
+    <string
+        name="add_acct_name">Add account</string>
+    <string
+        name="acct_number_lbl">Account number</string>
+    <string
+        name="acct_start_bal_lbl">Starting balance</string>
+    <string
+        name="acct_notes_lbl">Notes</string>
+    <string
+        name="save">Save</string>
+    <string
+        name="cancel">Cancel</string>
+    <string
+        name="save_account">saveAccount</string>
+    <string
+        name="parent_categoryid_key">PARENTCATEGORYID</string>
+    <string
+        name="edit">Edit</string>
+    <string
+        name="delete">Delete</string>
+    <string
+        name="update_account">updateAccount</string>
+    <string
+        name="acct_current_bal_lbl">Current balance</string>
+    <string
+        name="name_lbl">Name</string>
+    <string
+        name="save_category">saveCategory</string>
+    <string
+        name="net_assets_lbl">Assets</string>
+    <string
+        name="net_liabs_lbl">Liabilities</string>
+    <string
+        name="net_worth_lbl">Net worth</string>
+    <string
+        name="manage_accounts_btn">Accounts</string>
+    <string
+        name="manage_tx_btn">Transactions</string>
+    <string
+        name="summary_lbl">Summary</string>
+    <string
+        name="manage_accounts_actv">manageAccounts</string>
+    <string
+        name="type_lbl">Type</string>
+    <string
+        name="from_acct_lbl">Account</string>
+    <string
+        name="to_acct_lbl">Payee</string>
+    <string
+        name="tx_tags_lbl">Tags</string>
+    <string
+        name="tx_tagged_lbl">Tagged</string>
+    <string
+        name="save_tx">Save</string>
+    <string
+        name="tx_type_prompt">Type</string>
+    <string-array
+        name="tx_types">
+        <item>Expense</item>
+        <item>Income</item>
+        <item>Transfer</item>
+    </string-array>
+    <string
+        name="date_lbl">Date</string>
+    <string
+        name="tx_amt_lbl">Amount</string>
+    <string
+        name="launch_date_dlg">showDatePickerDialog</string>
+    <string
+        name="tx_type_exp">Expense</string>
+    <string
+        name="tx_type_inc">Income</string>
+    <string
+        name="tx_type_trans">Transfer</string>
+    <string
+        name="save_tx_action">saveTransaction</string>
+    <string
+        name="update_tx_action">updateTransaction</string>
+    <string
+        name="goto_home">gotoHomeScreen</string>
+    <string
+        name="cancel_action">doCancelAction</string>
+    <string
+        name="add_account_lbl">Add account</string>
+    <string
+        name="add_category_lbl">Add category</string>
+    <string
+        name="home_lbl">Home</string>
+    <string
+        name="add_account_action">addAccount</string>
+    <string
+        name="add_category_action">addCategory</string>
+    <string
+        name="add_tx_action">addTransaction</string>
+    <string
+        name="add_tx_lbl">Add transaction</string>
+    <string
+        name="delete_tx_action">deleteTransaction</string>
+    <string
+        name="default_color">#6F8BBA</string>
+    <string
+        name="add_acct_title_lbl">Account details</string>
+    <string
+        name="manage_accts_title_lbl">Manage accounts and categories</string>
+    <string
+        name="add_category_title_lbl">Category details</string>
+    <string
+        name="view_tx_title_lbl">Transaction details</string>
+    <string
+        name="tx_list_lbl">Transactions</string>
+    <string
+        name="back">Back</string>
+    <string
+        name="list_tx_for_acct">View transactions</string>
+    <string
+        name="today_filter">Today</string>
+    <string
+        name="last_week_filter">Last 7 days</string>
+    <string
+        name="last_month_filter">Last 30 days</string>
+    <string
+        name="all_fltr">All</string>
+    <string
+        name="budget_type_prompt">Type</string>
+    <string-array
+        name="budget_types">
+        <item>Weekly</item>
+        <item>Bi-weekly</item>
+        <item>Monthly</item>
+    </string-array>
+<string name="manage_budgets_lbl">Budgets</string>
+<string name="allocate_amts_lbl">Allocate amounts</string>
+<string name="add_budget_title_lbl">Budget details</string>
+<string name="save_budget_action">saveBudget</string>
+<string name="budgets_title_lbl">Budgets</string>
+<string name="manage_budgets_title_lbl">Manage budgets</string>
+
+<string name="add_budget_action">addBudget</string>
+<string name="add_budget_lbl">New budget</string>
+<string name="view_budget_title_lbl">Budget details</string>
+<string name="space"> </string>
+<string name="remove_acct_from_budget">Remove from budget</string>
+<string name="previous">Previous</string>
+<string name="next">Next</string>
+<string name="do_previous">doPrevious</string>
+<string name="do_next">doNext</string>
+<string name="budget_alloc_lbl">Allocated</string>
+<string name="budget_savings_lbl">Savings</string>
+<string name="budget_actual_lbl">Spent</string>
+
+<string name="shortcut_string">Shortcuts</string>
+<string name="nw_summary">Summary</string>
+<string name="total_spe_for_period_lbl">Expenses</string>
+<string name="total_inc_for_period_lbl">Income</string>
+<string name="view_report_title_lbl">Cash flow</string>
+<string name="name">Name</string>
+<string name="total">Total</string>
+<string-array name="exp_report_table_items">
+        <item>Name</item>
+        <item>Total</item>
+        <item>Max</item>
+</string-array>
+<string-array name="budget_report_table_items">
+        <item>Name</item>
+        <item>Allocated</item>
+        <item>Spent</item>
+</string-array>
+<string name="backup_db">Backup database</string>
+<string name="backup_db_action">backupDatabase</string>
+<string name="use_backup">Use this backup</string>
+<string name="delete_backup">Delete</string>
+</resources>

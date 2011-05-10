@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="@string/list_tx_for_acct"
+        android:id="@+id/list_tx_for_acct"></item>
+    <item
+        android:title="@string/edit"
+        android:id="@+id/edit_item"></item>
+    <item
+        android:title="@string/delete"
+        android:id="@+id/delete_item"></item>
+</menu>
