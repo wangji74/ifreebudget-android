@@ -34,12 +34,22 @@
             android:paddingTop="5dip"
             android:paddingBottom="5dip"
             android:layout_alignParentTop="true" />
+        <TextView
+            android:id="@+id/subtitle_lbl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:textColor="#FFFFFF"
+            android:background="#6F8BBA"
+            android:paddingTop="5dip"
+            android:paddingBottom="5dip"
+            android:layout_below="@id/title_lbl" />
         <LinearLayout
             android:orientation="vertical"
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"
             android:id="@android:id/android:list"
-            android:layout_below="@id/title_lbl">
+            android:layout_below="@id/subtitle_lbl">
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"

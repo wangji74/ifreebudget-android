@@ -184,7 +184,7 @@
         <item>Max</item>
 </string-array>
 <string-array name="budget_report_table_items">
-        <item>Name</item>
+        <item>Account</item>
         <item>Allocated</item>
         <item>Spent</item>
 </string-array>

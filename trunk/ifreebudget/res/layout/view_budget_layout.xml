@@ -34,7 +34,7 @@
         android:id="@+id/breport_date_lbl"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold|italic"
+        android:textStyle="italic"
         android:textColor="#FFFFFF"
         android:background="#6F8BBA"
         android:paddingTop="5dip"
