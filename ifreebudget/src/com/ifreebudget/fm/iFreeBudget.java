@@ -17,7 +17,6 @@ package com.ifreebudget.fm;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,11 +36,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ifreebudget.fm.actions.ActionRequest;
@@ -54,10 +50,8 @@ import com.ifreebudget.fm.activities.ManageDBActivity;
 import com.ifreebudget.fm.activities.QuickAddTransactionActivity;
 import com.ifreebudget.fm.activities.ViewReportActivity;
 import com.ifreebudget.fm.constants.AccountTypes;
-import com.ifreebudget.fm.entity.DBException;
 import com.ifreebudget.fm.entity.FManEntityManager;
 import com.ifreebudget.fm.entity.beans.Account;
-import com.ifreebudget.fm.entity.beans.FManEntity;
 import com.ifreebudget.fm.entity.beans.TxHistory;
 import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
@@ -96,11 +90,6 @@ public class iFreeBudget extends Activity {
         case R.id.mItemClear:
             clearAll();
             return true;
-            // case R.id.mItemRate:
-            // gotoMarket();
-            // return true;
-            // case R.id.mItemAbout:
-            // return true;
         default:
             return super.onOptionsItemSelected(item);
 
@@ -114,17 +103,17 @@ public class iFreeBudget extends Activity {
 
         listAdapter = new MyArrayAdapter(this, R.layout.shortcut_item_layout);
 
-        ListView lv = (ListView) findViewById(R.id.sc_list);
-        lv.setAdapter(listAdapter);
-        lv.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapter, View view,
-                    int position, long id) {
-
-                Shortcut item = (Shortcut) adapter.getItemAtPosition(position);
-                startAddTxActivity(item.item);
-            }
-        });
+//        ListView lv = (ListView) findViewById(R.id.sc_list);
+//        lv.setAdapter(listAdapter);
+//        lv.setOnItemClickListener(new OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapter, View view,
+//                    int position, long id) {
+//
+//                Shortcut item = (Shortcut) adapter.getItemAtPosition(position);
+//                startAddTxActivity(item.item);
+//            }
+//        });
     }
 
     @Override
@@ -163,45 +152,45 @@ public class iFreeBudget extends Activity {
         BigDecimal nwVal = (BigDecimal) resp.getResult("NET_VALUE");
         nwTf.setText(numberFormat.format(nwVal));
 
-        initializeShortcuts();
+//        initializeShortcuts();
     }
 
-    private void initializeShortcuts() {
-        listAdapter.clear();
-
-        FManEntityManager em = FManEntityManager.getInstance();
-        try {
-            List<FManEntity> sList = em.getTxHistoryShortcutList();
-//            Log.i(TAG, String.valueOf(sList.size()));
-
-            TextView lbl = (TextView) findViewById(R.id.sc_title);
-            if (sList == null || sList.size() == 0) {
-                lbl.setVisibility(View.INVISIBLE);
-            }
-            else {
-                lbl.setVisibility(View.VISIBLE);
-            }
-
-            for (FManEntity e : sList) {
-                addShortcut((TxHistory) e, em);
-            }
-        }
-        catch (DBException e) {
-            Log.e(TAG, MiscUtils.stackTrace2String(e));
-        }
-    }
-
-    private void addShortcut(TxHistory entity, FManEntityManager em) {
-        try {
-            Account f = em.getAccount(entity.getFromAccountId());
-            Account t = em.getAccount(entity.getToAccountId());
-            Shortcut sc = new Shortcut(entity, f, t);
-            listAdapter.add(sc);
-        }
-        catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
-    }
+//    private void initializeShortcuts() {
+//        listAdapter.clear();
+//
+//        FManEntityManager em = FManEntityManager.getInstance();
+//        try {
+//            List<FManEntity> sList = em.getTxHistoryShortcutList();
+////            Log.i(TAG, String.valueOf(sList.size()));
+//
+//            TextView lbl = (TextView) findViewById(R.id.sc_title);
+//            if (sList == null || sList.size() == 0) {
+//                lbl.setVisibility(View.INVISIBLE);
+//            }
+//            else {
+//                lbl.setVisibility(View.VISIBLE);
+//            }
+//
+//            for (FManEntity e : sList) {
+//                addShortcut((TxHistory) e, em);
+//            }
+//        }
+//        catch (DBException e) {
+//            Log.e(TAG, MiscUtils.stackTrace2String(e));
+//        }
+//    }
+//
+//    private void addShortcut(TxHistory entity, FManEntityManager em) {
+//        try {
+//            Account f = em.getAccount(entity.getFromAccountId());
+//            Account t = em.getAccount(entity.getToAccountId());
+//            Shortcut sc = new Shortcut(entity, f, t);
+//            listAdapter.add(sc);
+//        }
+//        catch (Exception e) {
+//            Log.e(TAG, e.getMessage());
+//        }
+//    }
 
     public void manageAccounts(View view) {
         Intent intent = new Intent(this, ManageAccountsActivity.class);
