@@ -25,7 +25,7 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name" android:debuggable="false">
         <activity
-            android:name=".iFreeBudget"
+            android:name=".activities.MainView"
             android:label="@string/app_name">
             <intent-filter>
                 <action
@@ -78,6 +78,9 @@
             android:label="iFreeBudget"></activity>
         <activity
             android:name=".activities.UpdateTransactionActivity"
+            android:label="iFreeBudget"></activity>
+        <activity
+            android:name=".activities.MainView"
             android:label="iFreeBudget"></activity>
     </application>
     <uses-sdk
