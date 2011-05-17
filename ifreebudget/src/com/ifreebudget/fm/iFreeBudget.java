@@ -44,6 +44,7 @@ import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.ActionResponse;
 import com.ifreebudget.fm.actions.GetNetWorthAction;
 import com.ifreebudget.fm.activities.ListTransactionsActivity;
+import com.ifreebudget.fm.activities.MainView;
 import com.ifreebudget.fm.activities.ManageAccountsActivity;
 import com.ifreebudget.fm.activities.ManageBudgetsActivity;
 import com.ifreebudget.fm.activities.ManageDBActivity;
@@ -348,8 +349,10 @@ public class iFreeBudget extends Activity {
     }
     
     private void gotoDBManager() {
-        Intent intent = new Intent(iFreeBudget.this,
-                ManageDBActivity.class);
+//        Intent intent = new Intent(iFreeBudget.this,
+//                ManageDBActivity.class);
+        
+        Intent intent = new Intent(iFreeBudget.this, MainView.class);
 
         startActivity(intent);        
     }
