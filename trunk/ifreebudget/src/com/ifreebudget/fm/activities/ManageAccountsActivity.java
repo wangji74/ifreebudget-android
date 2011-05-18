@@ -364,21 +364,21 @@ public class ManageAccountsActivity extends ListActivity {
                 CategoryIconMap cim = dbHelper.getCategoryIconMap(ac
                         .getCategoryId());
                 if (cim == null) {
-                    return R.drawable.folder_blue;
+                    return R.drawable.default_category;
                 }
                 else {
                     int iconRes = getResources()
                             .getIdentifier(cim.getIconPath(), "drawable",
                                     "com.ifreebudget.fm");
                     if (iconRes == 0) {
-                        return R.drawable.folder_blue;
+                        return R.drawable.default_category;
                     }
                     return iconRes;
                 }
             }
             catch (DBException e) {
                 Log.e(TAG, MiscUtils.stackTrace2String(e));
-                return R.drawable.folder_blue;
+                return R.drawable.default_category;
             }
         }
     }
