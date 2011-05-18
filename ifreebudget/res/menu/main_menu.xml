@@ -15,11 +15,11 @@
 -->
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
+    <!-- item
         android:id="@+id/mItemReports"
         android:title="Reports"
         android:icon="@drawable/reports"
-        android:titleCondensed="Reports" />
+        android:titleCondensed="Reports" /-->
     <!-- item
         android:id="@+id/mItemAbout"
         android:title="About"
@@ -30,11 +30,11 @@
         android:title="Rate me"
         android:icon="@drawable/rateme"
         android:titleCondensed="Rate me"></item -->
-    <item
+    <!--tem
         android:titleCondensed="Backups"
         android:id="@+id/mItemDbManager"
         android:icon="@drawable/backup"
-        android:title="Backups" />
+        android:title="Backups" /-->
     <item
         android:titleCondensed="Clear all"
         android:id="@+id/mItemClear"

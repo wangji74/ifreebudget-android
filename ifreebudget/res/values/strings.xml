@@ -199,6 +199,7 @@
         <item>Budgets</item>
         <item>Reports</item>
         <item>Backups</item>        
+        <item>Add expense</item>
 </string-array>
 
 </resources>
