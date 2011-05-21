@@ -103,43 +103,49 @@
         </TableRow>
     </TableLayout>
     <View
-        android:id="@+id/spacer"
+        android:id="@+id/top_spacer"
         android:layout_width="fill_parent"
         android:layout_height="2dip"
-        android:background="#C0C0C0"
+        android:background="#c0c0c0"
         android:layout_below="@id/report_info_tbl" />
     <LinearLayout
         android:id="@+id/list_header_panel"
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/spacer">
+        android:layout_below="@id/top_spacer">
         <TextView
             android:text="@string/name"
             android:textColor="#000000"
-            android:textStyle="bold|italic"
+            android:textStyle="bold"
             android:background="#eaeaea"
-            android:paddingLeft="5dip"
+            android:paddingLeft="5dp"
             android:layout_weight="1.0"
             android:layout_width="0dip"
             android:layout_height="wrap_content" />
         <TextView
             android:text="@string/total"
             android:textColor="#000000"
-            android:textStyle="bold|italic"
+            android:textStyle="bold"
             android:background="#eaeaea"
-            android:paddingRight="5dip"
+            android:paddingRight="5dp"
             android:layout_weight="1.0"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:gravity="right" />
     </LinearLayout>
+    <View
+        android:id="@+id/bottom_spacer"
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:background="#c0c0c0"
+        android:layout_below="@id/list_header_panel" />    
     <ListView
         android:id="@+id/report_item_list_view"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
         android:cacheColorHint="#ffffff"
-        android:layout_below="@+id/list_header_panel"
+        android:layout_below="@+id/bottom_spacer"
         android:layout_above="@+id/south_panel" />
     <LinearLayout
         android:id="@+id/south_panel"
