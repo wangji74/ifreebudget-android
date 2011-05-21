@@ -79,9 +79,6 @@
         <activity
             android:name=".activities.UpdateTransactionActivity"
             android:label="iFreeBudget"></activity>
-        <activity
-            android:name=".activities.MainView"
-            android:label="iFreeBudget"></activity>
     </application>
     <uses-sdk
         android:minSdkVersion="7"
