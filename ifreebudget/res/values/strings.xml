@@ -202,4 +202,5 @@
         <item>Add expense</item>
 </string-array>
 
+<string name="show_filter_selector">showFilterSelector</string>
 </resources>
