@@ -22,9 +22,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -41,6 +44,7 @@ import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -84,6 +88,12 @@ public class ListTransactionsActivity extends ListActivity {
 
     public static FilterUtils.DATE_RANGE dateRange = FilterUtils.DATE_RANGE.LastWeek;
 
+    private TextView footerLbl = null;
+
+    private BigDecimal totalValue = null;
+    
+    private Button filterButton = null;
+
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
@@ -107,13 +117,16 @@ public class ListTransactionsActivity extends ListActivity {
         super.registerForContextMenu(getListView());
 
         txListAdapter = new MyArrayAdapter(this, R.layout.tx_list_layout);
-
         this.setListAdapter(txListAdapter);
+
+        footerLbl = (TextView) findViewById(R.id.tx_footer_lbl);
+        filterButton = (Button) findViewById(R.id.filter_button);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        totalValue = new BigDecimal(0d);
         retrieveTxList(1, 25, buildFilter());
     }
 
@@ -198,20 +211,16 @@ public class ListTransactionsActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-        case R.id.today_fltr:
-            dateRange = FilterUtils.DATE_RANGE.Today;
+        case R.id.home_menu:
+            gotoHomeScreen();
             break;
-        case R.id.last_week_fltr:
-            dateRange = FilterUtils.DATE_RANGE.LastWeek;
-            break;
-        case R.id.last_month_fltr:
-            dateRange = FilterUtils.DATE_RANGE.LastMonth;
+        case R.id.add_tx_menu:
+            addTransaction();
             break;
         default:
-            dateRange = FilterUtils.DATE_RANGE.All;
+            return true;
         }
 
-        retrieveTxList(1, 25, buildFilter());
         return true;
     }
 
@@ -219,6 +228,7 @@ public class ListTransactionsActivity extends ListActivity {
 
     private void addToUI(TxHolder tx) {
         txListAdapter.add(tx);
+        setTotalValue(totalValue);
     }
 
     private Filter buildFilter() {
@@ -360,12 +370,14 @@ public class ListTransactionsActivity extends ListActivity {
         TextView filterView = (TextView) findViewById(R.id.tx_list_filter_lbl);
         filterView.setText(query.getFilterName());
 
+        /* clear out the display */
         txListAdapter.clear();
-
+        totalValue = new BigDecimal(0);
+        setTotalValue(totalValue);
+        
         Runnable r = new Runnable() {
             public void run() {
                 List<FManEntity> catgs;
-                List<TxHolder> txList = new ArrayList<TxHolder>();
                 try {
                     try {
                         String q = query.getQueryObject(false);
@@ -407,10 +419,11 @@ public class ListTransactionsActivity extends ListActivity {
                             }
                         }
 
-                        txList.add(tx);
                         tx.fromAcct = from;
                         tx.toAcct = to;
                         tx.iconResource = iconRes;
+
+                        totalValue = totalValue.add(tx.t.getTxAmount());
 
                         txListUpdateHandler.post(new Runnable() {
                             public void run() {
@@ -428,25 +441,53 @@ public class ListTransactionsActivity extends ListActivity {
         new Thread(r).start();
     }
 
-    public void gotoHomeScreen(View view) {
+    public void gotoHomeScreen() {
         Intent intent = new Intent(this, iFreeBudget.class);
         startActivity(intent);
     }
 
-    public void addTransaction(View view) {
-        // Intent intent = getIntent();
-        // Bundle bundle = intent.getExtras();
-        // if (bundle != null) {
-        // String fk = bundle.getString(FilterUtils.FILTERKEY);
-        // if (fk != null) {
-        // Long fv = bundle.getLong(FilterUtils.FILTERVALUE, -1);
-        // if (fv != null) {
-        // txIntent.putExtra(fk, fv);
-        // }
-        // }
-        // }
+    public void addTransaction() {
         Intent txIntent = new Intent(this, AddTransactionActivity.class);
         startActivity(txIntent);
+    }
+    
+    private void setTotalValue(BigDecimal value) {
+        footerLbl.setText("Total: " + nf.format(value));
+    }
+
+    public void showFilterSelector(View view) {
+        Resources res = getResources();
+        final CharSequence[] items = {
+                res.getString(R.string.today_filter),
+                res.getString(R.string.last_week_filter),
+                res.getString(R.string.last_month_filter),
+                res.getString(R.string.all_fltr) };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select filter");
+        builder.setSingleChoiceItems(items, -1,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        switch (item) {
+                        case 0:
+                            dateRange = FilterUtils.DATE_RANGE.Today;
+                            break;
+                        case 1:
+                            dateRange = FilterUtils.DATE_RANGE.LastWeek;
+                            break;
+                        case 2:
+                            dateRange = FilterUtils.DATE_RANGE.LastMonth;
+                            break;
+                        case 3:
+                            dateRange = FilterUtils.DATE_RANGE.All;
+                        }
+                        
+                        filterButton.setText(items[item]);
+                        retrieveTxList(1, 25, buildFilter());
+                        dialog.dismiss();
+                    }
+                });
+        builder.show();
     }
 
     class TxHolder {

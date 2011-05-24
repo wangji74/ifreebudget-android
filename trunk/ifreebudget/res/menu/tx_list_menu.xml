@@ -15,21 +15,13 @@
   limitations under the License.
 -->
 <menu
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android">    
     <item
-        android:id="@+id/all_fltr"
-        android:title="@string/all_fltr"
-        android:titleCondensed="@string/all_fltr"></item>
+        android:id="@+id/home_menu"
+        android:title="@string/home_lbl"
+        android:titleCondensed="@string/home_lbl"></item>
     <item
-        android:titleCondensed="@string/today_filter"
-        android:title="@string/today_filter"
-        android:id="@+id/today_fltr"></item>
-    <item
-        android:titleCondensed="@string/last_week_filter"
-        android:title="@string/last_week_filter"
-        android:id="@+id/last_week_fltr"></item>
-    <item
-        android:titleCondensed="@string/last_month_filter"
-        android:title="@string/last_month_filter"
-        android:id="@+id/last_month_fltr"></item>
+        android:id="@+id/add_tx_menu"
+        android:title="@string/add_tx_lbl"
+        android:titleCondensed="@string/add_tx_lbl"></item>
 </menu>
