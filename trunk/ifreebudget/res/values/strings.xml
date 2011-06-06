@@ -192,6 +192,7 @@
 <string name="backup_db_action">backupDatabase</string>
 <string name="use_backup">Use this backup</string>
 <string name="delete_backup">Delete</string>
+<string name="add">Add</string>
 
 <string-array name="grid_items">
         <item>Accounts</item>

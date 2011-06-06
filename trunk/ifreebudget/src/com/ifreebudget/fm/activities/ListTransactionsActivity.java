@@ -446,6 +446,10 @@ public class ListTransactionsActivity extends ListActivity {
         startActivity(intent);
     }
 
+    public void addTransaction(View view) {
+        addTransaction();
+    }
+    
     public void addTransaction() {
         Intent txIntent = new Intent(this, AddTransactionActivity.class);
         startActivity(txIntent);
