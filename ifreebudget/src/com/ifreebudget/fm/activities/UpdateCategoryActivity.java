@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ifreebudget.fm.R;
@@ -43,17 +44,29 @@ public class UpdateCategoryActivity extends Activity {
 
     private static final String TAG = "UpdateCategoryActivity";
     private AccountCategory category = null;
+    private TextView subtitleLbl = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.update_catgr_layout);
-
+        subtitleLbl = (TextView) findViewById(R.id.subtitle_lbl);
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
         Long accountId = null;
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle.containsKey(iFreeBudget.CATEGORYIDKEY)) {
             accountId = (Long) bundle.get(iFreeBudget.CATEGORYIDKEY);
+        }
+
+        if (bundle.containsKey(ManageAccountsActivity.PARENTCATEGORYIDPATH)) {
+            String categoryPath = (String) bundle
+                    .get(ManageAccountsActivity.PARENTCATEGORYIDPATH);
+            subtitleLbl.setText(categoryPath);
         }
 
         if (accountId != null) {
