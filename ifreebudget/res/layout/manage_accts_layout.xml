@@ -1,85 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Copyright 2011 ifreebudget@gmail.com
-  
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-  
-    http://www.apache.org/licenses/LICENSE-2.0
-  
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
+<!-- Copyright 2011 ifreebudget@gmail.com Licensed under the Apache License, 
+	Version 2.0 (the "License"); you may not use this file except in compliance 
+	with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. -->
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#ffffff">
-    <!-- ImageButton android:id="@+id/home_button" android:src="@drawable/home" 
-        android:layout_height="wrap_content" android:layout_width="wrap_content" 
-        android:onClick="@string/goto_home" android:background="@android:color/transparent" 
-        android:padding="3pt" android:layout_alignParentTop="true"/ -->
-    <TextView
-        android:id="@+id/title_lbl"
-        android:text="@string/manage_accts_title_lbl"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold|italic"
-        android:textColor="#FFFFFF"
-        android:background="#6F8BBA"
-        android:paddingTop="5dip"
-        android:paddingBottom="5dip" />
-    <TextView
-        android:id="@+id/category_path_lbl"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="italic"
-        android:textColor="#FFFFFF"
-        android:background="#6F8BBA"
-        android:paddingTop="5dip"
-        android:paddingBottom="5dip"
-        android:layout_below="@id/title_lbl"/>        
-    <ListView
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent"
-        android:id="@android:id/android:list"
-        android:layout_below="@id/category_path_lbl"
-        android:layout_above="@+id/south_panel" />
-    <LinearLayout
-        android:id="@+id/south_panel"
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.1"
-        android:layout_span="2"
-        android:layout_alignParentBottom="true">
-        <Button
-            android:id="@+id/home_button"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/home_lbl"
-            android:layout_weight="0.3"
-            android:width="80px"
-            android:onClick="@string/goto_home" />
-        <Button
-            android:id="@+id/add_acct_btn"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/add_account_lbl"
-            android:layout_weight="0.3"
-            android:width="80px"
-            android:onClick="@string/add_account_action" />
-        <Button
-            android:id="@+id/add_catgr_btn"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/add_category_lbl"
-            android:layout_weight="0.3"
-            android:width="80px"
-            android:onClick="@string/add_category_action" />
-    </LinearLayout>
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="#ffffff">
+	<!-- ImageButton android:id="@+id/home_button" android:src="@drawable/home" 
+		android:layout_height="wrap_content" android:layout_width="wrap_content" 
+		android:onClick="@string/goto_home" android:background="@android:color/transparent" 
+		android:padding="3pt" android:layout_alignParentTop="true"/ -->
+	<TextView
+		android:id="@+id/title_lbl"
+		android:text="@string/manage_accts_title_lbl"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:textStyle="bold|italic"
+		android:textColor="#FFFFFF"
+		android:background="#6F8BBA"
+		android:paddingTop="5dip"
+		android:paddingBottom="5dip" />
+	<TextView
+		android:id="@+id/category_path_lbl"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:textStyle="italic"
+		android:textColor="#FFFFFF"
+		android:background="#6F8BBA"
+		android:paddingTop="5dip"
+		android:paddingBottom="5dip"
+		android:layout_below="@id/title_lbl" />
+	<GridView
+		android:id="@+id/accts_grid"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:padding="10dp"
+		android:verticalSpacing="40dp"
+		android:horizontalSpacing="10dp"
+		android:numColumns="2"
+		android:columnWidth="60dp"
+		android:stretchMode="columnWidth"
+		android:gravity="center_vertical|center_horizontal"
+		android:layout_below="@id/category_path_lbl" 
+		android:layout_above="@+id/south_panel"/>
+	<LinearLayout
+		android:id="@+id/south_panel"
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="0.1"
+		android:layout_span="2"
+		android:layout_alignParentBottom="true">
+		<Button
+			android:id="@+id/home_button"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="@string/home_lbl"
+			android:layout_weight="0.3"
+			android:width="80px"
+			android:onClick="@string/goto_home" />
+		<Button
+			android:id="@+id/add_acct_btn"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="@string/add_account_lbl"
+			android:layout_weight="0.3"
+			android:width="80px"
+			android:onClick="@string/add_account_action" />
+		<Button
+			android:id="@+id/add_catgr_btn"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="@string/add_category_lbl"
+			android:layout_weight="0.3"
+			android:width="80px"
+			android:onClick="@string/add_category_action" />
+	</LinearLayout>
 </RelativeLayout>

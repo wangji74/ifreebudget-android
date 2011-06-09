@@ -94,30 +94,6 @@
                     android:gravity="right" />
             </TableRow>
         </TableLayout>
-        <!-- View
-            android:id="@+id/spacer"
-            android:layout_width="2dip"
-            android:layout_height="20dip"
-            android:layout_below="@id/main_tbl" />
-        <TextView
-            android:id="@+id/sc_title"
-            android:text="@string/shortcut_string"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textStyle="bold|italic"
-            android:textColor="#FFFFFF"
-            android:background="#6F8BBA"
-            android:paddingTop="5dip"
-            android:paddingBottom="5dip"
-            android:layout_below="@id/spacer" />
-        <ListView
-            android:layout_height="fill_parent"
-            android:layout_width="fill_parent"
-            android:id="@+id/sc_list"
-            android:cacheColorHint="#ffffff"
-            android:layout_below="@id/sc_title"
-            android:layout_above="@+id/south_panel"
-            android:footerDividersEnabled="false" /-->
         <LinearLayout
             android:id="@+id/south_panel"
             android:orientation="horizontal"

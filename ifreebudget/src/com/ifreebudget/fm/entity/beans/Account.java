@@ -134,8 +134,8 @@ public class Account implements FManEntity, Cloneable, Comparable<Account> {
     public String toString() {
         StringBuilder ret = new StringBuilder(accountName);
 
-        if (currentBalance != null) {
-            ret.append("\t\t");
+        if (currentBalance != null && currentBalance.doubleValue() > 0d) {
+            ret.append("\n");
             ret.append(NumberFormat.getCurrencyInstance(
                     SessionManager.getCurrencyLocale()).format(currentBalance));
             ret.append("");
