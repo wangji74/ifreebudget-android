@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,10 +35,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.ifreebudget.fm.R;
 import com.ifreebudget.fm.iFreeBudget;
@@ -51,10 +55,11 @@ import com.ifreebudget.fm.entity.beans.Account;
 import com.ifreebudget.fm.entity.beans.AccountCategory;
 import com.ifreebudget.fm.entity.beans.CategoryIconMap;
 import com.ifreebudget.fm.entity.beans.FManEntity;
+import com.ifreebudget.fm.iFreeBudget.ImageAdapter;
 import com.ifreebudget.fm.search.FilterUtils;
 import com.ifreebudget.fm.utils.MiscUtils;
 
-public class ManageAccountsActivity extends ListActivity {
+public class ManageAccountsActivity extends Activity {
     public static final String PARENTCATEGORYIDKEY = "PARENTCATEGORYID";
     public static final String ACCOUNTIDKEY = "ACCOUNTID";
     public static final String CATEGORYIDKEY = "CATEGORYID";
@@ -66,15 +71,28 @@ public class ManageAccountsActivity extends ListActivity {
 
     private TextView categoryPathTf = null;
 
+    private GridView grid = null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.manage_accts_layout);
-        super.registerForContextMenu(getListView());
 
         dbHelper = FManEntityManager.getInstance(this);
 
         categoryPathTf = (TextView) findViewById(R.id.category_path_lbl);
+
+        grid = (GridView) findViewById(R.id.accts_grid);
+
+        grid.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                    int position, long id) {
+
+                handleGridItemClick(parent, v, position, id);
+            }
+        });
+
+        registerForContextMenu(grid);
     }
 
     @Override
@@ -97,9 +115,10 @@ public class ManageAccountsActivity extends ListActivity {
 
             FManEntity[] arr = new FManEntity[catgs.size()];
             catgs.toArray(arr);
-            this.setListAdapter(new CategoryRowAdapter(this,
-                    R.layout.row_layout, R.id.label, arr));
-            
+
+            grid.setAdapter(new CategoryRowAdapter(this,
+                    R.layout.grid_item_layout, R.id.label, arr));
+
             categoryPathTf.setText(getCategoryPath());
         }
         catch (DBException e) {
@@ -107,11 +126,9 @@ public class ManageAccountsActivity extends ListActivity {
         }
     }
 
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-
-        Object obj = this.getListAdapter().getItem(position);
+    protected void handleGridItemClick(AdapterView<?> l, View v, int position,
+            long id) {
+        Object obj = grid.getAdapter().getItem(position);
         if (obj instanceof AccountCategory) {
             AccountCategory o = (AccountCategory) obj;
 
@@ -156,7 +173,7 @@ public class ManageAccountsActivity extends ListActivity {
             return true;
         }
 
-        FManEntity obj = (FManEntity) getListAdapter().getItem(info.position);
+        FManEntity obj = (FManEntity) grid.getAdapter().getItem(info.position);
         if (item.getItemId() == R.id.edit_item) {
             doEditAction(obj);
         }
@@ -311,11 +328,12 @@ public class ManageAccountsActivity extends ListActivity {
         if (currentCategoryId != AccountTypes.ACCT_TYPE_ROOT) {
             int i = 0;
             long lastCategoryId = currentCategoryId;
-            while (i++ < lim) {                
-                try {                    
-                    AccountCategory ac = dbHelper.getAccountCategory(lastCategoryId);
+            while (i++ < lim) {
+                try {
+                    AccountCategory ac = dbHelper
+                            .getAccountCategory(lastCategoryId);
                     list.add(ac.getCategoryName());
-                    if(ac.getParentCategoryId() == AccountTypes.ACCT_TYPE_ROOT) {
+                    if (ac.getParentCategoryId() == AccountTypes.ACCT_TYPE_ROOT) {
                         break;
                     }
                     lastCategoryId = ac.getParentCategoryId();
@@ -325,9 +343,9 @@ public class ManageAccountsActivity extends ListActivity {
                 }
             }
             int sz = list.size();
-            for(i = sz - 1; i >= 0; i--) {
+            for (i = sz - 1; i >= 0; i--) {
                 ret.append(list.get(i));
-                if(i > 0) {
+                if (i > 0) {
                     ret.append(" > ");
                 }
             }
@@ -341,14 +359,21 @@ public class ManageAccountsActivity extends ListActivity {
 
         CategoryRowAdapter(Context context, int resource, int label,
                 FManEntity[] items) {
-            super(ManageAccountsActivity.this, R.layout.row_layout, R.id.label,
-                    items);
+            super(ManageAccountsActivity.this, R.layout.grid_item_layout,
+                    R.id.label, items);
             this.items = items;
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
-            View row = super.getView(position, convertView, parent);
-            ImageView icon = (ImageView) row.findViewById(R.id.icon);
+            View v;
+            if (convertView == null) {
+                LayoutInflater li = getLayoutInflater();
+                v = li.inflate(R.layout.grid_item_layout, null);
+            }
+            else {
+                v = convertView;
+            }
+            ImageView icon = (ImageView) v.findViewById(R.id.icon_image);
             FManEntity entity = items[position];
             if (entity instanceof AccountCategory) {
                 icon.setImageResource(getCategoryIconResource((AccountCategory) entity));
@@ -356,11 +381,17 @@ public class ManageAccountsActivity extends ListActivity {
             else {
                 icon.setImageResource(R.drawable.account);
             }
-            return (row);
+            TextView tv = (TextView) v.findViewById(R.id.icon_text);
+            tv.setText(entity.toString());
+            return v;
         }
 
         private int getCategoryIconResource(AccountCategory ac) {
             try {
+                /* If one of the root categories, get default icons */
+                if(ac.getParentCategoryId() == AccountTypes.ACCT_TYPE_ROOT) {
+                    return getRootCategoryIcon(ac);
+                }
                 CategoryIconMap cim = dbHelper.getCategoryIconMap(ac
                         .getCategoryId());
                 if (cim == null) {
@@ -378,6 +409,24 @@ public class ManageAccountsActivity extends ListActivity {
             }
             catch (DBException e) {
                 Log.e(TAG, MiscUtils.stackTrace2String(e));
+                return R.drawable.default_category;
+            }
+        }
+
+        private int getRootCategoryIcon(AccountCategory ac) {
+            if (ac.getCategoryId() == AccountTypes.ACCT_TYPE_INCOME) {
+                return R.drawable.income;
+            }
+            else if (ac.getCategoryId() == AccountTypes.ACCT_TYPE_CASH) {
+                return R.drawable.assets;
+            }
+            else if (ac.getCategoryId() == AccountTypes.ACCT_TYPE_EXPENSE) {
+                return R.drawable.expense;
+            }
+            else if (ac.getCategoryId() == AccountTypes.ACCT_TYPE_LIABILITY) {
+                return R.drawable.liab;
+            }
+            else {
                 return R.drawable.default_category;
             }
         }
