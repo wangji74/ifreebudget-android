@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ifreebudget.fm.R;
@@ -35,6 +36,7 @@ import com.ifreebudget.fm.entity.DBException;
 import com.ifreebudget.fm.entity.FManEntityManager;
 import com.ifreebudget.fm.entity.beans.Account;
 import com.ifreebudget.fm.entity.beans.AccountCategory;
+import com.ifreebudget.fm.utils.ActivityUtils;
 import com.ifreebudget.fm.utils.MiscUtils;
 
 import static com.ifreebudget.fm.utils.Messages.tr;
@@ -42,10 +44,40 @@ import static com.ifreebudget.fm.utils.Messages.tr;
 public class AddAccountActivity extends Activity {
     private static final String TAG = "AddAccountActivity";
 
+    private TextView subtitleLbl = null;
+
+    private long catId = -1;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addacct_layout);
+        subtitleLbl = (TextView) findViewById(R.id.subtitle_lbl);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Intent intent = this.getIntent();
+
+        catId = -1;
+        String categoryPath = null;
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                if (bundle.containsKey(iFreeBudget.PARENTCATEGORYIDKEY)) {
+                    catId = (Long) bundle.get(iFreeBudget.PARENTCATEGORYIDKEY);
+                }
+                if (bundle
+                        .containsKey(ManageAccountsActivity.PARENTCATEGORYIDPATH)) {
+                    categoryPath = (String) bundle
+                            .get(ManageAccountsActivity.PARENTCATEGORYIDPATH);
+                }
+            }
+        }
+        if (categoryPath != null) {
+            subtitleLbl.setText(categoryPath);
+        }
     }
 
     public void doCancelAction(View view) {
@@ -54,17 +86,6 @@ public class AddAccountActivity extends Activity {
 
     public void saveAccount(View view) {
         Intent intent = this.getIntent();
-
-        long catId = -1;
-        if (intent != null) {
-            Bundle bundle = intent.getExtras();
-            if (bundle != null) {
-                if (bundle.containsKey(iFreeBudget.PARENTCATEGORYIDKEY)) {
-                    catId = (Long) bundle.get(iFreeBudget.PARENTCATEGORYIDKEY);
-                }
-            }
-        }
-
         if (catId != -1) {
             if (createAccount(catId)) {
                 intent = new Intent(this, ManageAccountsActivity.class);

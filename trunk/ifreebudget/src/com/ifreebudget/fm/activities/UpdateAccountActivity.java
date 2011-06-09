@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ifreebudget.fm.R;
@@ -40,17 +41,30 @@ import com.ifreebudget.fm.utils.MiscUtils;
 public class UpdateAccountActivity extends Activity {
     private static final String TAG = "UpdateAccountActivity";
     private Account account = null;
+    private TextView subtitleLbl = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.update_acct_layout);
+        subtitleLbl = (TextView) findViewById(R.id.subtitle_lbl);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
         Long accountId = null;
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
+
         if (bundle.containsKey(iFreeBudget.ACCOUNTIDKEY)) {
             accountId = (Long) bundle.get(iFreeBudget.ACCOUNTIDKEY);
+        }
+
+        if (bundle.containsKey(ManageAccountsActivity.PARENTCATEGORYIDPATH)) {
+            String categoryPath = (String) bundle
+                    .get(ManageAccountsActivity.PARENTCATEGORYIDPATH);
+            subtitleLbl.setText(categoryPath);
         }
 
         if (accountId != null) {
@@ -138,7 +152,7 @@ public class UpdateAccountActivity extends Activity {
 
             String nameStr = name.trim();
             Boolean validate = true;
-            if(account.getAccountName().equals(nameStr)) {
+            if (account.getAccountName().equals(nameStr)) {
                 validate = false;
             }
             account.setAccountName(nameStr);

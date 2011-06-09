@@ -16,11 +16,9 @@
 package com.ifreebudget.fm.activities;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,19 +26,17 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.ifreebudget.fm.R;
 import com.ifreebudget.fm.iFreeBudget;
@@ -55,12 +51,12 @@ import com.ifreebudget.fm.entity.beans.Account;
 import com.ifreebudget.fm.entity.beans.AccountCategory;
 import com.ifreebudget.fm.entity.beans.CategoryIconMap;
 import com.ifreebudget.fm.entity.beans.FManEntity;
-import com.ifreebudget.fm.iFreeBudget.ImageAdapter;
 import com.ifreebudget.fm.search.FilterUtils;
 import com.ifreebudget.fm.utils.MiscUtils;
 
 public class ManageAccountsActivity extends Activity {
     public static final String PARENTCATEGORYIDKEY = "PARENTCATEGORYID";
+    public static final String PARENTCATEGORYIDPATH = "PARENTCATEGORYPATH";
     public static final String ACCOUNTIDKEY = "ACCOUNTID";
     public static final String CATEGORYIDKEY = "CATEGORYID";
 
@@ -287,6 +283,7 @@ public class ManageAccountsActivity extends Activity {
         Account a = (Account) entity;
         Intent intent = new Intent(this, UpdateAccountActivity.class);
         intent.putExtra(PARENTCATEGORYIDKEY, currentCategoryId);
+        intent.putExtra(PARENTCATEGORYIDPATH, categoryPathTf.getText());
         intent.putExtra(ACCOUNTIDKEY, a.getAccountId());
         startActivity(intent);
     }
@@ -295,6 +292,7 @@ public class ManageAccountsActivity extends Activity {
         AccountCategory a = (AccountCategory) entity;
         Intent intent = new Intent(this, UpdateCategoryActivity.class);
         intent.putExtra(PARENTCATEGORYIDKEY, currentCategoryId);
+        intent.putExtra(PARENTCATEGORYIDPATH, categoryPathTf.getText());
         intent.putExtra(CATEGORYIDKEY, a.getCategoryId());
         startActivity(intent);
     }
@@ -302,12 +300,14 @@ public class ManageAccountsActivity extends Activity {
     private void startAddAccountActivity() {
         Intent intent = new Intent(this, AddAccountActivity.class);
         intent.putExtra(PARENTCATEGORYIDKEY, currentCategoryId);
+        intent.putExtra(PARENTCATEGORYIDPATH, categoryPathTf.getText());
         startActivity(intent);
     }
 
     private void startAddCategoryActivity() {
         Intent intent = new Intent(this, AddCategoryActivity.class);
         intent.putExtra(PARENTCATEGORYIDKEY, currentCategoryId);
+        intent.putExtra(PARENTCATEGORYIDPATH, categoryPathTf.getText());
         startActivity(intent);
     }
 
