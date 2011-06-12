@@ -300,16 +300,14 @@ public class iFreeBudget extends Activity {
             if (convertView == null) {
                 LayoutInflater li = getLayoutInflater();
                 v = li.inflate(R.layout.grid_item_layout, null);
-                TextView tv = (TextView) v.findViewById(R.id.icon_text);
-
-                tv.setText(mTextIds[position]);
-
-                ImageView iv = (ImageView) v.findViewById(R.id.icon_image);
-                iv.setImageResource(mThumbIds[position]);
             }
             else {
                 v = convertView;
             }
+            TextView tv = (TextView) v.findViewById(R.id.icon_text);
+            tv.setText(mTextIds[position]);
+            ImageView iv = (ImageView) v.findViewById(R.id.icon_image);
+            iv.setImageResource(mThumbIds[position]);
             return v;
         }
 
