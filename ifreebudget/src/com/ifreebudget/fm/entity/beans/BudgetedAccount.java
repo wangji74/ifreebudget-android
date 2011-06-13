@@ -16,6 +16,9 @@
 package com.ifreebudget.fm.entity.beans;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+
+import com.ifreebudget.fm.services.SessionManager;
 
 public class BudgetedAccount implements FManEntity {
     private static final long serialVersionUID = 1L;
@@ -97,10 +100,15 @@ public class BudgetedAccount implements FManEntity {
     }
 
     public String toString() {
-        StringBuilder ret = new StringBuilder();
-        ret.append("<i>");
-        ret.append(getAccountName());
-        ret.append("</i>");
+        StringBuilder ret = new StringBuilder(accountName);
+//
+//        if (allocatedAmount != null && allocatedAmount.doubleValue() > 0d) {
+//            ret.append("\n");
+//            ret.append(NumberFormat.getCurrencyInstance(
+//                    SessionManager.getCurrencyLocale()).format(allocatedAmount));
+//            ret.append("");
+//        }
+
         return ret.toString();
     }
 

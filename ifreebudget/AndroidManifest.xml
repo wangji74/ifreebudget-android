@@ -17,7 +17,7 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ifreebudget.fm"
-    android:versionName="3.5" android:versionCode="26">
+    android:versionName="3.6" android:versionCode="27">
     
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     
@@ -62,9 +62,6 @@
             android:name=".activities.ManageBudgetsActivity"
             android:label="iFreeBudget"></activity>
         <activity
-            android:name=".activities.AddBudgetActivity"
-            android:label="iFreeBudget"></activity>
-        <activity
             android:name=".activities.ViewBudgetActivity"
             android:label="iFreeBudget"></activity>
         <activity
@@ -78,6 +75,12 @@
             android:label="iFreeBudget"></activity>
         <activity
             android:name=".activities.UpdateTransactionActivity"
+            android:label="iFreeBudget"></activity>
+        <activity
+            android:name=".activities.wizards.budget.BudgetDetailsActivity"
+            android:label="iFreeBudget"></activity>
+        <activity
+            android:name=".activities.wizards.budget.AddBudgetActivity"
             android:label="iFreeBudget"></activity>
     </application>
     <uses-sdk
