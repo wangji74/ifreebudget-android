@@ -15,22 +15,8 @@
  ******************************************************************************/
 package com.ifreebudget.fm.activities;
 
-import java.util.Date;
 import java.util.List;
 
-import com.ifreebudget.fm.R;
-import com.ifreebudget.fm.iFreeBudget;
-import com.ifreebudget.fm.actions.ActionRequest;
-import com.ifreebudget.fm.actions.ActionResponse;
-import com.ifreebudget.fm.actions.GetBudgetSummaryAction;
-import com.ifreebudget.fm.entity.DBException;
-import com.ifreebudget.fm.entity.FManEntityManager;
-import com.ifreebudget.fm.entity.beans.AccountCategory;
-import com.ifreebudget.fm.entity.beans.Budget;
-import com.ifreebudget.fm.entity.beans.FManEntity;
-import com.ifreebudget.fm.utils.MiscUtils;
-
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,6 +24,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.ifreebudget.fm.R;
+import com.ifreebudget.fm.iFreeBudget;
+import com.ifreebudget.fm.activities.wizards.budget.BudgetDetailsActivity;
+import com.ifreebudget.fm.entity.DBException;
+import com.ifreebudget.fm.entity.FManEntityManager;
+import com.ifreebudget.fm.entity.beans.Budget;
+import com.ifreebudget.fm.entity.beans.FManEntity;
+import com.ifreebudget.fm.utils.MiscUtils;
 
 public class ManageBudgetsActivity extends ListActivity {
     private static final String TAG = "ManageBudgetsActivity";
@@ -95,7 +90,7 @@ public class ManageBudgetsActivity extends ListActivity {
     }
 
     public void addBudget(View view) {
-        Intent txIntent = new Intent(this, AddBudgetActivity.class);
+        Intent txIntent = new Intent(this, BudgetDetailsActivity.class);
         startActivity(txIntent);
     }
 }

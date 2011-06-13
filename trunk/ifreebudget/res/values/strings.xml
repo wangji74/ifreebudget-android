@@ -204,4 +204,8 @@
 </string-array>
 
 <string name="show_filter_selector">showFilterSelector</string>
+<string name="set_budget_amt_action">setBudgetAmount</string>
+<string name="default_budget_alloc_lbl">Tap account to allocate amounts</string>
+<string name="amt">Amount</string>
+<string name="alloc">Set amount</string>
 </resources>

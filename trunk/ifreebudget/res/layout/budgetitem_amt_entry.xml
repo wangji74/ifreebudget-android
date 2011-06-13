@@ -12,7 +12,7 @@
 	android:layout_height="fill_parent"
 	android:background="#ffffff">
 	<TextView
-		android:id="@+id/budget_name_lbl"
+		android:id="@+id/account_name_lbl"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:textStyle="bold|italic"
@@ -22,7 +22,6 @@
 		android:paddingBottom="5dip" />
 	<TextView
 		android:id="@+id/subtitle_lbl"
-		android:text="@string/default_budget_alloc_lbl"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:textStyle="bold|italic"
@@ -30,20 +29,14 @@
 		android:background="#6F8BBA"
 		android:paddingTop="5dip"
 		android:paddingBottom="5dip"
-		android:layout_below="@id/budget_name_lbl" />
-	<GridView
-		android:id="@+id/budget_accts_grid"
-		android:layout_width="fill_parent"
+		android:layout_below="@id/account_name_lbl" />
+	<EditText
+		android:id="@+id/allocated_amt_tf"
 		android:layout_height="wrap_content"
-		android:padding="10dp"
-		android:verticalSpacing="40dp"
-		android:horizontalSpacing="10dp"
-		android:numColumns="2"
-		android:columnWidth="60dp"
-		android:stretchMode="columnWidth"
-		android:gravity="center_vertical|center_horizontal"
-		android:layout_below="@+id/subtitle_lbl"
-		android:layout_above="@+id/south_panel" />
+		android:layout_width="fill_parent"
+		android:singleLine="true"
+		android:layout_weight="0.5"
+		android:layout_below="@id/subtitle_lbl" />
 	<LinearLayout
 		android:id="@+id/south_panel"
 		android:orientation="horizontal"
@@ -53,10 +46,10 @@
 		android:layout_span="2"
 		android:layout_alignParentBottom="true">
 		<Button
-			android:id="@+id/back_button"
+			android:id="@+id/cancel_button"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
-			android:text="@string/back"
+			android:text="@string/cancel"
 			android:layout_weight="0.5"
 			android:width="80dip"
 			android:onClick="@string/cancel_action" />
@@ -67,6 +60,6 @@
 			android:text="@string/save"
 			android:layout_weight="0.5"
 			android:width="80dip"
-			android:onClick="@string/save_budget_action" />
+			android:onClick="@string/set_budget_amt_action" />
 	</LinearLayout>
 </RelativeLayout>
