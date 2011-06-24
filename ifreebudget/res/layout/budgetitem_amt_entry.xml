@@ -46,14 +46,6 @@
 		android:layout_span="2"
 		android:layout_alignParentBottom="true">
 		<Button
-			android:id="@+id/cancel_button"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:text="@string/cancel"
-			android:layout_weight="0.5"
-			android:width="80dip"
-			android:onClick="@string/cancel_action" />
-		<Button
 			android:id="@+id/save_button"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
@@ -61,5 +53,13 @@
 			android:layout_weight="0.5"
 			android:width="80dip"
 			android:onClick="@string/set_budget_amt_action" />
+		<Button
+			android:id="@+id/cancel_button"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="@string/cancel"
+			android:layout_weight="0.5"
+			android:width="80dip"
+			android:onClick="@string/cancel_action" />
 	</LinearLayout>
 </RelativeLayout>
