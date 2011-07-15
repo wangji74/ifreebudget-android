@@ -60,7 +60,7 @@ import com.ifreebudget.fm.actions.GetExpReportAction.ReportItem;
 import com.ifreebudget.fm.entity.beans.Account;
 import com.ifreebudget.fm.entity.beans.BudgetedAccount;
 import com.ifreebudget.fm.entity.beans.Transaction;
-import com.ifreebudget.fm.search.FilterUtils;
+import com.ifreebudget.fm.search.newfilter.NewFilterUtils;
 import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
 
@@ -187,11 +187,11 @@ public class ViewReportActivity extends Activity {
             Intent intent = new Intent(this, ListTransactionsActivity.class);
             Long accountId = entity.getAccount().getAccountId();
 
-            intent.putExtra(FilterUtils.FILTERKEY,
-                    FilterUtils.ACCOUNT_FILTER_TYPE_DATERANGED);
-            intent.putExtra(FilterUtils.FILTERVALUE, accountId);
-            intent.putExtra(FilterUtils.STARTDATE, reportStartDt.getTime());
-            intent.putExtra(FilterUtils.ENDDATE, reportEndDt.getTime());
+            intent.putExtra(NewFilterUtils.FILTERKEY,
+                    NewFilterUtils.ACCOUNT_FILTER_TYPE_DATERANGED);
+            intent.putExtra(NewFilterUtils.FILTERVALUE, accountId);
+            intent.putExtra(NewFilterUtils.STARTDATE, reportStartDt.getTime());
+            intent.putExtra(NewFilterUtils.ENDDATE, reportEndDt.getTime());
             startActivity(intent);
         }
         catch (Exception e) {

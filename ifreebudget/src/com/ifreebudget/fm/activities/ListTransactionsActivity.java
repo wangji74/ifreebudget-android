@@ -24,6 +24,7 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -67,9 +68,9 @@ import com.ifreebudget.fm.entity.beans.AccountCategory;
 import com.ifreebudget.fm.entity.beans.CategoryIconMap;
 import com.ifreebudget.fm.entity.beans.FManEntity;
 import com.ifreebudget.fm.entity.beans.Transaction;
-import com.ifreebudget.fm.search.Filter;
-import com.ifreebudget.fm.search.FilterUtils;
-import com.ifreebudget.fm.search.Order;
+import com.ifreebudget.fm.search.newfilter.Filter;
+import com.ifreebudget.fm.search.newfilter.NewFilterUtils;
+import com.ifreebudget.fm.search.newfilter.Order;
 import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
 
@@ -86,12 +87,12 @@ public class ListTransactionsActivity extends ListActivity {
     final NumberFormat nf = NumberFormat.getCurrencyInstance(SessionManager
             .getCurrencyLocale());
 
-    public static FilterUtils.DATE_RANGE dateRange = FilterUtils.DATE_RANGE.LastWeek;
+    public static NewFilterUtils.DATE_RANGE dateRange = NewFilterUtils.DATE_RANGE.LastWeek;
 
     private TextView footerLbl = null;
 
     private BigDecimal totalValue = null;
-    
+
     private Button filterButton = null;
 
     @Override
@@ -128,6 +129,7 @@ public class ListTransactionsActivity extends ListActivity {
         super.onResume();
         totalValue = new BigDecimal(0d);
         retrieveTxList(1, 25, buildFilter());
+        setFilterButtonText();
     }
 
     /* Menu handler functions */
@@ -236,21 +238,33 @@ public class ListTransactionsActivity extends ListActivity {
         Bundle bundle = intent.getExtras();
         Filter f = null;
         if (bundle != null) {
-            String filter = (String) bundle.get(FilterUtils.FILTERKEY);
+            String filter = (String) bundle.get(NewFilterUtils.FILTERKEY);
 
-            if (filter.equals(FilterUtils.ACCOUNT_FILTER_TYPE_DATERANGED)) {
-                Long accountId = bundle.getLong(FilterUtils.FILTERVALUE, -1);
-                Long start = (Long) bundle.get(FilterUtils.STARTDATE);
-                Long end = (Long) bundle.get(FilterUtils.ENDDATE);
-                f = buildAccountFilter(accountId, start, end);
+            if (filter == null) {
+                if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+                    String query = intent.getStringExtra(SearchManager.QUERY);
+                    f = buildSearchFilter(query);
+                }
             }
-            else if (filter.equals(FilterUtils.ACCOUNT_FILTER_TYPE)) {
-                Long accountId = bundle.getLong(FilterUtils.FILTERVALUE, -1);
-                f = buildAccountFilter(accountId);
-            }
-            else if (filter.equals(FilterUtils.CATEGORY_FILTER_TYPE)) {
-                Long categoryId = bundle.getLong(FilterUtils.FILTERVALUE, -1);
-                f = buildCategoryFilter(categoryId);
+            else {
+                if (filter
+                        .equals(NewFilterUtils.ACCOUNT_FILTER_TYPE_DATERANGED)) {
+                    Long accountId = bundle.getLong(NewFilterUtils.FILTERVALUE,
+                            -1);
+                    Long start = (Long) bundle.get(NewFilterUtils.STARTDATE);
+                    Long end = (Long) bundle.get(NewFilterUtils.ENDDATE);
+                    f = buildAccountFilter(accountId, start, end);
+                }
+                else if (filter.equals(NewFilterUtils.ACCOUNT_FILTER_TYPE)) {
+                    Long accountId = bundle.getLong(NewFilterUtils.FILTERVALUE,
+                            -1);
+                    f = buildAccountFilter(accountId);
+                }
+                else if (filter.equals(NewFilterUtils.CATEGORY_FILTER_TYPE)) {
+                    Long categoryId = bundle.getLong(
+                            NewFilterUtils.FILTERVALUE, -1);
+                    f = buildCategoryFilter(categoryId);
+                }
             }
         }
         else {
@@ -266,12 +280,12 @@ public class ListTransactionsActivity extends ListActivity {
         if (accountId == -1) {
             return getDefaultFilter();
         }
-        Filter f = FilterUtils.getByAccountIdFilter(accountId);
-        FilterUtils.addDateRangeToFilter(f, dateRange);
+        Filter f = NewFilterUtils.getByAccountIdFilter(accountId);
+        NewFilterUtils.addDateRangeToFilter(f, dateRange);
 
         try {
             Account a = dbHelper.getAccount(accountId);
-            f.setFilterName("Account: " + a.getAccountName() + " , "
+            f.setName("Account: " + a.getAccountName() + " , "
                     + dateRange.toString());
         }
         catch (DBException e) {
@@ -280,12 +294,26 @@ public class ListTransactionsActivity extends ListActivity {
         return f;
     }
 
+    private Filter buildSearchFilter(String query) {
+        Filter f = NewFilterUtils.getBySearchQuery(query);
+        NewFilterUtils.addDateRangeToFilter(f, dateRange);
+
+        String name = query;
+        if (query.length() > 15) {
+            name = new StringBuilder(query.substring(0, 12)).append("...")
+                    .toString();
+        }
+        f.setName("Search: " + name + " , " + dateRange.toString());
+
+        return f;
+    }
+
     private Filter buildAccountFilter(Long accountId, Long start, Long end) {
         if (accountId == -1) {
             return getDefaultFilter();
         }
-        Filter f = FilterUtils.getByAccountIdFilter(accountId);
-        FilterUtils.addDateRangeToFilter(f, String.valueOf(start),
+        Filter f = NewFilterUtils.getByAccountIdFilter(accountId);
+        NewFilterUtils.addDateRangeToFilter(f, String.valueOf(start),
                 String.valueOf(end));
 
         try {
@@ -295,7 +323,7 @@ public class ListTransactionsActivity extends ListActivity {
             SimpleDateFormat df = SessionManager.getDateFormat();
             String lbl = df.format(s) + " to " + df.format(e);
             Account a = dbHelper.getAccount(accountId);
-            f.setFilterName("Account: " + a.getAccountName() + "\n" + lbl);
+            f.setName("Account: " + a.getAccountName() + "\n" + lbl);
         }
         catch (DBException e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
@@ -319,9 +347,9 @@ public class ListTransactionsActivity extends ListActivity {
             for (FManEntity e : children) {
                 accountIdList.add(String.valueOf(((Account) e).getAccountId()));
             }
-            Filter f = FilterUtils.getByAccountIdListFilter(accountIdList);
-            FilterUtils.addDateRangeToFilter(f, dateRange);
-            f.setFilterName("Category: " + a.getCategoryName() + ", "
+            Filter f = NewFilterUtils.getByAccountIdListFilter(accountIdList);
+            NewFilterUtils.addDateRangeToFilter(f, dateRange);
+            f.setName("Category: " + a.getCategoryName() + ", "
                     + dateRange.toString());
             return f;
         }
@@ -332,8 +360,8 @@ public class ListTransactionsActivity extends ListActivity {
     }
 
     private Filter getDefaultFilter() {
-        Filter f = FilterUtils.getByDateRangeFilter(dateRange);
-        f.setFilterName(dateRange.toString());
+        Filter f = NewFilterUtils.getByDateRangeFilter(dateRange);
+        f.setName(dateRange.toString());
         return f;
     }
 
@@ -368,13 +396,13 @@ public class ListTransactionsActivity extends ListActivity {
 
     private void retrieveTxList(int offset, int limit, final Filter query) {
         TextView filterView = (TextView) findViewById(R.id.tx_list_filter_lbl);
-        filterView.setText(query.getFilterName());
+        filterView.setText(query.getName());
 
         /* clear out the display */
         txListAdapter.clear();
         totalValue = new BigDecimal(0);
         setTotalValue(totalValue);
-        
+
         Runnable r = new Runnable() {
             public void run() {
                 List<FManEntity> catgs;
@@ -449,20 +477,19 @@ public class ListTransactionsActivity extends ListActivity {
     public void addTransaction(View view) {
         addTransaction();
     }
-    
+
     public void addTransaction() {
         Intent txIntent = new Intent(this, AddTransactionActivity.class);
         startActivity(txIntent);
     }
-    
+
     private void setTotalValue(BigDecimal value) {
         footerLbl.setText("Total: " + nf.format(value));
     }
 
     public void showFilterSelector(View view) {
         Resources res = getResources();
-        final CharSequence[] items = {
-                res.getString(R.string.today_filter),
+        final CharSequence[] items = { res.getString(R.string.today_filter),
                 res.getString(R.string.last_week_filter),
                 res.getString(R.string.last_month_filter),
                 res.getString(R.string.all_fltr) };
@@ -474,24 +501,46 @@ public class ListTransactionsActivity extends ListActivity {
                     public void onClick(DialogInterface dialog, int item) {
                         switch (item) {
                         case 0:
-                            dateRange = FilterUtils.DATE_RANGE.Today;
+                            dateRange = NewFilterUtils.DATE_RANGE.Today;
                             break;
                         case 1:
-                            dateRange = FilterUtils.DATE_RANGE.LastWeek;
+                            dateRange = NewFilterUtils.DATE_RANGE.LastWeek;
                             break;
                         case 2:
-                            dateRange = FilterUtils.DATE_RANGE.LastMonth;
+                            dateRange = NewFilterUtils.DATE_RANGE.LastMonth;
                             break;
                         case 3:
-                            dateRange = FilterUtils.DATE_RANGE.All;
+                            dateRange = NewFilterUtils.DATE_RANGE.All;
                         }
-                        
+
                         filterButton.setText(items[item]);
                         retrieveTxList(1, 25, buildFilter());
                         dialog.dismiss();
                     }
                 });
         builder.show();
+    }
+
+    private void setFilterButtonText() {
+        Resources res = getResources();
+
+        String text = "Select";
+        if (dateRange != null) {
+            switch (dateRange) {
+            case Today:
+                text = res.getString(R.string.today_filter);
+                break;
+            case LastWeek:
+                text = res.getString(R.string.last_week_filter);
+                break;
+            case LastMonth:
+                text = res.getString(R.string.last_month_filter);
+                break;
+            case All:
+                text = res.getString(R.string.all_fltr);
+            }
+        }
+        filterButton.setText(text);
     }
 
     class TxHolder {

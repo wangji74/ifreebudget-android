@@ -32,8 +32,8 @@ import com.ifreebudget.fm.entity.FManEntityManager;
 import com.ifreebudget.fm.entity.beans.Account;
 import com.ifreebudget.fm.entity.beans.FManEntity;
 import com.ifreebudget.fm.entity.beans.Transaction;
-import com.ifreebudget.fm.search.Filter;
-import com.ifreebudget.fm.search.FilterUtils;
+import com.ifreebudget.fm.search.newfilter.Filter;
+import com.ifreebudget.fm.search.newfilter.NewFilterUtils;
 import com.ifreebudget.fm.utils.MiscUtils;
 
 /**
@@ -80,7 +80,7 @@ public class GetExpReportAction {
             long startS = start.getTimeInMillis();
             long endS = end.getTimeInMillis();
 
-            Filter f = FilterUtils.getByDateFilter(startS, endS);
+            Filter f = NewFilterUtils.getByDateFilter(startS, endS);
 
             List<FManEntity> txList = em.executeFilterQuery(
                     f.getQueryObject(false), Transaction.class);
