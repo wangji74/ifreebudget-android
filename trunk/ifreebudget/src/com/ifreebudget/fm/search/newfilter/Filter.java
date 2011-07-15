@@ -1,14 +1,9 @@
 package com.ifreebudget.fm.search.newfilter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.util.Log;
-
 public class Filter implements Filterable {
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
     private String name;
 
     private List<Predicate> predicates;
@@ -21,28 +16,26 @@ public class Filter implements Filterable {
 
     private List<Order> order;
 
-    private static final String TAG = "Filter";
-
     private Filter(String filterObject) {
         name = System.currentTimeMillis() + ".xml";
         predicates = new ArrayList<Predicate>();
         operators = new ArrayList<OperatorType>();
 
-        this.filterObject = filterObject;        
+        this.filterObject = filterObject;
     }
-    
+
     public Filter(String filterObject, String select) {
         this(filterObject);
-        if(select != null) {
+        if (select != null) {
             this.selectWhat = new ArrayList<String>();
             this.selectWhat.add(select);
         }
     }
-    
-//    public Filter(String filterObject, List<String> select) {
-//        this(filterObject);
-//        this.selectWhat = select;
-//    }
+
+    // public Filter(String filterObject, List<String> select) {
+    // this(filterObject);
+    // this.selectWhat = select;
+    // }
 
     public String getName() {
         return name;
@@ -149,8 +142,7 @@ public class Filter implements Filterable {
         }
     }
 
-    public String getQueryObject(boolean countQuery)
-            throws Exception {
+    public String getQueryObject(boolean countQuery) throws Exception {
         try {
             StringBuilder q = new StringBuilder(printFilter(countQuery));
 
@@ -159,7 +151,7 @@ public class Filter implements Filterable {
                 Predicate p = predicates.get(i);
                 setQueryParameters(q, p);
             }
-            Log.i(TAG, q.toString());
+            // Log.i(TAG, q.toString());
             return q.toString();
         }
         finally {
@@ -189,8 +181,8 @@ public class Filter implements Filterable {
 
     private int count = 0;
 
-    private void setQueryParameter(StringBuilder q, String type,
-            Filterable p) throws Exception {
+    private void setQueryParameter(StringBuilder q, String type, Filterable p)
+            throws Exception {
 
         Object value = p.getValue();
         if (type.equals(String.class.getName())) {
