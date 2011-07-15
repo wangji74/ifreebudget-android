@@ -22,7 +22,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -30,9 +29,9 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
@@ -40,34 +39,22 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Gallery;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.LinearLayout.LayoutParams;
 
 import com.ifreebudget.fm.R;
 import com.ifreebudget.fm.iFreeBudget;
 import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.ActionResponse;
 import com.ifreebudget.fm.actions.GetBudgetSummaryAction;
-import com.ifreebudget.fm.actions.GetExpReportAction.ReportItem;
-import com.ifreebudget.fm.activities.ListTransactionsActivity.TxHolder;
-import com.ifreebudget.fm.activities.ListTransactionsActivity.TxItemView;
-import com.ifreebudget.fm.activities.ViewReportActivity.ReportItemView;
 import com.ifreebudget.fm.entity.DBException;
 import com.ifreebudget.fm.entity.FManEntityManager;
-import com.ifreebudget.fm.entity.beans.Account;
-import com.ifreebudget.fm.entity.beans.AccountCategory;
 import com.ifreebudget.fm.entity.beans.Budget;
 import com.ifreebudget.fm.entity.beans.BudgetedAccount;
-import com.ifreebudget.fm.entity.beans.FManEntity;
-import com.ifreebudget.fm.search.FilterUtils;
+import com.ifreebudget.fm.search.newfilter.NewFilterUtils;
 import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
 
@@ -210,11 +197,11 @@ public class ViewBudgetActivity extends ListActivity {
             Intent intent = new Intent(this, ListTransactionsActivity.class);
             Long accountId = entity.getAccountId();
 
-            intent.putExtra(FilterUtils.FILTERKEY,
-                    FilterUtils.ACCOUNT_FILTER_TYPE_DATERANGED);
-            intent.putExtra(FilterUtils.FILTERVALUE, accountId);
-            intent.putExtra(FilterUtils.STARTDATE, budgetStartDt.getTime());
-            intent.putExtra(FilterUtils.ENDDATE, budgetEndDt.getTime());
+            intent.putExtra(NewFilterUtils.FILTERKEY,
+                    NewFilterUtils.ACCOUNT_FILTER_TYPE_DATERANGED);
+            intent.putExtra(NewFilterUtils.FILTERVALUE, accountId);
+            intent.putExtra(NewFilterUtils.STARTDATE, budgetStartDt.getTime());
+            intent.putExtra(NewFilterUtils.ENDDATE, budgetEndDt.getTime());
             startActivity(intent);            
         }
         catch (Exception e) {

@@ -30,6 +30,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.ifreebudget.fm.actions.ActionRequest;
@@ -74,7 +75,7 @@ public class FManEntityManager {
         }
         return em;
     }
-    
+
     public static void closeInstance() {
         em.openHelper.close();
         /* Null out this instance so it can be re-initialized properly. */
@@ -121,10 +122,16 @@ public class FManEntityManager {
     }
 
     public void endTransaction() {
-        if(database.inTransaction()) 
+        if (database.inTransaction())
             database.endTransaction();
     }
 
+    public SQLiteStatement prepareStatement(String query) throws Exception {
+        SQLiteStatement stmt = database.compileStatement(query);
+        
+        return stmt;
+    }
+    
     public void updateEntity(FManEntity entity) throws DBException {
         try {
             entity.getTableMapper().doUpdate(database, entity);
@@ -266,21 +273,21 @@ public class FManEntityManager {
         return categories;
     }
 
-//    public AccountCategory getParentCategory(Long categoryId)
-//            throws DBException {
-//        try {
-//            String filter = " WHERE CATEGORYID = " + categoryId;
-//            TableMapper mapper = new AccountCategoryMapper();
-//            List<FManEntity> list = mapper.getList(database, filter, 0, 0);
-//            if (list != null && list.size() > 0) {
-//                return (AccountCategory) list.get(0);
-//            }
-//            return null;
-//        }
-//        catch (SQLException e) {
-//            throw new DBException(e);
-//        }
-//    }
+    // public AccountCategory getParentCategory(Long categoryId)
+    // throws DBException {
+    // try {
+    // String filter = " WHERE CATEGORYID = " + categoryId;
+    // TableMapper mapper = new AccountCategoryMapper();
+    // List<FManEntity> list = mapper.getList(database, filter, 0, 0);
+    // if (list != null && list.size() > 0) {
+    // return (AccountCategory) list.get(0);
+    // }
+    // return null;
+    // }
+    // catch (SQLException e) {
+    // throw new DBException(e);
+    // }
+    // }
 
     public boolean fitIdExists(Long fromAccountId, Long toAccountId,
             String fitId) {
@@ -615,19 +622,20 @@ public class FManEntityManager {
 
     public List<FManEntity> getAccountsForTypesOrdered(int[] accountTypes)
             throws DBException {
-        
-//        String q = "SELECT FROMACCOUNTID, MAX(CNT) FROM TXHISTORY GROUP BY FROMACCOUNTID ORDER BY MAX(CNT) DESC";
 
-        String q = "SELECT ACCOUNTID FROM ACCOUNT LEFT OUTER JOIN " +
-        		"(SELECT FROMACCOUNTID, MAX(CNT) AS C FROM TXHISTORY GROUP BY FROMACCOUNTID ORDER BY MAX(CNT) DESC) T " +
-        		"ON ACCOUNT.ACCOUNTID = T.FROMACCOUNTID WHERE ACCOUNTTYPE IN ( <type> ) ORDER BY C DESC, ACCOUNT.ACCOUNTNAME";
-        
+        // String q =
+        // "SELECT FROMACCOUNTID, MAX(CNT) FROM TXHISTORY GROUP BY FROMACCOUNTID ORDER BY MAX(CNT) DESC";
+
+        String q = "SELECT ACCOUNTID FROM ACCOUNT LEFT OUTER JOIN "
+                + "(SELECT FROMACCOUNTID, MAX(CNT) AS C FROM TXHISTORY GROUP BY FROMACCOUNTID ORDER BY MAX(CNT) DESC) T "
+                + "ON ACCOUNT.ACCOUNTID = T.FROMACCOUNTID WHERE ACCOUNTTYPE IN ( <type> ) ORDER BY C DESC, ACCOUNT.ACCOUNTNAME";
+
         String inList = SQLUtils.buildInList(accountTypes);
-        
+
         q = q.replaceAll("<type>", inList);
 
         List<FManEntity> ret = new ArrayList<FManEntity>();
-        Map<Long, Object> tmp = null; 
+        Map<Long, Object> tmp = null;
         Cursor cursor = null;
         try {
             cursor = database.rawQuery(q, null);
@@ -651,15 +659,15 @@ public class FManEntityManager {
         finally {
             closeCursor(cursor);
         }
-        
-//        inList = SQLUtils.buildInList(accountTypes);
-//        String filter = " WHERE ACCOUNTTYPE IN ( " + inList + " ) ";
-//        String[] colName1 = { "ACCOUNTNAME" };
-//        String[] dir1 = { "ASC" };
-//        List<FManEntity> aList = mappers.get(Account.class).getList(database,
-//                filter, colName1, dir1, -1, -1);
-//        
-//        return aList;
+
+        // inList = SQLUtils.buildInList(accountTypes);
+        // String filter = " WHERE ACCOUNTTYPE IN ( " + inList + " ) ";
+        // String[] colName1 = { "ACCOUNTNAME" };
+        // String[] dir1 = { "ASC" };
+        // List<FManEntity> aList = mappers.get(Account.class).getList(database,
+        // filter, colName1, dir1, -1, -1);
+        //
+        // return aList;
     }
 
     public void reInitializeDb() {

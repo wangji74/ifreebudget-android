@@ -51,7 +51,7 @@ import com.ifreebudget.fm.entity.beans.Account;
 import com.ifreebudget.fm.entity.beans.AccountCategory;
 import com.ifreebudget.fm.entity.beans.CategoryIconMap;
 import com.ifreebudget.fm.entity.beans.FManEntity;
-import com.ifreebudget.fm.search.FilterUtils;
+import com.ifreebudget.fm.search.newfilter.NewFilterUtils;
 import com.ifreebudget.fm.utils.MiscUtils;
 
 public class ManageAccountsActivity extends Activity {
@@ -262,15 +262,15 @@ public class ManageAccountsActivity extends Activity {
             Intent intent = new Intent(this, ListTransactionsActivity.class);
             if (entity instanceof Account) {
                 Account a = (Account) entity;
-                intent.putExtra(FilterUtils.FILTERKEY,
-                        FilterUtils.ACCOUNT_FILTER_TYPE);
-                intent.putExtra(FilterUtils.FILTERVALUE, a.getAccountId());
+                intent.putExtra(NewFilterUtils.FILTERKEY,
+                        NewFilterUtils.ACCOUNT_FILTER_TYPE);
+                intent.putExtra(NewFilterUtils.FILTERVALUE, a.getAccountId());
             }
             else {
                 AccountCategory a = (AccountCategory) entity;
-                intent.putExtra(FilterUtils.FILTERKEY,
-                        FilterUtils.CATEGORY_FILTER_TYPE);
-                intent.putExtra(FilterUtils.FILTERVALUE, a.getCategoryId());
+                intent.putExtra(NewFilterUtils.FILTERKEY,
+                        NewFilterUtils.CATEGORY_FILTER_TYPE);
+                intent.putExtra(NewFilterUtils.FILTERVALUE, a.getCategoryId());
             }
             startActivity(intent);
         }
