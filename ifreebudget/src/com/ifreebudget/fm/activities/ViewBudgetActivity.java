@@ -42,8 +42,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.ifreebudget.fm.R;
 import com.ifreebudget.fm.iFreeBudget;
@@ -208,6 +210,14 @@ public class ViewBudgetActivity extends ListActivity {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
         }
     }
+    
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        
+        BudgetedAccount obj = (BudgetedAccount) this.getListAdapter().getItem(position);
+        startListTxActivity(obj);
+    }    
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -226,6 +236,7 @@ public class ViewBudgetActivity extends ListActivity {
         budgetReportDateLbl = (TextView) findViewById(R.id.breport_date_lbl);
 
         listAdapter = new MyArrayAdapter(this, R.layout.budget_list_row);
+
         setListAdapter(listAdapter);
     }
 
@@ -243,7 +254,9 @@ public class ViewBudgetActivity extends ListActivity {
             if (bundle != null && bundle.containsKey(BUDGETIDKEY)) {
                 budgetId = (Long) bundle.get(BUDGETIDKEY);
             }
-            startDate = new Date().getTime();
+            if(startDate == 0l) {
+                startDate = new Date().getTime();
+            }
         }
         if (budgetId == 0) {
             return;
