@@ -134,6 +134,10 @@ public class ManageAccountsActivity extends Activity {
 
             startActivity(intent);
         }
+        else {
+            Account o = (Account) obj;
+            doListTxAction(o);
+        }
     }
 
     public void addAccount(View view) {

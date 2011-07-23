@@ -47,6 +47,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -115,6 +116,15 @@ public class ViewReportActivity extends Activity {
         super.registerForContextMenu(lv);
 
         lv.setAdapter(listAdapter);
+        
+        lv.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                    int position, long id) {
+
+                ReportItem obj = listAdapter.getItem(position);
+                startListTxActivity(obj);
+            }
+        });
     }
 
     @Override
@@ -133,8 +143,14 @@ public class ViewReportActivity extends Activity {
         String title = getString(R.string.view_report_title_lbl) + " - " + reportType;
         reportTypeTf.setText(title);
 
-        /* Init start date to now */
-        startDate = new Date().getTime();
+        /*
+         * Init start date to now, if it is not previously set. Start date will
+         * be set when user clicks on a list item to view transactions for the
+         * particular period and clicks back to arrive here
+         */
+        if(startDate == 0) {
+            startDate = new Date().getTime();
+        }
 
         /* Init the list */
         listAdapter.clear();
@@ -142,13 +158,6 @@ public class ViewReportActivity extends Activity {
         loadReport();
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.report_menu, menu);
-//        return true;
-//    }
-    
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
             ContextMenuInfo menuInfo) {
