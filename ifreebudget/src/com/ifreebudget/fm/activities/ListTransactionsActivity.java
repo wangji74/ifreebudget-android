@@ -33,6 +33,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.SearchRecentSuggestions;
 import android.text.Html;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -244,6 +245,12 @@ public class ListTransactionsActivity extends ListActivity {
                 if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
                     String query = intent.getStringExtra(SearchManager.QUERY);
                     f = buildSearchFilter(query);
+
+                    /* Save to recent queries */
+                    SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
+                            this, TxSearchSuggestionProvider.AUTHORITY,
+                            TxSearchSuggestionProvider.MODE);
+                    suggestions.saveRecentQuery(query, null);
                 }
             }
             else {
