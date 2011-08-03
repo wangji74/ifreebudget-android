@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.ifreebudget.fm.R;
+import com.ifreebudget.fm.iFreeBudget;
 import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.ActionResponse;
 import com.ifreebudget.fm.actions.AddNestedTransactions;
@@ -158,6 +159,14 @@ public class UpdateTransactionActivity extends Activity {
     }
 
     /* End platform overrides */
+    private void startHomeActivity() {
+        Intent intent = new Intent(this, iFreeBudget.class);
+        startActivity(intent);
+    }
+
+    public void gotoHomeScreen(View view) {
+        startHomeActivity();
+    }    
 
     protected void loadToAccounts(FManEntity fromAccount, FManEntity toAccount) {
         List<Long> matches = null;
