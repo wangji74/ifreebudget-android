@@ -73,6 +73,15 @@ public class UpdateCategoryActivity extends Activity {
             initializeFields(accountId);
         }
     }
+    
+    private void startHomeActivity() {
+        Intent intent = new Intent(this, iFreeBudget.class);
+        startActivity(intent);
+    }
+
+    public void gotoHomeScreen(View view) {
+        startHomeActivity();
+    }    
 
     private void initializeFields(Long categoryId) {
         FManEntityManager em = FManEntityManager.getInstance();

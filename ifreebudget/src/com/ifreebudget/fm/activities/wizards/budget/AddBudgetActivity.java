@@ -68,15 +68,13 @@ public class AddBudgetActivity extends Activity {
 
     private TextView title = null;
 
-    private TextView subtitle = null;
-
     private BigDecimal runningTotal = null;
 
     public void gotoHomeScreen(View view) {
         Intent intent = new Intent(this, iFreeBudget.class);
         startActivity(intent);
     }
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,9 +82,8 @@ public class AddBudgetActivity extends Activity {
 
         grid = (GridView) findViewById(R.id.budget_accts_grid);
         title = (TextView) findViewById(R.id.budget_name_lbl);
-        subtitle = (TextView) findViewById(R.id.subtitle_lbl);
         runningTotal = new BigDecimal(0d);
-        
+
         grid.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                     int position, long id) {
@@ -163,7 +160,7 @@ public class AddBudgetActivity extends Activity {
                 TextView tv = (TextView) v
                         .findViewById(R.id.budget_acct_name_tf);
                 tv.setText(getDisplayString(obj));
-                
+
                 setRunningTotal();
             }
         });
@@ -179,20 +176,23 @@ public class AddBudgetActivity extends Activity {
 
     private void setRunningTotal() {
         runningTotal = new BigDecimal(0d);
-        for(FManEntity a : budgetedAccounts) {
+        for (FManEntity a : budgetedAccounts) {
             BudgetedAccount ba = (BudgetedAccount) a;
             BigDecimal alloc = ba.getAllocatedAmount();
-            if(alloc == null || alloc.doubleValue() == 0d) {
-                continue;                
+            if (alloc == null || alloc.doubleValue() == 0d) {
+                continue;
             }
             runningTotal = runningTotal.add(alloc);
         }
         String totalStr = NumberFormat.getCurrencyInstance(
                 SessionManager.getCurrencyLocale()).format(runningTotal);
-        
-        subtitle.setText("Total " + totalStr);
+
+        StringBuilder typeStr = new StringBuilder(name).append("\t ( ")
+                .append(Budget.getTypeAsString(type)).append(" )\t Total: ")
+                .append(totalStr);
+        title.setText(typeStr);
     }
-    
+
     public void doCancelAction(View view) {
         super.finish();
     }

@@ -67,7 +67,7 @@
 			android:textStyle="italic"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingBottom="5dip"
+			android:padding="5dip"
 			android:textColor="#000000"
 			android:textSize="12dip" />
 	</RelativeLayout>
@@ -85,7 +85,7 @@
 		android:layout_height="wrap_content"
 		android:layout_weight="0.1"
 		android:layout_span="2"
-		android:background="#6F8BBA"
+		android:background="@color/sub_title_color"
 		android:layout_alignParentBottom="true">
 		<Button
 			android:id="@+id/filter_button"
@@ -101,8 +101,7 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:textStyle="bold"
-			android:background="#6F8BBA"
-			android:textColor="#FFFFFF"
+			android:textColor="#000000"
 			android:paddingTop="5dip"
 			android:paddingRight="5dip"
 			android:gravity="right"

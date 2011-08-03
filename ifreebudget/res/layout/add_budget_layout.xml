@@ -58,7 +58,7 @@
 		android:id="@+id/budget_name_lbl"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:textStyle="bold|italic"
+		android:textStyle="bold"
 		android:textColor="#000000"
 		android:background="@color/sub_title_color"
 		android:paddingTop="5dip"

@@ -25,9 +25,9 @@
         android:text="@string/view_tx_title_lbl"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold|italic"
+        android:textStyle="bold"
         android:textColor="#FFFFFF"
-        android:background="#6F8BBA"
+        android:background="@android:drawable/title_bar"
         android:paddingTop="5dip"
         android:paddingBottom="5dip" />
     <TableLayout
