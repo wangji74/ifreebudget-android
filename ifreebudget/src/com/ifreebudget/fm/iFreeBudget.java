@@ -217,7 +217,7 @@ public class iFreeBudget extends Activity {
         NumberFormat numberFormat = NumberFormat
                 .getCurrencyInstance(SessionManager.getCurrencyLocale());
 
-        TextView nwTf = (TextView) findViewById(R.id.title_lbl);
+        TextView nwTf = (TextView) findViewById(R.id.nw_lbl);
         TextView asTf = (TextView) findViewById(R.id.asset_lbl);
         TextView lbTf = (TextView) findViewById(R.id.liab_lbl);
 

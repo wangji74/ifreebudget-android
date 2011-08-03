@@ -481,6 +481,10 @@ public class ListTransactionsActivity extends ListActivity {
         startActivity(intent);
     }
 
+    public void gotoHomeScreen(View view) {
+        gotoHomeScreen();
+    }
+    
     public void addTransaction(View view) {
         addTransaction();
     }

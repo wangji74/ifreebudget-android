@@ -1,66 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright 2011 ifreebudget@gmail.com Licensed under the Apache License, 
-    Version 2.0 (the "License"); you may not use this file except in compliance 
-    with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
-    Unless required by applicable law or agreed to in writing, software distributed 
-    under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
-    OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
-    the specific language governing permissions and limitations under the License. -->
+	Version 2.0 (the "License"); you may not use this file except in compliance 
+	with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. -->
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#ffffff">
-    <TextView
-        android:id="@+id/bkups_title_lbl"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold|italic"
-        android:textColor="#FFFFFF"
-        android:background="#6F8BBA"
-        android:paddingTop="5dip"
-        android:paddingLeft="2dip"
-        android:paddingBottom="5dip" />
-    <TextView
-        android:id="@+id/subtitle_lbl"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="italic"
-        android:textColor="#FFFFFF"
-        android:background="#6F8BBA"
-        android:paddingTop="5dip"
-        android:paddingBottom="5dip"
-        android:layout_below="@id/bkups_title_lbl" />
-    <ListView
-        android:id="@+id/db_bkup_list_view"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:cacheColorHint="#ffffff"
-        android:layout_below="@+id/subtitle_lbl"
-        android:layout_above="@+id/south_panel" />
-    <LinearLayout
-        android:id="@+id/south_panel"
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.1"
-        android:layout_span="2"
-        android:layout_alignParentBottom="true">
-        <Button
-            android:id="@+id/home_button"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/home_lbl"
-            android:width="80dip"
-            android:layout_weight="0.5"
-            android:onClick="@string/goto_home" />
-        <Button
-            android:id="@+id/backup_db_button"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/backup_db"
-            android:width="80dip"
-            android:layout_weight="0.5"
-            android:onClick="@string/backup_db_action" />
-    </LinearLayout>
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="#ffffff">
+	<RelativeLayout
+		android:layout_width="fill_parent"
+		android:layout_height="60dip"
+		android:background="#ffffff">
+		<LinearLayout
+			android:id="@+id/info_panel"
+			android:orientation="vertical"
+			android:layout_width="fill_parent"
+			android:layout_height="60dip"
+			android:background="@android:drawable/title_bar"
+			android:paddingRight="5dip"
+			android:paddingTop="5dip"
+			android:paddingBottom="5dip">
+			<RelativeLayout
+				android:id="@+id/title_panel"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				<TextView
+					android:id="@+id/title_lbl"
+					android:text="@string/app_name"
+					android:layout_width="wrap_content"
+					android:layout_height="fill_parent"
+					android:textStyle="bold"
+					android:textSize="18sp"
+					android:gravity="center_vertical"
+					android:paddingLeft="5dip"
+					android:textColor="#FFFFFF"
+					android:clickable="true"
+					android:onClick="@string/goto_home" />
+				<LinearLayout
+					android:id="@+id/button_panel"
+					android:orientation="horizontal"
+					android:gravity="fill_vertical"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentRight="true">
+					<ImageButton
+						android:id="@+id/add_tx_btn"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:background="@null"
+						android:gravity="center"
+						android:onClick="@string/backup_db_action"
+						android:src="@android:drawable/ic_menu_save" />
+				</LinearLayout>
+			</RelativeLayout>
+		</LinearLayout>
+		<ListView
+			android:id="@+id/db_bkup_list_view"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:cacheColorHint="#ffffff"
+			android:layout_below="@+id/info_panel" />
+	</RelativeLayout>
 </RelativeLayout>

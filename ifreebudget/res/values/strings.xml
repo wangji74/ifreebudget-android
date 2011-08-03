@@ -209,4 +209,6 @@
 <string name="amt">Amount</string>
 <string name="alloc">Set amount</string>
 <string name="search_hint">Search transactions</string>
+<color name="title_color">#202020</color>
+<color name="sub_title_color">#eaeaea</color>
 </resources>

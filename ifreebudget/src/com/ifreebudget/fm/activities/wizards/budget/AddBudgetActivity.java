@@ -43,6 +43,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ifreebudget.fm.R;
+import com.ifreebudget.fm.iFreeBudget;
 import com.ifreebudget.fm.activities.ManageBudgetsActivity;
 import com.ifreebudget.fm.constants.AccountTypes;
 import com.ifreebudget.fm.entity.DBException;
@@ -71,6 +72,11 @@ public class AddBudgetActivity extends Activity {
 
     private BigDecimal runningTotal = null;
 
+    public void gotoHomeScreen(View view) {
+        Intent intent = new Intent(this, iFreeBudget.class);
+        startActivity(intent);
+    }
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

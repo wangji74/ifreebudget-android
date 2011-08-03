@@ -71,9 +71,6 @@ public class ManageDBActivity extends Activity {
         lv.setAdapter(listAdapter);
 
         super.registerForContextMenu(lv);
-
-        TextView spacerTf = (TextView) findViewById(R.id.bkups_title_lbl);
-        spacerTf.setText("Backups list");
     }
 
     @Override
