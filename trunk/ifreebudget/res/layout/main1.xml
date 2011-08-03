@@ -46,7 +46,6 @@
 		<TextView
 			android:id="@+id/asset_lbl"
 			android:layout_height="wrap_content"
-			android:textStyle="italic"
 			android:textColor="#000000"
 			android:paddingTop="5dip"
 			android:paddingRight="5dip"
@@ -58,7 +57,6 @@
 		<TextView
 			android:id="@+id/liab_lbl"
 			android:layout_height="wrap_content"
-			android:textStyle="italic"
 			android:textColor="#000000"
 			android:paddingTop="5dip"
 			android:paddingRight="5dip"
@@ -72,7 +70,7 @@
 		android:id="@+id/nw_lbl"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:textStyle="bold|italic"
+		android:textStyle="bold"
 		android:background="#eaeaea"
 		android:textColor="#000000"
 		android:paddingLeft="5dip"

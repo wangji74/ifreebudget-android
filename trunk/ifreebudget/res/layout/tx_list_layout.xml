@@ -64,7 +64,6 @@
 		<TextView
 			android:id="@+id/tx_list_filter_lbl"
 			android:gravity="left"
-			android:textStyle="italic"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:padding="5dip"

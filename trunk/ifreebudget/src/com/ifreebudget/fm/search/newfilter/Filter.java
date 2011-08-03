@@ -3,6 +3,8 @@ package com.ifreebudget.fm.search.newfilter;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
+
 public class Filter implements Filterable {
     private String name;
 
@@ -151,7 +153,7 @@ public class Filter implements Filterable {
                 Predicate p = predicates.get(i);
                 setQueryParameters(q, p);
             }
-            // Log.i(TAG, q.toString());
+            Log.i("Filter", q.toString());
             return q.toString();
         }
         finally {

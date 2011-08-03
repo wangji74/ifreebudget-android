@@ -50,7 +50,6 @@
 		android:id="@+id/breport_date_lbl"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:textStyle="italic"
 		android:textColor="#000000"
 		android:background="@color/sub_title_color"
 		android:padding="5dip"
