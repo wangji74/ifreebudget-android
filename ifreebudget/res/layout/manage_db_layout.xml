@@ -11,58 +11,53 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:background="#ffffff">
-	<RelativeLayout
+	<LinearLayout
+		android:id="@+id/info_panel"
+		android:orientation="vertical"
 		android:layout_width="fill_parent"
 		android:layout_height="60dip"
-		android:background="#ffffff">
-		<LinearLayout
-			android:id="@+id/info_panel"
-			android:orientation="vertical"
+		android:background="@android:drawable/title_bar"
+		android:paddingRight="5dip"
+		android:paddingTop="5dip"
+		android:paddingBottom="5dip">
+		<RelativeLayout
+			android:id="@+id/title_panel"
 			android:layout_width="fill_parent"
-			android:layout_height="60dip"
-			android:background="@android:drawable/title_bar"
-			android:paddingRight="5dip"
-			android:paddingTop="5dip"
-			android:paddingBottom="5dip">
-			<RelativeLayout
-				android:id="@+id/title_panel"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
-				<TextView
-					android:id="@+id/title_lbl"
-					android:text="@string/app_name"
-					android:layout_width="wrap_content"
-					android:layout_height="fill_parent"
-					android:textStyle="bold"
-					android:textSize="18sp"
-					android:gravity="center_vertical"
-					android:paddingLeft="5dip"
-					android:textColor="#FFFFFF"
-					android:clickable="true"
-					android:onClick="@string/goto_home" />
-				<LinearLayout
-					android:id="@+id/button_panel"
-					android:orientation="horizontal"
-					android:gravity="fill_vertical"
+			android:layout_height="wrap_content">
+			<TextView
+				android:id="@+id/title_lbl"
+				android:text="@string/app_name"
+				android:layout_width="wrap_content"
+				android:layout_height="fill_parent"
+				android:textStyle="bold"
+				android:textSize="18sp"
+				android:gravity="center_vertical"
+				android:paddingLeft="5dip"
+				android:textColor="#FFFFFF"
+				android:clickable="true"
+				android:onClick="@string/goto_home" />
+			<LinearLayout
+				android:id="@+id/button_panel"
+				android:orientation="horizontal"
+				android:gravity="fill_vertical"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentRight="true">
+				<ImageButton
+					android:id="@+id/add_tx_btn"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_alignParentRight="true">
-					<ImageButton
-						android:id="@+id/add_tx_btn"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:background="@null"
-						android:gravity="center"
-						android:onClick="@string/backup_db_action"
-						android:src="@android:drawable/ic_menu_save" />
-				</LinearLayout>
-			</RelativeLayout>
-		</LinearLayout>
-		<ListView
-			android:id="@+id/db_bkup_list_view"
-			android:layout_height="wrap_content"
-			android:layout_width="fill_parent"
-			android:cacheColorHint="#ffffff"
-			android:layout_below="@+id/info_panel" />
-	</RelativeLayout>
+					android:background="@null"
+					android:gravity="center"
+					android:onClick="@string/backup_db_action"
+					android:src="@android:drawable/ic_menu_save" />
+			</LinearLayout>
+		</RelativeLayout>
+	</LinearLayout>
+	<ListView
+		android:id="@+id/db_bkup_list_view"
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:cacheColorHint="#ffffff"
+		android:layout_below="@+id/info_panel" />
 </RelativeLayout>

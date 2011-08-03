@@ -45,7 +45,6 @@ public class NewFilterUtils {
 
     public static Filter getBySearchQuery(String query) {
         query = query.toLowerCase();
-        
 
         Filter f = new Filter("FMTRANSACTION", "txId");
 
@@ -65,16 +64,18 @@ public class NewFilterUtils {
         f.addPredicate(p1, OperatorType.OR);
         f.addPredicate(p2, OperatorType.OR);
         f.addPredicate(p3, OperatorType.AND);
-        
+
         Filter ret = new Filter("FMTRANSACTION", null);
-        Predicate p = Predicate.create("txid", f, RelationType.IN, Long.class.getName());
+        Predicate p = Predicate.create("txid", f, RelationType.IN,
+                Long.class.getName());
         ret.addPredicate(p, OperatorType.AND);
-        
+
         return ret;
     }
 
     public static Filter getByAccountIdFilter(long accountId) {
-        Filter f = new Filter("FMTRANSACTION", null);
+
+        Filter f = new Filter("FMTRANSACTION", "txId");
 
         String val = String.valueOf(accountId);
 
@@ -87,17 +88,22 @@ public class NewFilterUtils {
         f.addPredicate(p1, OperatorType.OR);
         f.addPredicate(p2, OperatorType.AND);
 
-        f.setName(val);
-        return f;
+        Filter ret = new Filter("FMTRANSACTION", null);
+        Predicate p = Predicate.create("txid", f, RelationType.IN,
+                Long.class.getName());
+        ret.addPredicate(p, OperatorType.AND);
+
+        return ret;
     }
 
     public static Filter getByAccountIdListFilter(List<String> accountIdList) {
-        Filter f = new Filter("FMTRANSACTION", null);
+        Filter f = new Filter("FMTRANSACTION", "txId");
 
         List<Filterable> val = new ArrayList<Filterable>();
         for (String s : accountIdList) {
             val.add(new PredicateValue(RelationType.IN, s));
         }
+
         Predicate p1 = Predicate.create("fromAccountId", val, RelationType.IN,
                 Long.class.getName());
 
@@ -107,8 +113,25 @@ public class NewFilterUtils {
         f.addPredicate(p1, OperatorType.OR);
         f.addPredicate(p2, OperatorType.AND);
 
-        f.setName("byIdList");
-        return f;
+        Filter ret = new Filter("FMTRANSACTION", null);
+        Predicate p = Predicate.create("txid", f, RelationType.IN,
+                Long.class.getName());
+        ret.addPredicate(p, OperatorType.AND);
+
+        return ret;
+
+        // Predicate p1 = Predicate.create("fromAccountId", val,
+        // RelationType.IN,
+        // Long.class.getName());
+        //
+        // Predicate p2 = Predicate.create("toAccountId", val, RelationType.IN,
+        // Long.class.getName());
+        //
+        // f.addPredicate(p1, OperatorType.OR);
+        // f.addPredicate(p2, OperatorType.AND);
+        //
+        // f.setName("byIdList");
+        // return f;
     }
 
     public static Filter getByDateFilter(long from, long to) {

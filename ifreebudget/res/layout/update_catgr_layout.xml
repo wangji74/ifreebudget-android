@@ -60,7 +60,6 @@
 		android:id="@+id/subtitle_lbl"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:textStyle="italic"
 		android:textColor="#000000"
 		android:background="@color/sub_title_color"
 		android:paddingTop="5dip"
