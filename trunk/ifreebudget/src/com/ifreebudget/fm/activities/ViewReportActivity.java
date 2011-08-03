@@ -54,6 +54,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ifreebudget.fm.R;
+import com.ifreebudget.fm.iFreeBudget;
 import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.ActionResponse;
 import com.ifreebudget.fm.actions.GetExpReportAction;
@@ -66,7 +67,7 @@ import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
 
 public class ViewReportActivity extends Activity {
-    private TextView reportTypeTf, totalIncTf, totalSpeTf, savingsTf, reportDateLbl;
+    private TextView totalIncTf, totalSpeTf, savingsTf, reportDateLbl;
 
     private MyArrayAdapter listAdapter;
 
@@ -98,8 +99,6 @@ public class ViewReportActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.view_report_layout);
-
-        reportTypeTf = (TextView) findViewById(R.id.report_title_lbl);
 
         totalIncTf = (TextView) findViewById(R.id.total_inc_for_period_val);
 
@@ -140,8 +139,8 @@ public class ViewReportActivity extends Activity {
             }
         }
 
-        String title = getString(R.string.view_report_title_lbl) + " - " + reportType;
-        reportTypeTf.setText(title);
+//        String title = getString(R.string.view_report_title_lbl) + " - " + reportType;
+//        reportTypeTf.setText(title);
 
         /*
          * Init start date to now, if it is not previously set. Start date will
@@ -190,6 +189,11 @@ public class ViewReportActivity extends Activity {
 
     /* Non framework methods */
 
+    public void gotoHomeScreen(View view) {
+        Intent intent = new Intent(this, iFreeBudget.class);
+        startActivity(intent);
+    }
+    
     private void startListTxActivity(ReportItem entity) {
 
         try {

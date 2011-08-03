@@ -251,6 +251,11 @@ public class AddTransactionActivity extends Activity {
             }
         }
     }
+    
+    public void gotoHomeScreen(View view) {
+        Intent intent = new Intent(this, iFreeBudget.class);
+        startActivity(intent);
+    }    
 
     public void showDatePickerDialog(View view) {
         super.showDialog(DATE_DIALOG_ID);

@@ -3,6 +3,7 @@ package com.ifreebudget.fm.activities.wizards.budget;
 import static com.ifreebudget.fm.utils.Messages.tr;
 
 import com.ifreebudget.fm.R;
+import com.ifreebudget.fm.iFreeBudget;
 import com.ifreebudget.fm.activities.UpdateAccountActivity;
 import com.ifreebudget.fm.entity.beans.Budget;
 import com.ifreebudget.fm.utils.MiscUtils;
@@ -23,6 +24,10 @@ public class BudgetDetailsActivity extends Activity {
 
     private Spinner bTypeSpinner;
     
+    public void gotoHomeScreen(View view) {
+        Intent intent = new Intent(this, iFreeBudget.class);
+        startActivity(intent);
+    }
     
     @Override
     public void onCreate(Bundle savedInstanceState) {

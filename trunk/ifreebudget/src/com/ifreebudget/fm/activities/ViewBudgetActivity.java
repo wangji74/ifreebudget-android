@@ -148,6 +148,10 @@ public class ViewBudgetActivity extends ListActivity {
         }
     }
 
+    public void gotoHomeScreen(View view) {
+        startHomeActivity();
+    }
+
     private void startHomeActivity() {
         Intent intent = new Intent(this, iFreeBudget.class);
         startActivity(intent);

@@ -11,26 +11,59 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:background="#ffffff">
+	<LinearLayout
+		android:id="@+id/info_panel"
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="60dip"
+		android:background="@android:drawable/title_bar"
+		android:paddingRight="5dip"
+		android:paddingTop="5dip"
+		android:paddingBottom="5dip">
+		<RelativeLayout
+			android:id="@+id/title_panel"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+			<TextView
+				android:id="@+id/title_lbl"
+				android:text="@string/app_name"
+				android:layout_width="wrap_content"
+				android:layout_height="fill_parent"
+				android:textStyle="bold"
+				android:textSize="18sp"
+				android:gravity="center_vertical"
+				android:paddingLeft="5dip"
+				android:textColor="#FFFFFF"
+				android:clickable="true"
+				android:onClick="@string/goto_home" />
+			<LinearLayout
+				android:id="@+id/button_panel"
+				android:orientation="horizontal"
+				android:gravity="fill_vertical"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentRight="true">
+				<ImageButton
+					android:id="@+id/add_budget_btn"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:background="@null"
+					android:gravity="center"
+					android:onClick="@string/save_budget_action"
+					android:src="@android:drawable/ic_menu_save" />
+			</LinearLayout>
+		</RelativeLayout>
+	</LinearLayout>
 	<TextView
 		android:id="@+id/budget_name_lbl"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:textStyle="bold|italic"
-		android:textColor="#FFFFFF"
-		android:background="#6F8BBA"
-		android:paddingTop="5dip"
-		android:paddingBottom="5dip" />
-	<TextView
-		android:id="@+id/subtitle_lbl"
-		android:text="@string/default_budget_alloc_lbl"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:textStyle="bold|italic"
-		android:textColor="#FFFFFF"
-		android:background="#6F8BBA"
+		android:textColor="#000000"
+		android:background="@color/sub_title_color"
 		android:paddingTop="5dip"
 		android:paddingBottom="5dip"
-		android:layout_below="@id/budget_name_lbl" />
+		android:layout_below="@id/info_panel" />
 	<GridView
 		android:id="@+id/budget_accts_grid"
 		android:layout_width="fill_parent"
@@ -42,31 +75,5 @@
 		android:columnWidth="60dp"
 		android:stretchMode="columnWidth"
 		android:gravity="center_vertical|center_horizontal"
-		android:layout_below="@+id/subtitle_lbl"
-		android:layout_above="@+id/south_panel" />
-	<LinearLayout
-		android:id="@+id/south_panel"
-		android:orientation="horizontal"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_weight="0.1"
-		android:layout_span="2"
-		android:layout_alignParentBottom="true">
-		<Button
-			android:id="@+id/save_button"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:text="@string/save"
-			android:layout_weight="0.5"
-			android:width="80dip"
-			android:onClick="@string/save_budget_action" />
-		<Button
-			android:id="@+id/back_button"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:text="@string/back"
-			android:layout_weight="0.5"
-			android:width="80dip"
-			android:onClick="@string/cancel_action" />
-	</LinearLayout>
+		android:layout_below="@+id/budget_name_lbl"/>
 </RelativeLayout>

@@ -30,6 +30,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -72,8 +73,9 @@ public class ManageAccountsActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        super.requestWindowFeature(Window.FEATURE_NO_TITLE);        
         super.setContentView(R.layout.manage_accts_layout);
-
+        
         dbHelper = FManEntityManager.getInstance(this);
 
         categoryPathTf = (TextView) findViewById(R.id.category_path_lbl);
