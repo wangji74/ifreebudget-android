@@ -15,7 +15,7 @@
 	<application
 		android:icon="@drawable/icon"
 		android:label="@string/app_name"
-		android:theme="@android:style/Theme.NoTitleBar" android:debuggable="false">
+		android:theme="@android:style/Theme.NoTitleBar" android:debuggable="true">
 		<provider
 			android:name=".activities.TxSearchSuggestionProvider"
 			android:authorities="com.ifreebudget.fm.TxSearchSuggestionProvider" />
