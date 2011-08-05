@@ -63,6 +63,10 @@ public class Filter implements Filterable {
         this.filterObject = filterObject;
     }
 
+    public List<Predicate> getPredicates() {
+        return predicates;
+    }
+
     private String getSelectString(boolean count) {
         if (count) {
             return " count(R) ";
@@ -95,11 +99,11 @@ public class Filter implements Filterable {
             query.append(" where ");
             for (int i = 0; i < sz; i++) {
                 Predicate p = predicates.get(i);
-                query.append(p);
-                query.append(Predicate.SPACE);
+                query.append(p.toSql());
+                query.append(PredicateImpl.SPACE);
                 if (i < opSz) {
                     query.append(operators.get(i));
-                    query.append(Predicate.SPACE);
+                    query.append(PredicateImpl.SPACE);
                 }
                 query.append("\n");
             }
@@ -137,69 +141,18 @@ public class Filter implements Filterable {
         return printFilter(false);
     }
 
-    private void doSubstitute(StringBuilder q, Object value) {
-        int pos = q.indexOf("?");
-        if (pos >= 0 && pos + 1 < q.length()) {
-            q.replace(pos, pos + 1, value.toString());
-        }
-    }
-
     public String getQueryObject(boolean countQuery) throws Exception {
-        try {
-            StringBuilder q = new StringBuilder(printFilter(countQuery));
+        StringBuilder q = new StringBuilder(printFilter(countQuery));
+        Query query = new Query(q.toString());
 
-            int sz = predicates.size();
-            for (int i = 0; i < sz; i++) {
-                Predicate p = predicates.get(i);
-                setQueryParameters(q, p);
-            }
-            Log.i("Filter", q.toString());
-            return q.toString();
-        }
-        finally {
-            count = 0;
-        }
-    }
-
-    private void setQueryParameters(StringBuilder q, Predicate p)
-            throws Exception {
-        List<Filterable> values = p.getValues();
-        int sz = values.size();
-
+        int sz = predicates.size();
         for (int i = 0; i < sz; i++) {
-            Filterable f = values.get(i);
-            if (f instanceof Filter) {
-                Filter filter = (Filter) f;
-                List<Predicate> pList = filter.predicates;
-                for (Predicate pred : pList) {
-                    setQueryParameters(q, pred);
-                }
-            }
-            else {
-                setQueryParameter(q, p.getType(), f);
-            }
+            Predicate p = predicates.get(i);
+            p.setParameter(query);
         }
-    }
-
-    private int count = 0;
-
-    private void setQueryParameter(StringBuilder q, String type, Filterable p)
-            throws Exception {
-
-        Object value = p.getValue();
-        if (type.equals(String.class.getName())) {
-            String val = "'" + value.toString() + "'";
-            doSubstitute(q, val);
-        }
-        else if (type.equals(Double.class.getName())) {
-            Double d = Double.parseDouble(value.toString());
-            doSubstitute(q, d);
-        }
-        else if (type.equals(Long.class.getName())) {
-            Long l = Long.valueOf(value.toString());
-            doSubstitute(q, l);
-        }
-        count++;
+        String queryStr = query.getQueryString();
+        Log.i("Filter", queryStr);
+        return queryStr;
     }
 
     public void addOrder(Order o) {

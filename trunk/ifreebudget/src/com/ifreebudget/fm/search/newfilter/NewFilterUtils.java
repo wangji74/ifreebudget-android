@@ -49,16 +49,16 @@ public class NewFilterUtils {
         Filter f = new Filter("FMTRANSACTION", "txId");
 
         Filter subfilter = new Filter("Account", "accountId");
-        subfilter.addPredicate(Predicate.create("lower(accountName)", query,
+        subfilter.addPredicate(PredicateImpl.create("lower(accountName)", query,
                 RelationType.LIKE, String.class.getName()), OperatorType.AND);
 
-        Predicate p1 = Predicate.create("fromAccountId", subfilter,
+        Predicate p1 = PredicateImpl.create("fromAccountId", subfilter,
                 RelationType.IN, String.class.getName());
 
-        Predicate p2 = Predicate.create("toAccountId", subfilter,
+        Predicate p2 = PredicateImpl.create("toAccountId", subfilter,
                 RelationType.IN, String.class.getName());
 
-        Predicate p3 = Predicate.create("lower(txNotes)", query,
+        Predicate p3 = PredicateImpl.create("lower(txNotes)", query,
                 RelationType.LIKE, String.class.getName());
 
         f.addPredicate(p1, OperatorType.OR);
@@ -66,7 +66,7 @@ public class NewFilterUtils {
         f.addPredicate(p3, OperatorType.AND);
 
         Filter ret = new Filter("FMTRANSACTION", null);
-        Predicate p = Predicate.create("txid", f, RelationType.IN,
+        Predicate p = PredicateImpl.create("txid", f, RelationType.IN,
                 Long.class.getName());
         ret.addPredicate(p, OperatorType.AND);
 
@@ -75,72 +75,53 @@ public class NewFilterUtils {
 
     public static Filter getByAccountIdFilter(long accountId) {
 
-        Filter f = new Filter("FMTRANSACTION", "txId");
+        Filter f = new Filter("FMTRANSACTION", null);
 
         String val = String.valueOf(accountId);
 
-        Predicate p1 = Predicate.create("fromAccountId", val, RelationType.IN,
+        Predicate p1 = PredicateImpl.create("fromAccountId", val, RelationType.IN,
                 Long.class.getName());
 
-        Predicate p2 = Predicate.create("toAccountId", val, RelationType.IN,
+        Predicate p2 = PredicateImpl.create("toAccountId", val, RelationType.IN,
                 Long.class.getName());
 
-        f.addPredicate(p1, OperatorType.OR);
-        f.addPredicate(p2, OperatorType.AND);
+        PredicateGroup group = (PredicateGroup) PredicateGroup.create(p1);
+        group.addPredicate(p2, OperatorType.OR);
+        
+        f.addPredicate(group, OperatorType.AND);
 
-        Filter ret = new Filter("FMTRANSACTION", null);
-        Predicate p = Predicate.create("txid", f, RelationType.IN,
-                Long.class.getName());
-        ret.addPredicate(p, OperatorType.AND);
-
-        return ret;
+        return f;
     }
 
     public static Filter getByAccountIdListFilter(List<String> accountIdList) {
-        Filter f = new Filter("FMTRANSACTION", "txId");
+        Filter f = new Filter("FMTRANSACTION", null);
 
         List<Filterable> val = new ArrayList<Filterable>();
         for (String s : accountIdList) {
             val.add(new PredicateValue(RelationType.IN, s));
         }
 
-        Predicate p1 = Predicate.create("fromAccountId", val, RelationType.IN,
+        Predicate p1 = PredicateImpl.create("fromAccountId", val, RelationType.IN,
                 Long.class.getName());
 
-        Predicate p2 = Predicate.create("toAccountId", val, RelationType.IN,
+        Predicate p2 = PredicateImpl.create("toAccountId", val, RelationType.IN,
                 Long.class.getName());
 
-        f.addPredicate(p1, OperatorType.OR);
-        f.addPredicate(p2, OperatorType.AND);
+        PredicateGroup group = (PredicateGroup) PredicateGroup.create(p1);
+        group.addPredicate(p2, OperatorType.OR);
+        
+        f.addPredicate(group, OperatorType.AND);
 
-        Filter ret = new Filter("FMTRANSACTION", null);
-        Predicate p = Predicate.create("txid", f, RelationType.IN,
-                Long.class.getName());
-        ret.addPredicate(p, OperatorType.AND);
-
-        return ret;
-
-        // Predicate p1 = Predicate.create("fromAccountId", val,
-        // RelationType.IN,
-        // Long.class.getName());
-        //
-        // Predicate p2 = Predicate.create("toAccountId", val, RelationType.IN,
-        // Long.class.getName());
-        //
-        // f.addPredicate(p1, OperatorType.OR);
-        // f.addPredicate(p2, OperatorType.AND);
-        //
-        // f.setName("byIdList");
-        // return f;
+        return f;
     }
 
     public static Filter getByDateFilter(long from, long to) {
         Filter f = new Filter("FMTRANSACTION", null);
 
-        Predicate p1 = Predicate.create("TXDATE", String.valueOf(from),
+        Predicate p1 = PredicateImpl.create("TXDATE", String.valueOf(from),
                 RelationType.GREATER_THAN, Long.class.getName());
 
-        Predicate p2 = Predicate.create("TXDATE", String.valueOf(to),
+        Predicate p2 = PredicateImpl.create("TXDATE", String.valueOf(to),
                 RelationType.LESSER_THAN, Long.class.getName());
 
         f.addPredicate(p1, OperatorType.AND);
@@ -165,10 +146,10 @@ public class NewFilterUtils {
 
     public static void addDateRangeToFilter(Filter f, String startDate,
             String endDate) {
-        Predicate p1 = Predicate.create("TXDATE", startDate,
+        Predicate p1 = PredicateImpl.create("TXDATE", startDate,
                 RelationType.GREATER_THAN, Long.class.getName());
 
-        Predicate p2 = Predicate.create("TXDATE", endDate,
+        Predicate p2 = PredicateImpl.create("TXDATE", endDate,
                 RelationType.LESSER_THAN, Long.class.getName());
 
         f.addPredicate(p1, OperatorType.AND);
