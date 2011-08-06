@@ -151,7 +151,7 @@ public class Filter implements Filterable {
             p.setParameter(query);
         }
         String queryStr = query.getQueryString();
-        Log.i("Filter", queryStr);
+        //Log.i("Filter", queryStr);
         return queryStr;
     }
 

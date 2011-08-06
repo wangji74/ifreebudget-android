@@ -24,13 +24,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,30 +36,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.ActionResponse;
 import com.ifreebudget.fm.actions.GetNetWorthAction;
 import com.ifreebudget.fm.activities.AddTransactionActivity;
+import com.ifreebudget.fm.activities.DocActivity;
 import com.ifreebudget.fm.activities.ListTransactionsActivity;
-import com.ifreebudget.fm.activities.MainView;
 import com.ifreebudget.fm.activities.ManageAccountsActivity;
 import com.ifreebudget.fm.activities.ManageBudgetsActivity;
 import com.ifreebudget.fm.activities.ManageDBActivity;
-import com.ifreebudget.fm.activities.QuickAddTransactionActivity;
 import com.ifreebudget.fm.activities.ViewReportActivity;
-import com.ifreebudget.fm.activities.MainView.ImageAdapter;
-import com.ifreebudget.fm.constants.AccountTypes;
 import com.ifreebudget.fm.entity.FManEntityManager;
-import com.ifreebudget.fm.entity.beans.Account;
-import com.ifreebudget.fm.entity.beans.TxHistory;
 import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
 
@@ -119,6 +110,12 @@ public class iFreeBudget extends Activity {
         case R.id.mItemClear:
             clearAll();
             return true;
+        case R.id.mItemRate:
+            gotoMarket();
+            return true;
+        case R.id.mItemHelp:
+            gotoHelp();
+            return true;
         default:
             return super.onOptionsItemSelected(item);
 
@@ -172,6 +169,18 @@ public class iFreeBudget extends Activity {
         Intent intent = new Intent(this, ManageDBActivity.class);
 
         startActivity(intent);
+    }
+
+    private void gotoHelp() {
+        Intent doc = null;
+        doc = new Intent(this, DocActivity.class);
+        startActivity(doc);        
+    }
+    
+    private void gotoMarket() {
+        Intent goToMarket = null;
+        goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse(MARKET_URI));
+        startActivity(goToMarket);
     }
 
     private void gotoReports() {
