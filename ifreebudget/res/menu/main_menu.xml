@@ -20,21 +20,16 @@
         android:title="Reports"
         android:icon="@drawable/reports"
         android:titleCondensed="Reports" /-->
-    <!-- item
-        android:id="@+id/mItemAbout"
-        android:title="About"
+    <item
+        android:id="@+id/mItemHelp"
+        android:title="Help"
         android:icon="@drawable/about"
-        android:titleCondensed="About" /-->
-    <!-- item
+        android:titleCondensed="Help"/>
+    <item
         android:id="@+id/mItemRate"
         android:title="Rate me"
         android:icon="@drawable/rateme"
-        android:titleCondensed="Rate me"></item -->
-    <!--tem
-        android:titleCondensed="Backups"
-        android:id="@+id/mItemDbManager"
-        android:icon="@drawable/backup"
-        android:title="Backups" /-->
+        android:titleCondensed="Rate me"></item>
     <item
         android:titleCondensed="Clear all"
         android:id="@+id/mItemClear"

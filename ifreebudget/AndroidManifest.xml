@@ -9,13 +9,15 @@
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.ifreebudget.fm"
-	android:versionCode="32" android:versionName="4.1">
+	android:versionCode="33" android:versionName="4.2">
 	<uses-permission
 		android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission
+		android:name="android.permission.INTERNET" />
 	<application
 		android:icon="@drawable/icon"
 		android:label="@string/app_name"
-		android:theme="@android:style/Theme.NoTitleBar" android:debuggable="true">
+		android:theme="@android:style/Theme.NoTitleBar" android:debuggable="false">
 		<provider
 			android:name=".activities.TxSearchSuggestionProvider"
 			android:authorities="com.ifreebudget.fm.TxSearchSuggestionProvider" />
@@ -81,6 +83,9 @@
 			android:label="iFreeBudget"></activity>
 		<activity
 			android:name=".activities.wizards.budget.BudgetDetailsActivity"
+			android:label="iFreeBudget"></activity>
+		<activity
+			android:name=".activities.DocActivity"
 			android:label="iFreeBudget"></activity>
 		<activity
 			android:name=".activities.wizards.budget.AddBudgetActivity"
