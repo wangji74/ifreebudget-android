@@ -9,7 +9,7 @@
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.ifreebudget.fm"
-	android:versionCode="33" android:versionName="4.2">
+	android:versionCode="34" android:versionName="4.3">
 	<uses-permission
 		android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission

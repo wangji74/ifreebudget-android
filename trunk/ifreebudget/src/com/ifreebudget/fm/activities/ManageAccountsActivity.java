@@ -34,6 +34,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -69,7 +70,7 @@ public class ManageAccountsActivity extends Activity {
     private TextView categoryPathTf = null;
 
     private GridView grid = null;
-
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +119,16 @@ public class ManageAccountsActivity extends Activity {
                     R.layout.grid_item_layout, R.id.label, arr));
 
             categoryPathTf.setText(getCategoryPath());
+            
+            
+            if(currentCategoryId == AccountTypes.ACCT_TYPE_ROOT) {
+                findViewById(R.id.add_acct_btn).setVisibility(View.INVISIBLE);
+                findViewById(R.id.add_catgr_btn).setVisibility(View.INVISIBLE);
+            }
+            else {
+                findViewById(R.id.add_acct_btn).setVisibility(View.VISIBLE);
+                findViewById(R.id.add_catgr_btn).setVisibility(View.VISIBLE);
+            }
         }
         catch (DBException e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));

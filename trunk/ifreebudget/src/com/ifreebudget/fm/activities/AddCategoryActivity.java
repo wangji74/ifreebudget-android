@@ -135,4 +135,13 @@ public class AddCategoryActivity extends Activity {
             return false;
         }
     }
+    
+    private void startHomeActivity() {
+        Intent intent = new Intent(this, iFreeBudget.class);
+        startActivity(intent);
+    }
+
+    public void gotoHomeScreen(View view) {
+        startHomeActivity();
+    }    
 }

@@ -195,4 +195,13 @@ public class AddAccountActivity extends Activity {
             return -1L;
         }
     }
+    
+    private void startHomeActivity() {
+        Intent intent = new Intent(this, iFreeBudget.class);
+        startActivity(intent);
+    }
+
+    public void gotoHomeScreen(View view) {
+        startHomeActivity();
+    }    
 }
