@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="#ffffff"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<LinearLayout
+		android:id="@+id/info_panel"
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="60dip"
+		android:background="@android:drawable/title_bar"
+		android:paddingRight="5dip"
+		android:paddingTop="5dip"
+		android:paddingBottom="5dip">
+		<RelativeLayout
+			android:id="@+id/title_panel"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+			<TextView
+				android:id="@+id/title_lbl"
+				android:text="@string/app_name"
+				android:layout_width="wrap_content"
+				android:layout_height="fill_parent"
+				android:textStyle="bold"
+				android:textSize="18sp"
+				android:gravity="center_vertical"
+				android:paddingLeft="5dip"
+				android:textColor="#FFFFFF" />
+			<LinearLayout
+				android:id="@+id/button_panel"
+				android:orientation="horizontal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentRight="true">
+			</LinearLayout>
+		</RelativeLayout>
+	</LinearLayout>
+	<LinearLayout
+		android:id="@+id/summary_panel"
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="#eaeaea"
+		android:layout_below="@id/info_panel">
+		<TextView
+			android:id="@+id/asset_lbl"
+			android:layout_height="wrap_content"
+			android:textColor="#000000"
+			android:paddingTop="5dip"
+			android:paddingRight="5dip"
+			android:paddingLeft="5dip"
+			android:paddingBottom="5dip"
+			android:gravity="left"
+			android:layout_weight="1.0"
+			android:layout_width="0dip" />
+		<TextView
+			android:id="@+id/liab_lbl"
+			android:layout_height="wrap_content"
+			android:textColor="#000000"
+			android:paddingTop="5dip"
+			android:paddingRight="5dip"
+			android:paddingLeft="2dip"
+			android:paddingBottom="5dip"
+			android:gravity="right"
+			android:layout_weight="1.0"
+			android:layout_width="0dip" />
+	</LinearLayout>
+	<TextView
+		android:id="@+id/nw_lbl"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:textStyle="bold"
+		android:background="#eaeaea"
+		android:textColor="#000000"
+		android:paddingLeft="5dip"
+		android:paddingTop="5dip"
+		android:paddingBottom="5dip"
+		android:layout_below="@id/summary_panel" />
+	<GridView
+		android:id="@+id/main_grid"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:padding="10dp"
+		android:verticalSpacing="40dp"
+		android:horizontalSpacing="10dp"
+		android:numColumns="2"
+		android:columnWidth="60dp"
+		android:stretchMode="columnWidth"
+		android:gravity="center_vertical|center_horizontal"
+		android:layout_below="@id/nw_lbl" />
+</RelativeLayout>

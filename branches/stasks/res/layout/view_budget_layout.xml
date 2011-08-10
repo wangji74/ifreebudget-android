@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2011 ifreebudget@gmail.com Licensed under the Apache License, 
+	Version 2.0 (the "License"); you may not use this file except in compliance 
+	with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. -->
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="#ffffff">
+	<LinearLayout
+		android:id="@+id/info_panel"
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="60dip"
+		android:background="@android:drawable/title_bar"
+		android:paddingRight="5dip"
+		android:paddingTop="5dip"
+		android:paddingBottom="5dip">
+		<RelativeLayout
+			android:id="@+id/title_panel"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+			<TextView
+				android:id="@+id/title_lbl"
+				android:text="@string/app_name"
+				android:layout_width="wrap_content"
+				android:layout_height="fill_parent"
+				android:textStyle="bold"
+				android:textSize="18sp"
+				android:gravity="center_vertical"
+				android:paddingLeft="5dip"
+				android:textColor="#FFFFFF"
+				android:clickable="true"
+				android:onClick="@string/goto_home" />
+			<LinearLayout
+				android:id="@+id/button_panel"
+				android:orientation="horizontal"
+				android:gravity="fill_vertical"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentRight="true">
+			</LinearLayout>
+		</RelativeLayout>
+	</LinearLayout>
+	<TextView
+		android:id="@+id/breport_date_lbl"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:textColor="#000000"
+		android:background="@color/sub_title_color"
+		android:padding="5dip"
+		android:layout_below="@id/info_panel" />
+	<TableLayout
+		android:id="@+id/budget_info_tbl"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:stretchColumns="1"
+		android:padding="2pt"
+		android:layout_below="@id/breport_date_lbl">
+		<TableRow>
+			<TextView
+				android:text="@string/budget_alloc_lbl"
+				android:textColor="#000000"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:padding="5px"
+				android:textStyle="bold"
+				android:layout_weight="0.5" />
+			<TextView
+				android:id="@+id/budget_alloc_val"
+				android:textColor="#000000"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:padding="5px"
+				android:gravity="right"
+				android:layout_weight="0.5" />
+		</TableRow>
+		<TableRow>
+			<TextView
+				android:text="@string/budget_actual_lbl"
+				android:textColor="#000000"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:padding="5px"
+				android:textStyle="bold"
+				android:layout_weight="0.5" />
+			<TextView
+				android:id="@+id/budget_actual_val"
+				android:textColor="#000000"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:padding="5px"
+				android:gravity="right"
+				android:layout_weight="0.5" />
+		</TableRow>
+		<TableRow>
+			<TextView
+				android:text="@string/budget_savings_lbl"
+				android:textColor="#000000"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:padding="5px"
+				android:textStyle="bold"
+				android:layout_weight="0.5" />
+			<TextView
+				android:id="@+id/budget_savings_val"
+				android:textColor="#000000"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:padding="5px"
+				android:gravity="right"
+				android:layout_weight="0.5" />
+		</TableRow>
+	</TableLayout>
+	<View
+		android:id="@+id/spacer"
+		android:layout_width="fill_parent"
+		android:layout_height="2dip"
+		android:background="#C0C0C0"
+		android:layout_below="@id/budget_info_tbl" />
+	<ListView
+		android:layout_height="fill_parent"
+		android:layout_width="fill_parent"
+		android:id="@android:id/android:list"
+		android:cacheColorHint="#ffffff"
+		android:layout_below="@id/spacer"
+		android:layout_above="@+id/south_panel" />
+	<LinearLayout
+		android:id="@+id/south_panel"
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true">
+		<Button
+			android:id="@+id/previous_budget_period_button"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="@string/previous"
+			android:layout_weight="0.5"
+			android:width="80px"
+			android:onClick="@string/do_previous" />
+		<Button
+			android:id="@+id/next_budget_period_button"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="@string/next"
+			android:layout_weight="0.5"
+			android:width="80px"
+			android:onClick="@string/do_next" />
+	</LinearLayout>
+</RelativeLayout>
