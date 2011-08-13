@@ -45,6 +45,7 @@ import android.widget.TextView;
 import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.ActionResponse;
 import com.ifreebudget.fm.actions.GetNetWorthAction;
+import com.ifreebudget.fm.activities.AddReminderActivity;
 import com.ifreebudget.fm.activities.AddTransactionActivity;
 import com.ifreebudget.fm.activities.DocActivity;
 import com.ifreebudget.fm.activities.ListTransactionsActivity;
@@ -145,6 +146,9 @@ public class iFreeBudget extends Activity {
         case 5:
             addTransaction(view);
             return;
+        case 6:
+            addReminder(view);
+            return;
         default:
             return;
         }
@@ -206,6 +210,11 @@ public class iFreeBudget extends Activity {
 
     public void addTransaction(View view) {
         Intent txIntent = new Intent(this, AddTransactionActivity.class);
+        startActivity(txIntent);
+    }
+
+    public void addReminder(View view) {
+        Intent txIntent = new Intent(this, AddReminderActivity.class);
         startActivity(txIntent);
     }
 
@@ -326,6 +335,6 @@ public class iFreeBudget extends Activity {
         private Integer[] mThumbIds = { R.drawable.gitem_accounts,
                 R.drawable.gitem_transactions, R.drawable.gitem_budgets,
                 R.drawable.gitem_reports, R.drawable.gitem_backups,
-                R.drawable.gitem_newtx };
+                R.drawable.gitem_newtx, R.drawable.reminder };
     }
 }
