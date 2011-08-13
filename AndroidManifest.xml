@@ -88,6 +88,9 @@
 			android:name=".activities.DocActivity"
 			android:label="iFreeBudget"></activity>
 		<activity
+			android:name=".activities.AddReminderActivity"
+			android:label="iFreeBudget"></activity>
+		<activity
 			android:name=".activities.wizards.budget.AddBudgetActivity"
 			android:label="iFreeBudget"></activity>
 	</application>
