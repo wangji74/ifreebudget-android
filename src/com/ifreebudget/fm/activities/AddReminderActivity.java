@@ -78,15 +78,17 @@ public class AddReminderActivity extends Activity {
         Context c = v.getContext();
         LayoutInflater li = (LayoutInflater) c
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        RelativeLayout ll = (RelativeLayout) findViewById(R.id.add_reminder_layout);
+        LinearLayout ll = (LinearLayout) findViewById(R.id.repeat_info_panel);
 
         View vv = li.inflate(layoutId, null);
-
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.FILL_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.BELOW, R.id.repeat_type_panel);
         params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        
+        ll.removeAllViews();
+        
         ll.addView(vv, params);
     }
 }

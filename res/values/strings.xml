@@ -251,18 +251,18 @@
 		name="End">End</string>
 	<string
 		name="repeats_lbl">Repeats</string>
-		
 	<string
 		name="repeat_daily">Daily</string>
 	<string
 		name="repeat_weekly">Weekly</string>
 	<string
 		name="repeat_monthly">Monthly</string>
-		
 	<string-array
 		name="repeats_types">
 		<item>@string/repeat_daily</item>
 		<item>@string/repeat_weekly</item>
 		<item>@string/repeat_monthly</item>
 	</string-array>
+	<string
+		name="title_lbl">Title</string>
 </resources>
