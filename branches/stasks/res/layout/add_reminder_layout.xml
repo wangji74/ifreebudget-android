@@ -65,13 +65,13 @@
 			android:layout_height="wrap_content"
 			android:layout_below="@id/info_panel">
 			<TextView
-				android:text="@string/name_lbl"
+				android:text="@string/title_lbl"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dip"
 				android:textColor="#000000" />
 			<EditText
-				android:id="@+id/rem_name_tf"
+				android:id="@+id/rem_title_tf"
 				android:layout_height="wrap_content"
 				android:layout_width="fill_parent"
 				android:singleLine="true"
@@ -181,8 +181,12 @@
 					android:text="@string/repeat_monthly" />
 			</RadioGroup>
 		</LinearLayout>
-		<!-- LinearLayout android:id="@+id/repeat_info_panel" android:orientation="vertical" 
-			android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_below="@id/repeat_type_panel"> 
-			</LinearLayout -->
+		<LinearLayout
+			android:id="@+id/repeat_info_panel"
+			android:orientation="vertical"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/repeat_type_panel">
+		</LinearLayout>
 	</RelativeLayout>
 </ScrollView>
