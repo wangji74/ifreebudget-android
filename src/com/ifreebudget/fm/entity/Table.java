@@ -1,5 +1,6 @@
 package com.ifreebudget.fm.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Table {
@@ -9,7 +10,9 @@ public class Table {
     
     public Table(String tableName) {
         this.tableName = tableName;
+        fields = new ArrayList<Field>();
     }
+    
     public String getTableName() {
         return tableName;
     }
@@ -28,7 +31,8 @@ public class Table {
     }
     
     public String getCreateSql() {
-        StringBuilder ret = new StringBuilder();
+        StringBuilder ret = new StringBuilder("CREATE TABLE ");
+        ret.append(tableName);
         
         int sz = fields.size();
         

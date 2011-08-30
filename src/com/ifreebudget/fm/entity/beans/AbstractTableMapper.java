@@ -25,6 +25,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
+import com.ifreebudget.fm.entity.Field;
 import com.ifreebudget.fm.utils.MiscUtils;
 
 public abstract class AbstractTableMapper implements TableMapper {
@@ -86,6 +87,31 @@ public abstract class AbstractTableMapper implements TableMapper {
         }
         else {
             return c.getString(columnIndex);
+        }
+    }
+
+    protected void safeBind(SQLiteStatement stmt, int index, Field f,
+            FManEntity entity) throws Exception {
+
+        if (f.isPrimaryKey()) {
+            stmt.bindNull(index);
+            return;
+        }
+
+        Object val = f.getValue(entity);
+        Class<?> clsType = f.getJavaType();
+        String type = clsType.getName();
+        if (type.equals("java.lang.String")) {
+            safeBindString(stmt, index, (String) val);
+        }
+        else if (type.equals("java.lang.Integer")) {
+            safeBindInt(stmt, index, (Integer) val);
+        }
+        else if (type.equals("java.math.Double")) {
+            safeBindDouble(stmt, index, (Double) val);
+        }
+        else if (type.equals("java.math.BigDecimal")) {
+            safeBindBigDecimal(stmt, index, (BigDecimal) val);
         }
     }
 
