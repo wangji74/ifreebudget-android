@@ -1,5 +1,8 @@
 package com.ifreebudget.fm.entity;
 
+import java.lang.reflect.Method;
+
+import com.ifreebudget.fm.entity.beans.FManEntity;
 
 public class Field {
     private String dbName;
@@ -19,16 +22,27 @@ public class Field {
     public static final String CLOSEB = ")";
 
     public static Field create(String dbName, String dbType, String javaName,
-            String javaType, boolean isPrimaryKey, boolean isNullable) {
+            Class<?> javaType) {
         Field f = new Field();
         f.dbName = dbName;
         f.dbType = dbType;
+        
+
         f.mutatorName = "set" + javaName;
         f.accessorName = "get" + javaName;
-        f.isPrimaryKey = isPrimaryKey;
-        f.isNullable = isNullable;
-
+        
+        
+        f.isPrimaryKey = false;
+        f.isNullable = false;
+        f.isAutoincrement = false;
+        f.javaType = javaType;
         return f;
+    }
+
+    public Object getValue(FManEntity entity) throws Exception {
+        Method m = entity.getClass().getMethod(accessorName);
+        Object val = m.invoke(entity);
+        return val;
     }
 
     public String getSql() {
@@ -52,6 +66,14 @@ public class Field {
         }
         ret.append(SPACE);
         return ret.toString();
+    }
+
+    public Class<?> getJavaType() {
+        return javaType;
+    }
+
+    public void setJavaType(Class<?> javaType) {
+        this.javaType = javaType;
     }
 
     public String getDbType() {

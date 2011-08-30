@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.ifreebudget.fm.entity;
 
+import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,6 +48,8 @@ import com.ifreebudget.fm.entity.beans.BudgetedAccountMapper;
 import com.ifreebudget.fm.entity.beans.CategoryIconMap;
 import com.ifreebudget.fm.entity.beans.CategoryIconMapMapper;
 import com.ifreebudget.fm.entity.beans.FManEntity;
+import com.ifreebudget.fm.entity.beans.ScheduledTask;
+import com.ifreebudget.fm.entity.beans.ScheduledTaskMapper;
 import com.ifreebudget.fm.entity.beans.TableMapper;
 import com.ifreebudget.fm.entity.beans.Transaction;
 import com.ifreebudget.fm.entity.beans.TransactionMapper;
@@ -58,7 +61,7 @@ public class FManEntityManager {
     private static final String TAG = "DBHelper";
 
     public static final String DATABASE_NAME = "com.ifreebudget.db";
-    private static final int DATABASE_VERSION = 2 + 1 + 1;
+    private static final int DATABASE_VERSION = 2 + 1 + 1 + 1;
 
     private static FManEntityManager em = null;
 
@@ -106,6 +109,7 @@ public class FManEntityManager {
         mappers.put(CategoryIconMap.class, new CategoryIconMapMapper());
         mappers.put(Transaction.class, new TransactionMapper());
         mappers.put(TxHistory.class, new TxHistoryMapper());
+        mappers.put(ScheduledTask.class, new ScheduledTaskMapper());
     }
 
     /* API methods */
@@ -725,6 +729,8 @@ public class FManEntityManager {
                 Log.i(TAG, "Created BudgetedAccount table...Success!");
                 db.execSQL(new TxHistoryMapper().getCreateSql());
                 Log.i(TAG, "Created TxHistory table...Success");
+                db.execSQL(new ScheduledTaskMapper().getCreateSql());
+                Log.i(TAG, "Created ScheduledTask table...Success");
 
                 Log.i(TAG, "Creating initial accounts");
 
@@ -740,8 +746,8 @@ public class FManEntityManager {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL(new TxHistoryMapper().getCreateSql());
-            Log.i(TAG, "Created TxHistory table...Success");
+            db.execSQL(new ScheduledTaskMapper().getCreateSql());
+            Log.i(TAG, "Created ScheduledTask table...Success");
         }
 
         @Override
