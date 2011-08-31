@@ -1,33 +1,34 @@
 package com.ifreebudget.fm.entity.beans;
 
+import com.ifreebudget.fm.entity.Mappings;
+
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.ifreebudget.fm.entity.Mappings;
+public class ScheduleMapper extends DefaultAbstractTableMapper {
 
-public class ScheduledTaskMapper extends DefaultAbstractTableMapper {
-
-    private final String TABLENAME = "STASK";
-    private final String TAG = "ScheduledTaskMapper";
+    private final String TABLENAME = "SCHED";
+    private final String TAG = "ScheduleMapper";
     
-    public ScheduledTaskMapper() {
+    public ScheduleMapper() {
         super();
     }
-
+    
     @Override
     public String getTableName() {
         return TABLENAME;
     }
-    
+
     public String getUpdateSql() {
         throw new RuntimeException(getTag() + "-Update not supported");
     }
-
+    
+    @Override
     public void doUpdate(SQLiteDatabase database, FManEntity entity)
             throws SQLException {
-        throw new RuntimeException(getTag() + "-Update not supported");
+        throw new RuntimeException(getTag() + "-Update task not supported.");
     }
-    
+
     @Override
     protected String getTag() {
         return TAG;
@@ -35,6 +36,6 @@ public class ScheduledTaskMapper extends DefaultAbstractTableMapper {
 
     @Override
     protected String[] getMappings() {
-        return Mappings.ScheduledTaskMapperMappings;
-    }    
+        return Mappings.ScheduleMapperMappings;
+    }
 }

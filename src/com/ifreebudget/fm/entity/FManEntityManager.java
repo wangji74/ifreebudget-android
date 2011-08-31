@@ -47,7 +47,11 @@ import com.ifreebudget.fm.entity.beans.BudgetedAccount;
 import com.ifreebudget.fm.entity.beans.BudgetedAccountMapper;
 import com.ifreebudget.fm.entity.beans.CategoryIconMap;
 import com.ifreebudget.fm.entity.beans.CategoryIconMapMapper;
+import com.ifreebudget.fm.entity.beans.Constraint;
+import com.ifreebudget.fm.entity.beans.ConstraintMapper;
 import com.ifreebudget.fm.entity.beans.FManEntity;
+import com.ifreebudget.fm.entity.beans.Schedule;
+import com.ifreebudget.fm.entity.beans.ScheduleMapper;
 import com.ifreebudget.fm.entity.beans.ScheduledTask;
 import com.ifreebudget.fm.entity.beans.ScheduledTaskMapper;
 import com.ifreebudget.fm.entity.beans.TableMapper;
@@ -110,6 +114,8 @@ public class FManEntityManager {
         mappers.put(Transaction.class, new TransactionMapper());
         mappers.put(TxHistory.class, new TxHistoryMapper());
         mappers.put(ScheduledTask.class, new ScheduledTaskMapper());
+        mappers.put(Schedule.class, new ScheduleMapper());
+        mappers.put(Constraint.class, new ConstraintMapper());
     }
 
     /* API methods */
@@ -731,6 +737,10 @@ public class FManEntityManager {
                 Log.i(TAG, "Created TxHistory table...Success");
                 db.execSQL(new ScheduledTaskMapper().getCreateSql());
                 Log.i(TAG, "Created ScheduledTask table...Success");
+                db.execSQL(new ScheduleMapper().getCreateSql());
+                Log.i(TAG, "Created Schedule table...Success");
+                db.execSQL(new ConstraintMapper().getCreateSql());
+                Log.i(TAG, "Created Constraint table...Success");
 
                 Log.i(TAG, "Creating initial accounts");
 
@@ -748,6 +758,10 @@ public class FManEntityManager {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             db.execSQL(new ScheduledTaskMapper().getCreateSql());
             Log.i(TAG, "Created ScheduledTask table...Success");
+            db.execSQL(new ScheduleMapper().getCreateSql());
+            Log.i(TAG, "Created Schedule table...Success");
+            db.execSQL(new ConstraintMapper().getCreateSql());
+            Log.i(TAG, "Created Constraint table...Success");
         }
 
         @Override
