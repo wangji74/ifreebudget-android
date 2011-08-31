@@ -13,6 +13,7 @@ public class Field {
     private boolean isPrimaryKey;
     private boolean isAutoincrement;
     private Class<?> javaType;
+    private String extra;
 
     public static final String SPACE = " ";
     public static final String NOT_NULL = "NOT NULL";
@@ -63,6 +64,10 @@ public class Field {
         if (isAutoincrement) {
             ret.append(SPACE);
             ret.append(AUTO_INC);
+        }
+        if (extra != null) {
+            ret.append(SPACE);
+            ret.append(extra);
         }
         ret.append(SPACE);
         return ret.toString();
@@ -130,6 +135,14 @@ public class Field {
 
     public void setPrimaryKey(boolean isPrimaryKey) {
         this.isPrimaryKey = isPrimaryKey;
+    }
+
+    public String getExtra() {
+        return extra;
+    }
+
+    public void setExtra(String extra) {
+        this.extra = extra;
     }
 
     @Override

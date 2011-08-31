@@ -1,17 +1,18 @@
 package com.ifreebudget.fm.entity.beans;
 
 public class ScheduledTask implements FManEntity {
-    long id;
+    private static final long serialVersionUID = 1L;
+    Long id;
     String name;
-    long startTime;
-    long endTime;
-    long businessObjectId;
+    Long startTime;
+    Long endTime;
+    Long businessObjectId;
     String taskType;
-
-    public long getId() {
+    
+    public Long getId() {
         return id;
     }
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public String getName() {
@@ -20,29 +21,29 @@ public class ScheduledTask implements FManEntity {
     public void setName(String name) {
         this.name = name;
     }
-    public long getStartTime() {
+    public Long getStartTime() {
         return startTime;
     }
-    public void setStartTime(long startTime) {
+    public void setStartTime(Long startTime) {
         this.startTime = startTime;
     }
-    public long getEndTime() {
+    public Long getEndTime() {
         return endTime;
     }
-    public void setEndTime(long endTime) {
+    public void setEndTime(Long endTime) {
         this.endTime = endTime;
     }
-    public long getBusinessObjectId() {
+    public Long getBusinessObjectId() {
         return businessObjectId;
     }
-    public void setBusinessObjectId(long businessObjectId) {
+    public void setBusinessObjectId(Long businessObjectId) {
         this.businessObjectId = businessObjectId;
     }
     public String getTaskType() {
         return taskType;
     }
-    public void setTaskType(String type) {
-        this.taskType = type;
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
     }
     @Override
     public Object getPK() {
