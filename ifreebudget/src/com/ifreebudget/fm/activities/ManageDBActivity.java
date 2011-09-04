@@ -26,6 +26,8 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -122,7 +124,7 @@ public class ManageDBActivity extends Activity {
             SimpleDateFormat filenameformat = new SimpleDateFormat(
                     BKUP_DATE_FORMAT);
 
-            String backupDBPath = BKUP_DIR_NAME + "\\"
+            String backupDBPath = BKUP_DIR_NAME + "/"
                     + FManEntityManager.DATABASE_NAME + "_"
                     + filenameformat.format(dt);
 
@@ -153,23 +155,21 @@ public class ManageDBActivity extends Activity {
 
             // 4. copy the db
 
-            String currentDBPath = "\\data\\com.ifreebudget.fm\\databases\\"
-                    + FManEntityManager.DATABASE_NAME;
-
-            File data = Environment.getDataDirectory();
-            
-            File currentDB = new File(data, currentDBPath);
+            ContextWrapper cw = new ContextWrapper(this);
+            File currentDB = cw
+                    .getDatabasePath(FManEntityManager.DATABASE_NAME);
 
             File backupDB = new File(sd, backupDBPath);
+
             if (backupDB.exists()) {
                 FileChannel src = new FileInputStream(backupDB).getChannel();
 
                 FileChannel dst = new FileOutputStream(currentDB).getChannel();
 
                 dst.truncate(0);
-                
-                dst.transferFrom(src, 0, src.size());
 
+                dst.transferFrom(src, 0, src.size());
+                
                 src.close();
 
                 dst.close();
@@ -271,7 +271,7 @@ public class ManageDBActivity extends Activity {
 
             File data = Environment.getDataDirectory();
 
-            String currentDBPath = "\\data\\com.ifreebudget.fm\\databases\\"
+            String currentDBPath = "/data/com.ifreebudget.fm/databases/"
                     + FManEntityManager.DATABASE_NAME;
 
             File dirPath = new File(sd, BKUP_DIR_NAME);
@@ -282,7 +282,7 @@ public class ManageDBActivity extends Activity {
                 }
             }
 
-            String backupDBPath = BKUP_DIR_NAME + "\\"
+            String backupDBPath = BKUP_DIR_NAME + "/"
                     + FManEntityManager.DATABASE_NAME + "_" + getFileTag();
 
             File currentDB = new File(data, currentDBPath);
