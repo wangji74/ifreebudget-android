@@ -5,12 +5,12 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.ifreebudget.fm.entity.Mappings;
 
-public class ConstraintMapper extends DefaultAbstractTableMapper {
+public class ConstraintEntityMapper extends DefaultAbstractTableMapper {
 
     private final String TABLENAME = "CONSTRT";
     private final String TAG = "ConstraintMapper";
     
-    public ConstraintMapper() {
+    public ConstraintEntityMapper() {
         super();
     }
     

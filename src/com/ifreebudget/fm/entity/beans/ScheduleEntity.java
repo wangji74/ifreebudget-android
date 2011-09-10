@@ -1,6 +1,6 @@
 package com.ifreebudget.fm.entity.beans;
 
-public class Schedule implements FManEntity {
+public class ScheduleEntity implements FManEntity {
     private static final long serialVersionUID = 1L;
     Long id;
     Long scheduledTaskId;

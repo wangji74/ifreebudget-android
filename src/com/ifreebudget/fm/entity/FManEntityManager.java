@@ -47,13 +47,13 @@ import com.ifreebudget.fm.entity.beans.BudgetedAccount;
 import com.ifreebudget.fm.entity.beans.BudgetedAccountMapper;
 import com.ifreebudget.fm.entity.beans.CategoryIconMap;
 import com.ifreebudget.fm.entity.beans.CategoryIconMapMapper;
-import com.ifreebudget.fm.entity.beans.Constraint;
-import com.ifreebudget.fm.entity.beans.ConstraintMapper;
+import com.ifreebudget.fm.entity.beans.ConstraintEntity;
+import com.ifreebudget.fm.entity.beans.ConstraintEntityMapper;
 import com.ifreebudget.fm.entity.beans.FManEntity;
-import com.ifreebudget.fm.entity.beans.Schedule;
+import com.ifreebudget.fm.entity.beans.ScheduleEntity;
 import com.ifreebudget.fm.entity.beans.ScheduleMapper;
-import com.ifreebudget.fm.entity.beans.ScheduledTask;
-import com.ifreebudget.fm.entity.beans.ScheduledTaskMapper;
+import com.ifreebudget.fm.entity.beans.TaskEntity;
+import com.ifreebudget.fm.entity.beans.TaskEntityMapper;
 import com.ifreebudget.fm.entity.beans.TableMapper;
 import com.ifreebudget.fm.entity.beans.Transaction;
 import com.ifreebudget.fm.entity.beans.TransactionMapper;
@@ -113,9 +113,9 @@ public class FManEntityManager {
         mappers.put(CategoryIconMap.class, new CategoryIconMapMapper());
         mappers.put(Transaction.class, new TransactionMapper());
         mappers.put(TxHistory.class, new TxHistoryMapper());
-        mappers.put(ScheduledTask.class, new ScheduledTaskMapper());
-        mappers.put(Schedule.class, new ScheduleMapper());
-        mappers.put(Constraint.class, new ConstraintMapper());
+        mappers.put(TaskEntity.class, new TaskEntityMapper());
+        mappers.put(ScheduleEntity.class, new ScheduleMapper());
+        mappers.put(ConstraintEntity.class, new ConstraintEntityMapper());
     }
 
     /* API methods */
@@ -735,11 +735,11 @@ public class FManEntityManager {
                 Log.i(TAG, "Created BudgetedAccount table...Success!");
                 db.execSQL(new TxHistoryMapper().getCreateSql());
                 Log.i(TAG, "Created TxHistory table...Success");
-                db.execSQL(new ScheduledTaskMapper().getCreateSql());
+                db.execSQL(new TaskEntityMapper().getCreateSql());
                 Log.i(TAG, "Created ScheduledTask table...Success");
                 db.execSQL(new ScheduleMapper().getCreateSql());
                 Log.i(TAG, "Created Schedule table...Success");
-                db.execSQL(new ConstraintMapper().getCreateSql());
+                db.execSQL(new ConstraintEntityMapper().getCreateSql());
                 Log.i(TAG, "Created Constraint table...Success");
 
                 Log.i(TAG, "Creating initial accounts");
@@ -756,11 +756,11 @@ public class FManEntityManager {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL(new ScheduledTaskMapper().getCreateSql());
+            db.execSQL(new TaskEntityMapper().getCreateSql());
             Log.i(TAG, "Created ScheduledTask table...Success");
             db.execSQL(new ScheduleMapper().getCreateSql());
             Log.i(TAG, "Created Schedule table...Success");
-            db.execSQL(new ConstraintMapper().getCreateSql());
+            db.execSQL(new ConstraintEntityMapper().getCreateSql());
             Log.i(TAG, "Created Constraint table...Success");
         }
 

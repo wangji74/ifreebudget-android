@@ -104,6 +104,9 @@ public abstract class AbstractTableMapper implements TableMapper {
         if (type.equals("java.lang.String")) {
             safeBindString(stmt, index, (String) val);
         }
+        else if (type.equals("java.lang.Long")) {
+            safeBindLong(stmt, index, (Long) val);
+        }
         else if (type.equals("java.lang.Integer")) {
             safeBindInt(stmt, index, (Integer) val);
         }
