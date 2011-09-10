@@ -1,5 +1,7 @@
 package com.ifreebudget.fm.activities;
 
+import static com.ifreebudget.fm.utils.Messages.tr;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,11 +17,24 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.ifreebudget.fm.R;
+import com.ifreebudget.fm.actions.ActionRequest;
+import com.ifreebudget.fm.actions.ActionResponse;
+import com.ifreebudget.fm.actions.AddReminderAction;
+import com.ifreebudget.fm.entity.beans.TaskEntity;
+import com.ifreebudget.fm.scheduler.task.BasicSchedule;
+import com.ifreebudget.fm.scheduler.task.BasicTask;
+import com.ifreebudget.fm.scheduler.task.Schedule;
+import com.ifreebudget.fm.scheduler.task.Schedule.RepeatType;
+import com.ifreebudget.fm.scheduler.task.Task;
 import com.ifreebudget.fm.services.SessionManager;
+import com.ifreebudget.fm.utils.MiscUtils;
 
 public class AddReminderActivity extends Activity {
+
+    private final String TAG = "AddReminderActivity";
 
     private Button startDtBtn, endDtBtn, startTimeBtn, endTimeBtn;
     private RadioButton dailyBtn, weeklyBtn, monthlyBtn;
@@ -86,9 +101,58 @@ public class AddReminderActivity extends Activity {
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.BELOW, R.id.repeat_type_panel);
         params.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        
+
         ll.removeAllViews();
-        
+
         ll.addView(vv, params);
+    }
+
+    public void saveReminder(View view) {
+        try {
+            Task task = createTask();
+            ActionRequest req = new ActionRequest();
+            req.setActionName("addReminderAction");
+            req.setProperty("TASK", task);
+            req.setProperty("TASKTYPE", "Reminder");
+            ActionResponse resp = new AddReminderAction().execute(req);
+            if (resp.getErrorCode() == ActionResponse.NOERROR) {
+                super.finish();
+            }
+        }
+        catch (Exception e) {
+            Log.e(TAG, MiscUtils.stackTrace2String(e));
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    tr("Cannot create task - " + e.getMessage()),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+    private Task createTask() throws Exception {
+        String name = "Basic task";
+        Task t = new BasicTask(name);
+
+        Schedule s = getSchedule();
+
+        t.setSchedule(s);
+
+        return t;
+    }
+
+    private Schedule getSchedule() throws Exception {
+        Calendar c = Calendar.getInstance();
+        Date s = c.getTime();
+        c.add(Calendar.MONDAY, 2);
+        Date e = c.getTime();
+
+        return getDailySchedule(s, e);
+    }
+
+    private Schedule getDailySchedule(Date st, Date en) throws Exception {
+        BasicSchedule s = new BasicSchedule(st, en);
+        Integer val = Integer.parseInt("2");
+        s.setRepeatType(RepeatType.DATE, val);
+
+        return s;
     }
 }

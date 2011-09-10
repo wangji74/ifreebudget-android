@@ -1,6 +1,6 @@
 package com.ifreebudget.fm.entity.beans;
 
-public class ScheduledTask implements FManEntity {
+public class TaskEntity implements FManEntity {
     private static final long serialVersionUID = 1L;
     Long id;
     String name;
@@ -55,7 +55,7 @@ public class ScheduledTask implements FManEntity {
     }
     @Override
     public TableMapper getTableMapper() {
-        return new ScheduledTaskMapper();
+        return new TaskEntityMapper();
     }
     @Override
     public void setPK(Object pk) {

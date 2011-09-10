@@ -54,6 +54,7 @@
 						android:layout_height="wrap_content"
 						android:background="@null"
 						android:gravity="center"
+						android:onClick="@string/save_reminder_action"
 						android:src="@android:drawable/ic_menu_save" />
 				</LinearLayout>
 			</RelativeLayout>

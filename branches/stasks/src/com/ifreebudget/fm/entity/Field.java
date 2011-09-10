@@ -21,18 +21,17 @@ public class Field {
     public static final String AUTO_INC = "AUTOINCREMENT";
     public static final String OPENB = "(";
     public static final String CLOSEB = ")";
+    public static final String VALUES = "VALUES";
 
     public static Field create(String dbName, String dbType, String javaName,
             Class<?> javaType) {
         Field f = new Field();
         f.dbName = dbName;
         f.dbType = dbType;
-        
 
         f.mutatorName = "set" + javaName;
         f.accessorName = "get" + javaName;
-        
-        
+
         f.isPrimaryKey = false;
         f.isNullable = false;
         f.isAutoincrement = false;
@@ -176,5 +175,12 @@ public class Field {
         else if (!dbType.equals(other.dbType))
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Field [dbName=" + dbName + ", dbType=" + dbType
+                + ", isNullable=" + isNullable + ", isPrimaryKey="
+                + isPrimaryKey + ", isAutoincrement=" + isAutoincrement + "]";
     }
 }

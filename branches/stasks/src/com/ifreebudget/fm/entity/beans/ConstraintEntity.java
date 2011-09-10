@@ -1,6 +1,6 @@
 package com.ifreebudget.fm.entity.beans;
 
-public class Constraint {
+public class ConstraintEntity implements FManEntity {
     Long id;
     int constraintType;
     byte[] constraint;   
@@ -28,5 +28,21 @@ public class Constraint {
     }
     public void setScheduleId(Long scheduleId) {
         this.scheduleId = scheduleId;
+    }
+    @Override
+    public String getPKColumnName() {
+        return "id";
+    }
+    @Override
+    public Object getPK() {
+        return getId();
+    }
+    @Override
+    public void setPK(Object pk) {
+        setId( (Long) pk);
+    }
+    @Override
+    public TableMapper getTableMapper() {
+        return null;
     }
 }

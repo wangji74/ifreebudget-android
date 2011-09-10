@@ -5,12 +5,12 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.ifreebudget.fm.entity.Mappings;
 
-public class ScheduledTaskMapper extends DefaultAbstractTableMapper {
+public class TaskEntityMapper extends DefaultAbstractTableMapper {
 
     private final String TABLENAME = "STASK";
     private final String TAG = "ScheduledTaskMapper";
     
-    public ScheduledTaskMapper() {
+    public TaskEntityMapper() {
         super();
     }
 

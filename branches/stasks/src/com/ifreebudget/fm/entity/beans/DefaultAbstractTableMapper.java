@@ -88,8 +88,6 @@ public abstract class DefaultAbstractTableMapper extends AbstractTableMapper {
 
     public Object doInsert(SQLiteDatabase database, FManEntity entity)
             throws SQLException {
-        ScheduledTask task = (ScheduledTask) entity;
-
         SQLiteStatement stmt = database.compileStatement(getInsertSql());
 
         stmt.clearBindings();
@@ -98,7 +96,7 @@ public abstract class DefaultAbstractTableMapper extends AbstractTableMapper {
         int index = 1;
         for (Field f : fields) {
             try {
-                safeBind(stmt, index, f, task);
+                safeBind(stmt, index, f, entity);
             }
             catch (Exception e) {
                 Log.e(getTag(), MiscUtils.stackTrace2String(e));
@@ -108,13 +106,13 @@ public abstract class DefaultAbstractTableMapper extends AbstractTableMapper {
 
         Long id = stmt.executeInsert();
 
-        task.setId(id);
+        entity.setPK(id);
 
         return id;
     }
 
     public FManEntity getCurrentEntityFromCursor(Cursor cursor) {
-        ScheduledTask a = new ScheduledTask();
+        TaskEntity a = new TaskEntity();
         List<Field> fields = table.getFields();
         for (Field f : fields) {
             setField(cursor, a, f.getDbName(), f.getMutatorName(),
