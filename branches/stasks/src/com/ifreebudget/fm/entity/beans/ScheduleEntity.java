@@ -59,6 +59,6 @@ public class ScheduleEntity implements FManEntity {
     }
     @Override
     public TableMapper getTableMapper() {
-        return new ScheduleMapper();
+        return new ScheduleEntityMapper();
     }          
 }

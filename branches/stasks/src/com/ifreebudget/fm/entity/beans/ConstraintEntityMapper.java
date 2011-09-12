@@ -38,4 +38,9 @@ public class ConstraintEntityMapper extends DefaultAbstractTableMapper {
     protected String[] getMappings() {
         return Mappings.ConstraintMapperMappings;
     }    
+    
+    @Override
+    protected FManEntity self() {
+        return new ConstraintEntity();
+    }    
 }

@@ -58,6 +58,18 @@ public abstract class AbstractTableMapper implements TableMapper {
             Log.w(TAG, "Column: " + colName + " not found in result set.");
         }
         Object[] val = { getValueFromCursor(cursor, type, colIdx) };
+        try {
+            Method m = entity.getClass().getMethod(fieldName, type);
+            m.invoke(entity, val);
+        }
+        catch (Exception e1) {
+            Log.e(TAG, "Method not found " + fieldName + " on object : " + type);
+            setFieldFallback(entity, fieldName, val);
+        }
+    }
+
+    private void setFieldFallback(FManEntity entity, String fieldName,
+            Object[] val) {
         Method[] arr = entity.getClass().getDeclaredMethods();
         for (int i = 0; i < arr.length; i++) {
             Method c = arr[i];
