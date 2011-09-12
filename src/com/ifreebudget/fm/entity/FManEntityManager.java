@@ -51,7 +51,7 @@ import com.ifreebudget.fm.entity.beans.ConstraintEntity;
 import com.ifreebudget.fm.entity.beans.ConstraintEntityMapper;
 import com.ifreebudget.fm.entity.beans.FManEntity;
 import com.ifreebudget.fm.entity.beans.ScheduleEntity;
-import com.ifreebudget.fm.entity.beans.ScheduleMapper;
+import com.ifreebudget.fm.entity.beans.ScheduleEntityMapper;
 import com.ifreebudget.fm.entity.beans.TaskEntity;
 import com.ifreebudget.fm.entity.beans.TaskEntityMapper;
 import com.ifreebudget.fm.entity.beans.TableMapper;
@@ -114,7 +114,7 @@ public class FManEntityManager {
         mappers.put(Transaction.class, new TransactionMapper());
         mappers.put(TxHistory.class, new TxHistoryMapper());
         mappers.put(TaskEntity.class, new TaskEntityMapper());
-        mappers.put(ScheduleEntity.class, new ScheduleMapper());
+        mappers.put(ScheduleEntity.class, new ScheduleEntityMapper());
         mappers.put(ConstraintEntity.class, new ConstraintEntityMapper());
     }
 
@@ -737,7 +737,7 @@ public class FManEntityManager {
                 Log.i(TAG, "Created TxHistory table...Success");
                 db.execSQL(new TaskEntityMapper().getCreateSql());
                 Log.i(TAG, "Created ScheduledTask table...Success");
-                db.execSQL(new ScheduleMapper().getCreateSql());
+                db.execSQL(new ScheduleEntityMapper().getCreateSql());
                 Log.i(TAG, "Created Schedule table...Success");
                 db.execSQL(new ConstraintEntityMapper().getCreateSql());
                 Log.i(TAG, "Created Constraint table...Success");
@@ -758,7 +758,7 @@ public class FManEntityManager {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             db.execSQL(new TaskEntityMapper().getCreateSql());
             Log.i(TAG, "Created ScheduledTask table...Success");
-            db.execSQL(new ScheduleMapper().getCreateSql());
+            db.execSQL(new ScheduleEntityMapper().getCreateSql());
             Log.i(TAG, "Created Schedule table...Success");
             db.execSQL(new ConstraintEntityMapper().getCreateSql());
             Log.i(TAG, "Created Constraint table...Success");

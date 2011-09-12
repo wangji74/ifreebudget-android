@@ -5,12 +5,12 @@ import com.ifreebudget.fm.entity.Mappings;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-public class ScheduleMapper extends DefaultAbstractTableMapper {
+public class ScheduleEntityMapper extends DefaultAbstractTableMapper {
 
     private final String TABLENAME = "SCHED";
     private final String TAG = "ScheduleMapper";
     
-    public ScheduleMapper() {
+    public ScheduleEntityMapper() {
         super();
     }
     
@@ -38,4 +38,9 @@ public class ScheduleMapper extends DefaultAbstractTableMapper {
     protected String[] getMappings() {
         return Mappings.ScheduleMapperMappings;
     }
+    
+    @Override
+    protected FManEntity self() {
+        return new ScheduleEntity();
+    }    
 }

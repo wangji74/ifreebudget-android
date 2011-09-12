@@ -16,40 +16,39 @@ import com.ifreebudget.fm.utils.MiscUtils;
 public abstract class DefaultAbstractTableMapper extends AbstractTableMapper {
 
     protected Table table;
-    
+
     protected abstract String getTag();
-    
+
     protected abstract String[] getMappings();
-    
+
+    protected abstract FManEntity self();
+
     public DefaultAbstractTableMapper() {
         String[] mappings = getMappings();
-        
+
         table = new Table(getTableName());
-        
-        for(String s : mappings) {
+
+        for (String s : mappings) {
             String[] split = s.split(":");
             Class<?> cls = null;
             try {
                 cls = Class.forName(split[Mappings.JTIDX]);
             }
             catch (ClassNotFoundException e) {
-                Log.e(getTag(), 
-                        "Invalid mapping for class type: " + split[Mappings.JTIDX]);
+                Log.e(getTag(), "Invalid mapping for class type: "
+                        + split[Mappings.JTIDX]);
                 cls = String.class;
-            } 
-            Field f = Field.create(
-                    split[Mappings.DNIDX], 
-                    split[Mappings.DTIDX],
-                    split[Mappings.JNIDX], 
-                    cls);
-            
+            }
+            Field f = Field.create(split[Mappings.DNIDX],
+                    split[Mappings.DTIDX], split[Mappings.JNIDX], cls);
+
             f.setPrimaryKey(Boolean.valueOf(split[Mappings.PKIDX]));
             f.setNullable(!Boolean.valueOf(split[Mappings.NNIDX]));
             f.setAutoincrement(Boolean.valueOf(split[Mappings.ACIDX]));
             table.getFields().add(f);
-        }        
+        }
     }
-    
+
     @Override
     public String getCreateSql() {
         return table.getCreateSql();
@@ -63,13 +62,15 @@ public abstract class DefaultAbstractTableMapper extends AbstractTableMapper {
     @Override
     public String getRetrieveSql() {
         return table.getRetrieveSql();
-    }    
-    
+    }
+
+    @Override
     public List<FManEntity> getList(SQLiteDatabase database, String filter,
             int offset, int limit) {
         return getList(database, filter, null, null, offset, limit);
     }
 
+    @Override
     public List<FManEntity> getList(SQLiteDatabase database, String filter,
             String[] order, String[] direction, int offset, int limit) {
 
@@ -86,6 +87,7 @@ public abstract class DefaultAbstractTableMapper extends AbstractTableMapper {
         return executeListQuery(database, q.toString());
     }
 
+    @Override
     public Object doInsert(SQLiteDatabase database, FManEntity entity)
             throws SQLException {
         SQLiteStatement stmt = database.compileStatement(getInsertSql());
@@ -111,8 +113,9 @@ public abstract class DefaultAbstractTableMapper extends AbstractTableMapper {
         return id;
     }
 
+    @Override
     public FManEntity getCurrentEntityFromCursor(Cursor cursor) {
-        TaskEntity a = new TaskEntity();
+        FManEntity a = self();
         List<Field> fields = table.getFields();
         for (Field f : fields) {
             setField(cursor, a, f.getDbName(), f.getMutatorName(),
@@ -120,5 +123,5 @@ public abstract class DefaultAbstractTableMapper extends AbstractTableMapper {
         }
 
         return a;
-    }    
+    }
 }

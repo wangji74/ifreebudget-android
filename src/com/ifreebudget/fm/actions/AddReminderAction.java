@@ -69,6 +69,9 @@ public class AddReminderAction {
         se.setScheduledTaskId(taskId);
         se.setRepeatType(sch.getRepeatType().getType());
         se.setStep(sch.getStep());
+        se.setNextRunTime(sch.getNextRunTime().getTime());
+        se.setLastRunTime(0L);
+        
         return se;
     }
 

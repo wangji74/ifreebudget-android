@@ -36,5 +36,10 @@ public class TaskEntityMapper extends DefaultAbstractTableMapper {
     @Override
     protected String[] getMappings() {
         return Mappings.ScheduledTaskMapperMappings;
-    }    
+    } 
+    
+    @Override
+    protected FManEntity self() {
+        return new TaskEntity();
+    }
 }

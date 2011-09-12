@@ -14,7 +14,7 @@ public class Mappings {
     public static final int EXIDX = 7;
     
     public static String ScheduledTaskMapperMappings[] = {
-            "ID:INTEGER:true:true:true:id:java.lang.Long", 
+            "ID:INTEGER:true:true:true:Id:java.lang.Long", 
             "NAME:VARCHAR(128):true:false:false:Name:java.lang.String",
             "STARTTIME:INTEGER:true:false:false:StartTime:java.lang.Long",
             "ENDTIME:INTEGER:true:false:false:EndTime:java.lang.Long",
@@ -22,7 +22,7 @@ public class Mappings {
             "TASKTYPE:VARCHAR(64):true:false:false:TaskType:java.lang.String" };
 
     public static String ScheduleMapperMappings[] = {
-        "ID:INTEGER:true:true:true:id:java.lang.Long", 
+        "ID:INTEGER:true:true:true:Id:java.lang.Long", 
         "SCHTASKID:INTEGER:true:false:false:ScheduledTaskId:java.lang.Long",
         "NEXTRT:INTEGER:true:false:false:NextRunTime:java.lang.Long",
         "LASTRT:INTEGER:true:false:false:LastRunTime:java.lang.Long",
@@ -30,7 +30,7 @@ public class Mappings {
         "STEP:INTEGER:true:false:false:Step:java.lang.Integer" };    
 
     public static String ConstraintMapperMappings[] = {
-        "ID:INTEGER:true:true:true:id:java.lang.Long", 
+        "ID:INTEGER:true:true:true:Id:java.lang.Long", 
         "CONSTRTYPE:INTEGER:true:false:false:ConstraintType:java.lang.Long",
         "CONSTR:BLOB:true:false:false:Constraint:[Ljava.lang.Byte;",
         "LASTRT:INTEGER:true:false:false:LastRunTime:java.lang.Long",
