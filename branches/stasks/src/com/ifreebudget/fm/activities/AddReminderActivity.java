@@ -2,6 +2,7 @@ package com.ifreebudget.fm.activities;
 
 import static com.ifreebudget.fm.utils.Messages.tr;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -23,7 +25,6 @@ import com.ifreebudget.fm.R;
 import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.ActionResponse;
 import com.ifreebudget.fm.actions.AddReminderAction;
-import com.ifreebudget.fm.entity.beans.TaskEntity;
 import com.ifreebudget.fm.scheduler.task.BasicSchedule;
 import com.ifreebudget.fm.scheduler.task.BasicTask;
 import com.ifreebudget.fm.scheduler.task.Schedule;
@@ -38,6 +39,12 @@ public class AddReminderActivity extends Activity {
 
     private Button startDtBtn, endDtBtn, startTimeBtn, endTimeBtn;
     private RadioButton dailyBtn, weeklyBtn, monthlyBtn;
+
+    private enum TASK_TYPE_ENUM {
+        daily, weekly
+    };
+
+    private TASK_TYPE_ENUM taskType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +80,7 @@ public class AddReminderActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.e("AddReminderActivity", "Clicked");
+                taskType = TASK_TYPE_ENUM.daily;
                 setRepeatsView(v, R.layout.daily_repeat_layout);
             }
         });
@@ -128,30 +136,84 @@ public class AddReminderActivity extends Activity {
         }
     }
 
+    private Date getStartTime() throws Exception {
+        String dateSt = startDtBtn.getText().toString();
+        String timeSt = startTimeBtn.getText().toString();
+
+        SimpleDateFormat fmt = SessionManager.getDateTimeFormat();
+        return fmt.parse(dateSt + " " + timeSt);
+    }
+
+    private Date getEndTime() throws Exception {
+        String dateSt = endDtBtn.getText().toString();
+        String timeSt = endTimeBtn.getText().toString();
+
+        SimpleDateFormat fmt = SessionManager.getDateTimeFormat();
+        return fmt.parse(dateSt + " " + timeSt);
+    }
+
     private Task createTask() throws Exception {
         String name = "Basic task";
         Task t = new BasicTask(name);
 
         Schedule s = getSchedule();
 
+        if (s == null) {
+            return null;
+        }
+
         t.setSchedule(s);
 
         return t;
     }
 
-    private Schedule getSchedule() throws Exception {
-        Calendar c = Calendar.getInstance();
-        Date s = c.getTime();
-        c.add(Calendar.MONDAY, 2);
-        Date e = c.getTime();
+    private boolean validateDates(Date s, Date e) {
+        if (e.before(s)) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    tr("Cannot create task - End date is before start date"),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+            return false;
+        }
+        else if (e.equals(s)) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    tr("Cannot create task - Start and end dates are same"),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+            return false;
+        }
+        return true;
+    }
 
+    private Schedule getSchedule() throws Exception {
+        Date s = getStartTime();
+        Date e = getEndTime();
+
+        if (!validateDates(s, e)) {
+            return null;
+        }
         return getDailySchedule(s, e);
     }
 
     private Schedule getDailySchedule(Date st, Date en) throws Exception {
+        LinearLayout ll = (LinearLayout) findViewById(R.id.repeat_info_panel);
+        View v = ll.getChildAt(0);
+
+        EditText repInfo = (EditText) v.findViewById(R.id.daily_repeat_unit_tf);
+        String val = repInfo.getText().toString();
+
         BasicSchedule s = new BasicSchedule(st, en);
-        Integer val = Integer.parseInt("2");
-        s.setRepeatType(RepeatType.DATE, val);
+
+        int step = 1;
+        if (val == null) {
+            try {
+                step = Integer.parseInt(val);
+            }
+            catch (NumberFormatException e) {
+                Log.e(TAG, "Unparseable step value for daily schedule: " + val);
+            }
+        }
+        s.setRepeatType(RepeatType.DATE, step);
 
         return s;
     }

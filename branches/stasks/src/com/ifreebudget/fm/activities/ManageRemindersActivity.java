@@ -68,7 +68,7 @@ public class ManageRemindersActivity extends ListActivity {
         startActivity(intent);
     }
 
-    public void add(View view) {
+    public void Add(View view) {
         Intent txIntent = new Intent(this, AddReminderActivity.class);
         startActivity(txIntent);
     }
@@ -99,7 +99,7 @@ public class ManageRemindersActivity extends ListActivity {
                     return;
                 }
                 ScheduleEntity se = (ScheduleEntity) list.get(0);
-                nextTime = SessionManager.getDateFormat().format(
+                nextTime = SessionManager.getDateTimeFormat().format(
                         new Date(se.getNextRunTime()));
             }
             catch (DBException e) {

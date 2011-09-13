@@ -29,6 +29,7 @@ public class SessionManager {
     private static SessionManager instance;
     private static final String TAG = "SessionManager";
     private static final String dateFormat = "dd MMM yyyy";
+    private static final String dateTimeFormat = "dd MMM yyyy hh:mm a";
 
     private SessionManager() {
     }
@@ -68,5 +69,9 @@ public class SessionManager {
 
     public static SimpleDateFormat getDateFormat() {
         return new SimpleDateFormat(dateFormat);
+    }
+
+    public static SimpleDateFormat getDateTimeFormat() {
+        return new SimpleDateFormat(dateTimeFormat);
     }
 }
