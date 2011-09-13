@@ -64,11 +64,30 @@ public abstract class AbstractTableMapper implements TableMapper {
         }
         catch (Exception e1) {
             Log.e(TAG, "Method not found " + fieldName + " on object : " + type);
-            setFieldFallback(entity, fieldName, val);
+            setFieldFallback1(entity, fieldName, val, type);
         }
     }
 
-    private void setFieldFallback(FManEntity entity, String fieldName,
+    private void setFieldFallback1(FManEntity entity, String fieldName,
+            Object[] val, Class<?> type) {
+        Class<?> primitive = getPrimitiveType(type);
+        if (primitive != null) {
+            try {
+                Method m = entity.getClass().getMethod(fieldName, primitive);
+                m.invoke(entity, val);
+            }
+            catch (Exception e) {
+                Log.e(TAG, "Method not found " + fieldName + " on object : "
+                        + primitive);
+                setFieldFallback0(entity, fieldName, val);
+            }
+        }
+        else {
+            setFieldFallback0(entity, fieldName, val);            
+        }
+    }
+
+    private void setFieldFallback0(FManEntity entity, String fieldName,
             Object[] val) {
         Method[] arr = entity.getClass().getDeclaredMethods();
         for (int i = 0; i < arr.length; i++) {
@@ -84,6 +103,21 @@ public abstract class AbstractTableMapper implements TableMapper {
         }
     }
 
+    private Class<?> getPrimitiveType(Class<?> cls) {
+        String name = cls.getName();
+        if (name.equals("java.lang.Integer")) {
+            return int.class;
+        }
+        if (name.equals("java.lang.Double")) {
+            return double.class;
+        }
+        if (name.equals("java.lang.Long")) {
+            return long.class;
+        }
+
+        return null;
+    }
+
     protected Object getValueFromCursor(Cursor c, Class<?> type, int columnIndex) {
         if (type.equals(String.class)) {
             return c.getString(columnIndex);
@@ -96,6 +130,9 @@ public abstract class AbstractTableMapper implements TableMapper {
         }
         else if (type.equals(Integer.class)) {
             return c.getInt(columnIndex);
+        }
+        else if (type.equals(byte[].class)) {
+            return c.getBlob(columnIndex);
         }
         else {
             return c.getString(columnIndex);
@@ -127,6 +164,9 @@ public abstract class AbstractTableMapper implements TableMapper {
         }
         else if (type.equals("java.math.BigDecimal")) {
             safeBindBigDecimal(stmt, index, (BigDecimal) val);
+        }
+        else if (type.equals("[Ljava.lang.Byte;")) {
+            safeBindBlob(stmt, index, (byte[]) val);
         }
     }
 
@@ -173,6 +213,16 @@ public abstract class AbstractTableMapper implements TableMapper {
         }
         else {
             stmt.bindDouble(index, value);
+        }
+    }
+
+    protected void safeBindBlob(SQLiteStatement stmt, int index,
+            byte[] value) {
+        if (value == null) {
+            stmt.bindNull(index);
+        }
+        else {
+            stmt.bindBlob(index, value);
         }
     }
 
