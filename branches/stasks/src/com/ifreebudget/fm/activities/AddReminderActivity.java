@@ -15,9 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -28,8 +30,11 @@ import com.ifreebudget.fm.actions.AddReminderAction;
 import com.ifreebudget.fm.scheduler.task.BasicSchedule;
 import com.ifreebudget.fm.scheduler.task.BasicTask;
 import com.ifreebudget.fm.scheduler.task.Schedule;
+import com.ifreebudget.fm.scheduler.task.Schedule.DayOfWeek;
 import com.ifreebudget.fm.scheduler.task.Schedule.RepeatType;
 import com.ifreebudget.fm.scheduler.task.Task;
+import com.ifreebudget.fm.scheduler.task.WeekSchedule;
+import com.ifreebudget.fm.scheduler.task.constraints.WeekConstraint;
 import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
 
@@ -90,6 +95,7 @@ public class AddReminderActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.e("AddReminderActivity", "Clicked");
+                taskType = TASK_TYPE_ENUM.weekly;
                 setRepeatsView(v, R.layout.weekly_repeat_layout);
             }
         });
@@ -192,20 +198,23 @@ public class AddReminderActivity extends Activity {
         if (!validateDates(s, e)) {
             return null;
         }
-        return getDailySchedule(s, e);
+        if(taskType == TASK_TYPE_ENUM.daily) {
+            return getDailySchedule(s, e);
+        }
+        else if(taskType == TASK_TYPE_ENUM.weekly) {
+            return getWeeklySchedule(s, e);
+        }
+        return null;
     }
 
     private Schedule getDailySchedule(Date st, Date en) throws Exception {
-        LinearLayout ll = (LinearLayout) findViewById(R.id.repeat_info_panel);
-        View v = ll.getChildAt(0);
-
-        EditText repInfo = (EditText) v.findViewById(R.id.daily_repeat_unit_tf);
+        EditText repInfo = (EditText) findViewById(R.id.daily_repeat_unit_tf);
         String val = repInfo.getText().toString();
 
         BasicSchedule s = new BasicSchedule(st, en);
 
         int step = 1;
-        if (val == null) {
+        if (val != null) {
             try {
                 step = Integer.parseInt(val);
             }
@@ -214,6 +223,59 @@ public class AddReminderActivity extends Activity {
             }
         }
         s.setRepeatType(RepeatType.DATE, step);
+
+        return s;
+    }
+
+    private Schedule getWeeklySchedule(Date st, Date en) throws Exception {
+        EditText repInfo = (EditText) findViewById(R.id.weekly_repeat_unit_tf);
+        String val = repInfo.getText().toString();
+
+        int step = 1;
+        if (val != null) {
+            try {
+                step = Integer.parseInt(val);
+            }
+            catch (NumberFormatException e) {
+                Log.e(TAG, "Unparseable step value for daily schedule: " + val);
+            }
+        }
+
+        WeekSchedule s = new WeekSchedule(st, en);
+
+        WeekConstraint co = new WeekConstraint();
+
+        CheckBox cbox = (CheckBox) findViewById(R.id.cbSun);
+        if (cbox.isChecked()) {
+            co.addDay(DayOfWeek.Sunday);
+        }
+        cbox = (CheckBox) findViewById(R.id.cbMon);
+        if (cbox.isChecked()) {
+            co.addDay(DayOfWeek.Monday);
+        }
+        cbox = (CheckBox) findViewById(R.id.cbTue);
+        if (cbox.isChecked()) {
+            co.addDay(DayOfWeek.Tuesday);
+        }
+        cbox = (CheckBox) findViewById(R.id.cbWed);
+        if (cbox.isChecked()) {
+            co.addDay(DayOfWeek.Wednesday);
+        }
+        cbox = (CheckBox) findViewById(R.id.cbThu);
+        if (cbox.isChecked()) {
+            co.addDay(DayOfWeek.Thursday);
+        }
+        cbox = (CheckBox) findViewById(R.id.cbFri);
+        if (cbox.isChecked()) {
+            co.addDay(DayOfWeek.Friday);
+        }
+        cbox = (CheckBox) findViewById(R.id.cbSat);
+        if (cbox.isChecked()) {
+            co.addDay(DayOfWeek.Saturday);
+        }
+
+        s.setRepeatType(RepeatType.WEEK, step);
+        s.setConstraint(co);
 
         return s;
     }

@@ -43,6 +43,6 @@ public class ConstraintEntity implements FManEntity {
     }
     @Override
     public TableMapper getTableMapper() {
-        return null;
+        return new ConstraintEntityMapper();
     }
 }

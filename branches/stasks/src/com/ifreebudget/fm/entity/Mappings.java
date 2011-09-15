@@ -31,8 +31,7 @@ public class Mappings {
 
     public static String ConstraintMapperMappings[] = {
         "ID:INTEGER:true:true:true:Id:java.lang.Long", 
-        "CONSTRTYPE:INTEGER:true:false:false:ConstraintType:java.lang.Long",
+        "CONSTRTYPE:INTEGER:true:false:false:ConstraintType:java.lang.Integer",
         "CONSTR:BLOB:true:false:false:Constraint:[Ljava.lang.Byte;",
-        "LASTRT:INTEGER:true:false:false:LastRunTime:java.lang.Long",
         "SCHEDID:INTEGER:true:false:false:ScheduleId:java.lang.Long" };
 }
