@@ -10,6 +10,7 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,7 @@ public class AddReminderActivity extends Activity {
 
     private Button startDtBtn, endDtBtn, startTimeBtn, endTimeBtn;
     private RadioButton dailyBtn, weeklyBtn, monthlyBtn;
+    private EditText rem_title_tf;
 
     private enum TASK_TYPE_ENUM {
         daily, weekly
@@ -61,6 +63,8 @@ public class AddReminderActivity extends Activity {
 
         startTimeBtn = (Button) findViewById(R.id.start_time_btn);
         endTimeBtn = (Button) findViewById(R.id.end_time_btn);
+
+        rem_title_tf = (EditText) findViewById(R.id.rem_title_tf);
 
         Calendar s = Calendar.getInstance();
         Calendar e = Calendar.getInstance();
@@ -159,7 +163,11 @@ public class AddReminderActivity extends Activity {
     }
 
     private Task createTask() throws Exception {
-        String name = "Basic task";
+        if (!validate()) {
+            return null;
+        }
+        String name = rem_title_tf.getText().toString();
+
         Task t = new BasicTask(name);
 
         Schedule s = getSchedule();
@@ -171,6 +179,26 @@ public class AddReminderActivity extends Activity {
         t.setSchedule(s);
 
         return t;
+    }
+
+    private boolean validate() {
+        Editable e = rem_title_tf.getText();
+        if (e == null) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    tr("Cannot create task - Name is required"),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+            return false;
+        }
+        String s = e.toString().trim();
+        if (s.length() == 0) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    tr("Cannot create task - Name is required"),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+            return false;
+        }
+        return true;
     }
 
     private boolean validateDates(Date s, Date e) {
@@ -198,10 +226,10 @@ public class AddReminderActivity extends Activity {
         if (!validateDates(s, e)) {
             return null;
         }
-        if(taskType == TASK_TYPE_ENUM.daily) {
+        if (taskType == TASK_TYPE_ENUM.daily) {
             return getDailySchedule(s, e);
         }
-        else if(taskType == TASK_TYPE_ENUM.weekly) {
+        else if (taskType == TASK_TYPE_ENUM.weekly) {
             return getWeeklySchedule(s, e);
         }
         return null;
