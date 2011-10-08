@@ -30,6 +30,7 @@ import com.ifreebudget.fm.actions.ActionResponse;
 import com.ifreebudget.fm.actions.AddReminderAction;
 import com.ifreebudget.fm.scheduler.task.BasicSchedule;
 import com.ifreebudget.fm.scheduler.task.BasicTask;
+import com.ifreebudget.fm.scheduler.task.STaskAlarmReceiver;
 import com.ifreebudget.fm.scheduler.task.Schedule;
 import com.ifreebudget.fm.scheduler.task.Schedule.DayOfWeek;
 import com.ifreebudget.fm.scheduler.task.Schedule.RepeatType;
@@ -307,4 +308,11 @@ public class AddReminderActivity extends Activity {
 
         return s;
     }
+    
+//    private void scheduleEvent(Task task) {
+//        Intent intent = new Intent(ctx, STaskAlarmReceiver.class);
+//        intent.putExtra("alarm_message", "O'Doyle Rules!");
+//        // In reality, you would want to have a static variable for the request code instead of 192837
+//        PendingIntent sender = PendingIntent.getBroadcast(this, 192837, intent, PendingIntent.FLAG_UPDATE_CURRENT);        
+//    }
 }
