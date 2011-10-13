@@ -43,6 +43,7 @@ public class AddReminderAction {
             }
 
             em.setTransactionSuccessful();
+            resp.addResult("TASKID", te.getPK());
         }
         catch (Exception e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));

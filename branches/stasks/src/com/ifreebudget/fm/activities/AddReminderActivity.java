@@ -2,13 +2,15 @@ package com.ifreebudget.fm.activities;
 
 import static com.ifreebudget.fm.utils.Messages.tr;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
@@ -20,7 +22,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -42,7 +43,8 @@ import com.ifreebudget.fm.utils.MiscUtils;
 
 public class AddReminderActivity extends Activity {
 
-    private final String TAG = "AddReminderActivity";
+    private static final String TAG = "AddReminderActivity";
+    public static final String TASK_ALARM_ID = "ifb-st-id";
 
     private Button startDtBtn, endDtBtn, startTimeBtn, endTimeBtn;
     private RadioButton dailyBtn, weeklyBtn, monthlyBtn;
@@ -135,6 +137,9 @@ public class AddReminderActivity extends Activity {
             req.setProperty("TASKTYPE", "Reminder");
             ActionResponse resp = new AddReminderAction().execute(req);
             if (resp.getErrorCode() == ActionResponse.NOERROR) {
+                Long dbId = (Long) resp.getResult("TASKID");
+                AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+                scheduleEvent(am, getApplicationContext(), dbId, task);
                 super.finish();
             }
         }
@@ -152,7 +157,11 @@ public class AddReminderActivity extends Activity {
         String timeSt = startTimeBtn.getText().toString();
 
         SimpleDateFormat fmt = SessionManager.getDateTimeFormat();
-        return fmt.parse(dateSt + " " + timeSt);
+        Date dt = fmt.parse(dateSt + " " + timeSt);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dt);
+        cal.add(Calendar.MINUTE, 2);
+        return cal.getTime();
     }
 
     private Date getEndTime() throws Exception {
@@ -308,11 +317,15 @@ public class AddReminderActivity extends Activity {
 
         return s;
     }
-    
-//    private void scheduleEvent(Task task) {
-//        Intent intent = new Intent(ctx, STaskAlarmReceiver.class);
-//        intent.putExtra("alarm_message", "O'Doyle Rules!");
-//        // In reality, you would want to have a static variable for the request code instead of 192837
-//        PendingIntent sender = PendingIntent.getBroadcast(this, 192837, intent, PendingIntent.FLAG_UPDATE_CURRENT);        
-//    }
+
+    public static void scheduleEvent(AlarmManager manager, Context context,
+            Long dbId, Task task) {
+        Intent intent = new Intent(context, STaskAlarmReceiver.class);
+        intent.putExtra(TASK_ALARM_ID, dbId);
+        PendingIntent sender = PendingIntent.getBroadcast(context,
+                Short.MAX_VALUE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        manager.set(AlarmManager.RTC_WAKEUP, task.getSchedule()
+                .getNextRunTime().getTime(), sender);
+    }
 }

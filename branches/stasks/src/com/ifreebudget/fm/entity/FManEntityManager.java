@@ -59,6 +59,7 @@ import com.ifreebudget.fm.entity.beans.Transaction;
 import com.ifreebudget.fm.entity.beans.TransactionMapper;
 import com.ifreebudget.fm.entity.beans.TxHistory;
 import com.ifreebudget.fm.entity.beans.TxHistoryMapper;
+import com.ifreebudget.fm.scheduler.task.Task;
 import com.ifreebudget.fm.utils.MiscUtils;
 
 public class FManEntityManager {
@@ -506,6 +507,27 @@ public class FManEntityManager {
         }
     }
 
+    public TaskEntity getTask(Long id) throws DBException {
+        try {
+            TaskEntityMapper mapper = (TaskEntityMapper) mappers.get(TaskEntity.class);
+            List<Field> pkList = mapper.getPrimaryKeys();
+            Field pk = pkList.get(0);
+            String filter = String.format(" WHERE %s = %d", pk.getDbName(), id);
+            List<FManEntity> list = mapper.getList(database, filter, 0, 0);
+            if (list != null) {
+                if (list.size() != 1) {
+                    throw new DBException("Non unique accountId:" + id);
+                }
+                return (TaskEntity) list.get(0);
+            }
+            return null;
+        }
+        catch (SQLException e) {
+            throw new DBException(e);
+        }
+        
+    }
+    
     public int deleteBudget(long budgetId) throws DBException {
         try {
             String filter = "BUDGETID = " + budgetId;
