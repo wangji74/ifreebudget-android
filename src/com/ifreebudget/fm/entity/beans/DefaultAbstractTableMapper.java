@@ -22,6 +22,10 @@ public abstract class DefaultAbstractTableMapper extends AbstractTableMapper {
     protected abstract String[] getMappings();
 
     protected abstract FManEntity self();
+    
+    public List<Field> getPrimaryKeys() {
+        return table.getPrimaryKeys();
+    }
 
     public DefaultAbstractTableMapper() {
         String[] mappings = getMappings();

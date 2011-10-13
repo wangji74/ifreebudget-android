@@ -13,6 +13,18 @@ public class Table {
         fields = new ArrayList<Field>();
     }
 
+    public List<Field> getPrimaryKeys() {
+        List<Field> ret = new ArrayList<Field>();
+
+        for (Field f : fields) {
+            if (f.isPrimaryKey()) {
+                ret.add(f);
+            }
+        }
+
+        return ret;
+    }
+
     public String getTableName() {
         return tableName;
     }
