@@ -139,10 +139,10 @@ public class FManEntityManager {
 
     public SQLiteStatement prepareStatement(String query) throws Exception {
         SQLiteStatement stmt = database.compileStatement(query);
-        
+
         return stmt;
     }
-    
+
     public void updateEntity(FManEntity entity) throws DBException {
         try {
             entity.getTableMapper().doUpdate(database, entity);
@@ -509,14 +509,15 @@ public class FManEntityManager {
 
     public TaskEntity getTask(Long id) throws DBException {
         try {
-            TaskEntityMapper mapper = (TaskEntityMapper) mappers.get(TaskEntity.class);
+            TaskEntityMapper mapper = (TaskEntityMapper) mappers
+                    .get(TaskEntity.class);
             List<Field> pkList = mapper.getPrimaryKeys();
             Field pk = pkList.get(0);
             String filter = String.format(" WHERE %s = %d", pk.getDbName(), id);
             List<FManEntity> list = mapper.getList(database, filter, 0, 0);
             if (list != null) {
                 if (list.size() != 1) {
-                    throw new DBException("Non unique accountId:" + id);
+                    throw new DBException("Non unique taskId:" + id);
                 }
                 return (TaskEntity) list.get(0);
             }
@@ -525,9 +526,54 @@ public class FManEntityManager {
         catch (SQLException e) {
             throw new DBException(e);
         }
-        
+
     }
-    
+
+    public ScheduleEntity getScheduleByTaskId(Long taskId) throws DBException {
+        try {
+            ScheduleEntityMapper mapper = (ScheduleEntityMapper) mappers
+                    .get(ScheduleEntity.class);
+            String filter = String
+                    .format(" WHERE %s = %d", "SCHTASKID", taskId);
+            List<FManEntity> list = mapper.getList(database, filter, 0, 0);
+            if (list != null) {
+                if (list.size() != 1) {
+                    throw new DBException("Non unique scheduleId:" + taskId);
+                }
+                return (ScheduleEntity) list.get(0);
+            }
+            return null;
+        }
+        catch (SQLException e) {
+            throw new DBException(e);
+        }
+
+    }
+
+    public ConstraintEntity getConstraintByScheduleId(Long scheduleId)
+            throws DBException {
+        try {
+            ConstraintEntityMapper mapper = (ConstraintEntityMapper) mappers
+                    .get(ConstraintEntity.class);
+            String filter = String.format(" WHERE %s = %d", "SCHEDID",
+                    scheduleId);
+            List<FManEntity> list = mapper.getList(database, filter, 0, 0);
+            if (list != null) {
+                if (list.size() == 1) {
+                    return (ConstraintEntity) list.get(0);
+                }
+                if (list.size() > 1) {
+                    throw new DBException("Non unique scheduleId:" + scheduleId);
+                }
+            }
+            return null;
+        }
+        catch (SQLException e) {
+            throw new DBException(e);
+        }
+
+    }
+
     public int deleteBudget(long budgetId) throws DBException {
         try {
             String filter = "BUDGETID = " + budgetId;

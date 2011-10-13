@@ -12,6 +12,7 @@ import com.ifreebudget.fm.entity.beans.ScheduleEntity;
 import com.ifreebudget.fm.entity.beans.TaskEntity;
 import com.ifreebudget.fm.scheduler.task.Schedule;
 import com.ifreebudget.fm.scheduler.task.Task;
+import com.ifreebudget.fm.scheduler.task.TaskUtils.SerializationHelper;
 import com.ifreebudget.fm.scheduler.task.constraints.Constraint;
 import com.ifreebudget.fm.utils.MiscUtils;
 
@@ -60,7 +61,7 @@ public class AddReminderAction {
             throws Exception {
         ConstraintEntity ce = new ConstraintEntity();
         ce.setScheduleId(scheduleId);
-        ce.setConstraint(toByteArray(c));
+        ce.setConstraint(SerializationHelper.serialize(c));
         return ce;
     }
 
@@ -72,7 +73,7 @@ public class AddReminderAction {
         se.setStep(sch.getStep());
         se.setNextRunTime(sch.getNextRunTime().getTime());
         se.setLastRunTime(0L);
-        
+
         return se;
     }
 
@@ -86,15 +87,15 @@ public class AddReminderAction {
         return te;
     }
 
-    private byte[] toByteArray(Object obj) throws IOException {
-        byte[] bytes = null;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(obj);
-        oos.flush();
-        oos.close();
-        bos.close();
-        bytes = bos.toByteArray();
-        return bytes;
-    }
+    // private byte[] toByteArray(Object obj) throws IOException {
+    // byte[] bytes = null;
+    // ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    // ObjectOutputStream oos = new ObjectOutputStream(bos);
+    // oos.writeObject(obj);
+    // oos.flush();
+    // oos.close();
+    // bos.close();
+    // bytes = bos.toByteArray();
+    // return bytes;
+    // }
 }
