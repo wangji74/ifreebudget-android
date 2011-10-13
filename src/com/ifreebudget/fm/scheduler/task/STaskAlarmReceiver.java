@@ -13,6 +13,8 @@ import com.ifreebudget.fm.R;
 import com.ifreebudget.fm.activities.AddReminderActivity;
 import com.ifreebudget.fm.activities.AddTransactionActivity;
 import com.ifreebudget.fm.entity.FManEntityManager;
+import com.ifreebudget.fm.entity.beans.ConstraintEntity;
+import com.ifreebudget.fm.entity.beans.ScheduleEntity;
 import com.ifreebudget.fm.entity.beans.TaskEntity;
 import com.ifreebudget.fm.utils.MiscUtils;
 
@@ -33,10 +35,12 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
         try {
             FManEntityManager em = FManEntityManager.getInstance();
             TaskEntity task = em.getTask(id);
+            ScheduleEntity schedule = em.getScheduleByTaskId(task.getId());
+            ConstraintEntity constr = em.getConstraintByScheduleId(schedule.getId());
             String tickerText = "Scheduled transaction reminder - "
                     + task.getName();
             sendNotification(context, AddTransactionActivity.class, tickerText,
-                    "Scheduled transaction", tickerText, 1, true, true);
+                    "Scheduled transaction", tickerText, 1, true, false);
         }
         catch (Exception e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
