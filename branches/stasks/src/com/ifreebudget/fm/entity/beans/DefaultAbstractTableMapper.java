@@ -1,6 +1,7 @@
 package com.ifreebudget.fm.entity.beans;
 
 import java.util.List;
+import java.util.Set;
 
 import android.database.Cursor;
 import android.database.SQLException;
@@ -68,6 +69,10 @@ public abstract class DefaultAbstractTableMapper extends AbstractTableMapper {
         return table.getRetrieveSql();
     }
 
+    public String getUpdateSql(Set<String> fieldsToUpdate) {
+        return table.getUpdateSql(fieldsToUpdate);
+    }
+    
     @Override
     public List<FManEntity> getList(SQLiteDatabase database, String filter,
             int offset, int limit) {

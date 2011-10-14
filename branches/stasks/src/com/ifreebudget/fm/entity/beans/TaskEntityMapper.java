@@ -1,7 +1,11 @@
 package com.ifreebudget.fm.entity.beans;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 
 import com.ifreebudget.fm.entity.Mappings;
 
@@ -19,13 +23,9 @@ public class TaskEntityMapper extends DefaultAbstractTableMapper {
         return TABLENAME;
     }
     
-    public String getUpdateSql() {
-        throw new RuntimeException(getTag() + "-Update not supported");
-    }
-
     public void doUpdate(SQLiteDatabase database, FManEntity entity)
             throws SQLException {
-        throw new RuntimeException(getTag() + "-Update not supported");
+        throw new RuntimeException("Do not use!!!");
     }
     
     @Override

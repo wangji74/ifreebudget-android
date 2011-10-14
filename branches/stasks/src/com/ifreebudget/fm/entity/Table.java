@@ -1,7 +1,10 @@
 package com.ifreebudget.fm.entity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Table {
 
@@ -100,4 +103,38 @@ public class Table {
         return ret.toString();
     }
 
+    public String getUpdateSql(Set<String> fieldsToUpdate) {
+        if(fieldsToUpdate == null || fieldsToUpdate.size() == 0) {
+            return null;
+        }
+        StringBuilder ret = new StringBuilder("UPDATE");
+        ret.append(Field.SPACE);
+        ret.append(tableName);
+        ret.append(Field.SPACE);
+
+        ret.append("SET");
+
+        ret.append(Field.SPACE);
+
+        int sz = fields.size();
+        Iterator<String> it = fieldsToUpdate.iterator();
+        int count = 0;
+        while (it.hasNext()) {
+            String toCheck = "get" + it.next();
+            for (int i = 0; i < sz; i++) {
+                Field f = fields.get(i);
+                if (toCheck.equals(f.getAccessorName())) {
+                    if(count > 0) {
+                        ret.append(",");                        
+                    }
+                    ret.append(f.getDbName());
+                    ret.append(Field.EQ);
+                    ret.append("?");
+                    count++;
+                }
+            }
+        }
+
+        return ret.toString();
+    }
 }

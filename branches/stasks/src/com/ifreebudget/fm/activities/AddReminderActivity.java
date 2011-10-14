@@ -260,7 +260,7 @@ public class AddReminderActivity extends Activity {
                 Log.e(TAG, "Unparseable step value for daily schedule: " + val);
             }
         }
-        s.setRepeatType(RepeatType.DATE, step);
+        s.setRepeatType(RepeatType.MINUTE, step);
 
         return s;
     }
@@ -325,7 +325,8 @@ public class AddReminderActivity extends Activity {
         PendingIntent sender = PendingIntent.getBroadcast(context,
                 Short.MAX_VALUE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        manager.set(AlarmManager.RTC_WAKEUP, task.getSchedule()
-                .getNextRunTime().getTime(), sender);
+        Date dt = task.getSchedule().getNextRunTime();
+        Log.i(TAG, "Scheduled event for: " + dt.toString());
+        manager.set(AlarmManager.RTC_WAKEUP, dt.getTime(), sender);
     }
 }
