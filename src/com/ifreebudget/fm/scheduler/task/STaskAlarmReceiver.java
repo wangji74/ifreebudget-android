@@ -1,5 +1,10 @@
 package com.ifreebudget.fm.scheduler.task;
 
+import static com.ifreebudget.fm.utils.Messages.tr;
+
+import java.util.Date;
+
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -8,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.ifreebudget.fm.R;
 import com.ifreebudget.fm.activities.AddReminderActivity;
@@ -28,22 +34,55 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Long id = intent.getLongExtra(AddReminderActivity.TASK_ALARM_ID, -1);
         Log.d(TAG, "Alarm received: " + id);
-        if(id == -1) {
+        if (id == -1) {
             Log.e(TAG, "Invalid alarm received: " + id);
             return;
         }
         try {
             FManEntityManager em = FManEntityManager.getInstance();
-            TaskEntity task = em.getTask(id);
-            ScheduleEntity schedule = em.getScheduleByTaskId(task.getId());
-            ConstraintEntity constr = em.getConstraintByScheduleId(schedule.getId());
+            TaskEntity taskEntity = em.getTask(id);
+            ScheduleEntity scheduleEntity = em.getScheduleByTaskId(taskEntity.getId());
+            ConstraintEntity constraintEntity = em.getConstraintByScheduleId(scheduleEntity
+                    .getId());
+                                   
+            ScheduledTx t = new ScheduledTx(taskEntity.getName(),
+                    taskEntity.getBusinessObjectId());
+            Schedule sch = TaskUtils.rebuildSchedule(
+                    new Date(scheduleEntity.getNextRunTime()),
+                    new Date(taskEntity.getEndTime()), scheduleEntity, constraintEntity);
+
+            t.setSchedule(sch);
+
+            scheduleEntity.setLastRunTime(new Date().getTime());
+            scheduleEntity.setNextRunTime(sch.getNextRunTime().getTime());
+            
+            reSchedule(context, t);
+            
+            em.updateEntity(scheduleEntity);
+            
+
             String tickerText = "Scheduled transaction reminder - "
-                    + task.getName();
+                    + taskEntity.getName();
             sendNotification(context, AddTransactionActivity.class, tickerText,
                     "Scheduled transaction", tickerText, 1, true, false);
         }
         catch (Exception e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
+        }
+    }
+
+    private void reSchedule(Context context, ScheduledTx task) {
+        try {
+            AlarmManager am = (AlarmManager) context
+                    .getSystemService(Context.ALARM_SERVICE);
+            AddReminderActivity
+                    .scheduleEvent(am, context, task.getTxId(), task);
+        }
+        catch (Exception e) {
+            Log.e(TAG, MiscUtils.stackTrace2String(e));
+            Toast toast = Toast.makeText(context, tr("Task schedule failed - "
+                    + e.getMessage()), Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 
