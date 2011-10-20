@@ -125,16 +125,30 @@ public class Table {
                 Field f = fields.get(i);
                 if (toCheck.equals(f.getAccessorName())) {
                     if(count > 0) {
-                        ret.append(",");                        
+                        ret.append(Field.COMMA);                        
                     }
                     ret.append(f.getDbName());
                     ret.append(Field.EQ);
-                    ret.append("?");
+                    ret.append(Field.Q);
                     count++;
                 }
             }
         }
 
+        ret.append(Field.SPACE);
+        ret.append("WHERE");
+        ret.append(Field.SPACE);
+        count = 0;
+        List<Field> pks = getPrimaryKeys();
+        for(Field f : pks) {
+            if(count > 0) {
+                ret.append(Field.COMMA);
+            }
+            ret.append(f.getDbName());
+            ret.append(Field.EQ);
+            ret.append(Field.Q);
+            ret.append(Field.SPACE);
+        }
         return ret.toString();
     }
 }

@@ -41,25 +41,26 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
         try {
             FManEntityManager em = FManEntityManager.getInstance();
             TaskEntity taskEntity = em.getTask(id);
-            ScheduleEntity scheduleEntity = em.getScheduleByTaskId(taskEntity.getId());
-            ConstraintEntity constraintEntity = em.getConstraintByScheduleId(scheduleEntity
+            ScheduleEntity scheduleEntity = em.getScheduleByTaskId(taskEntity
                     .getId());
-                                   
+            ConstraintEntity constraintEntity = em
+                    .getConstraintByScheduleId(scheduleEntity.getId());
+
             ScheduledTx t = new ScheduledTx(taskEntity.getName(),
                     taskEntity.getBusinessObjectId());
             Schedule sch = TaskUtils.rebuildSchedule(
-                    new Date(scheduleEntity.getNextRunTime()),
-                    new Date(taskEntity.getEndTime()), scheduleEntity, constraintEntity);
+                    new Date(scheduleEntity.getNextRunTime()), new Date(
+                            taskEntity.getEndTime()), scheduleEntity,
+                    constraintEntity);
 
             t.setSchedule(sch);
 
             scheduleEntity.setLastRunTime(new Date().getTime());
             scheduleEntity.setNextRunTime(sch.getNextRunTime().getTime());
-            
-            reSchedule(context, t);
-            
+
+            reSchedule(context, taskEntity.getId(), t);
+
             em.updateEntity(scheduleEntity);
-            
 
             String tickerText = "Scheduled transaction reminder - "
                     + taskEntity.getName();
@@ -71,12 +72,11 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
         }
     }
 
-    private void reSchedule(Context context, ScheduledTx task) {
+    private void reSchedule(Context context, Long taskDbId, ScheduledTx task) {
         try {
             AlarmManager am = (AlarmManager) context
                     .getSystemService(Context.ALARM_SERVICE);
-            AddReminderActivity
-                    .scheduleEvent(am, context, task.getTxId(), task);
+            AddReminderActivity.scheduleEvent(am, context, taskDbId, task);
         }
         catch (Exception e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
