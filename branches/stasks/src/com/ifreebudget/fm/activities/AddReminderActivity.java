@@ -8,7 +8,9 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Dialog;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.ifreebudget.fm.R;
@@ -50,6 +53,13 @@ public class AddReminderActivity extends Activity {
     private RadioButton dailyBtn, weeklyBtn, monthlyBtn;
     private EditText rem_title_tf;
 
+    private static final int ST_TIME_DIALOG = 0;
+    private static final int EN_TIME_DIALOG = 1;
+    private static final int ST_DATE_DIALOG = 2;
+    private static final int EN_DATE_DIALOG = 3;
+
+    private static final String TIME_FORMAT = "hh:mm a";
+
     private enum TASK_TYPE_ENUM {
         daily, weekly
     };
@@ -65,7 +75,20 @@ public class AddReminderActivity extends Activity {
         endDtBtn = (Button) findViewById(R.id.end_date_btn);
 
         startTimeBtn = (Button) findViewById(R.id.start_time_btn);
+        startTimeBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog(ST_TIME_DIALOG);
+            }
+        });
+
         endTimeBtn = (Button) findViewById(R.id.end_time_btn);
+        endTimeBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog(EN_TIME_DIALOG);
+            }
+        });
 
         rem_title_tf = (EditText) findViewById(R.id.rem_title_tf);
 
@@ -108,6 +131,58 @@ public class AddReminderActivity extends Activity {
         });
 
     }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        String txt = null;
+        switch (id) {
+        case ST_TIME_DIALOG:
+            txt = startTimeBtn.getText().toString();
+            return getTimePickerDialog(stTimePickerListener, txt);
+        case EN_TIME_DIALOG:
+            txt = endTimeBtn.getText().toString();
+            return getTimePickerDialog(enTimePickerListener, txt);
+        }
+        return null;
+    }
+
+    public TimePickerDialog getTimePickerDialog(
+            TimePickerDialog.OnTimeSetListener listener, String txt) {
+        SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT);
+        int hr = 12;
+        int min = 0;
+        try {
+            Calendar c = Calendar.getInstance();
+            c.setTime(sdf.parse(txt));
+            hr = c.get(Calendar.HOUR_OF_DAY);
+            min = c.get(Calendar.MINUTE);
+        }
+        catch (Exception e) {
+            Log.e(TAG, "Error parsing time for start time dialog: " + txt);
+        }
+        return new TimePickerDialog(this, listener, hr, min, false);
+    }
+
+    private void updateTimeDisplay(Button view, int hourOfDay, int minute) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        c.set(Calendar.MINUTE, minute);
+
+        SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT);
+        view.setText(sdf.format(c.getTime()));
+    }
+
+    private TimePickerDialog.OnTimeSetListener stTimePickerListener = new TimePickerDialog.OnTimeSetListener() {
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            updateTimeDisplay(startTimeBtn, hourOfDay, minute);
+        }
+    };
+
+    private TimePickerDialog.OnTimeSetListener enTimePickerListener = new TimePickerDialog.OnTimeSetListener() {
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            updateTimeDisplay(endTimeBtn, hourOfDay, minute);
+        }
+    };
 
     private void setRepeatsView(View v, int layoutId) {
         Log.e("AddReminderActivity", "Clicked" + layoutId);

@@ -39,7 +39,7 @@ public class ScheduleEntityMapper extends DefaultAbstractTableMapper {
         ScheduleEntity se = (ScheduleEntity) entity;
 
         String sql = getUpdateSql();
-        if(sql == null) {
+        if (sql == null) {
             return;
         }
         SQLiteStatement stmt = database.compileStatement(sql);
@@ -49,6 +49,10 @@ public class ScheduleEntityMapper extends DefaultAbstractTableMapper {
         safeBindLong(stmt, 1, se.getNextRunTime());
         safeBindLong(stmt, 2, se.getNextRunTime());
 
+        // TODO : bind primary keys using table.getPrimaryKeys and reflective
+        // lookup on the entity.
+
+        safeBindLong(stmt, 3, (Long) entity.getPK());
         stmt.execute();
     }
 

@@ -23,6 +23,8 @@ public class Field {
     public static final String CLOSEB = ")";
     public static final String VALUES = "VALUES";
     public static final String EQ = "=";
+    public static final String Q = "?";
+    public static final String COMMA = ",";
 
     public static Field create(String dbName, String dbType, String javaName,
             Class<?> javaType) {
