@@ -62,10 +62,9 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
 
             em.updateEntity(scheduleEntity);
 
-            String tickerText = "Scheduled transaction reminder - "
-                    + taskEntity.getName();
+            String tickerText = taskEntity.getName() + " reminder";
             sendNotification(context, AddTransactionActivity.class, tickerText,
-                    "Scheduled transaction", tickerText, 1, true, false);
+                    "iFreeBudget", tickerText, 1, true, true);
         }
         catch (Exception e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
