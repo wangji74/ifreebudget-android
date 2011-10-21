@@ -36,10 +36,6 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_alignParentRight="true">
-				<!-- ImageButton android:id="@+id/add_budget_btn" android:layout_width="wrap_content" 
-					android:layout_height="wrap_content" android:background="@null" android:gravity="center" 
-					android:onClick="@string/save_budget_action" android:src="@android:drawable/ic_menu_save" 
-					/ -->
 			</LinearLayout>
 		</RelativeLayout>
 	</LinearLayout>
