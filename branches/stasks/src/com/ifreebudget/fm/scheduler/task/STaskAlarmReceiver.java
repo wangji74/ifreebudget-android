@@ -64,7 +64,7 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
 
             String tickerText = taskEntity.getName() + " reminder";
             sendNotification(context, AddTransactionActivity.class, tickerText,
-                    "iFreeBudget", tickerText, 1, true, true);
+                    "iFreeBudget", tickerText, 1, true, false);
         }
         catch (Exception e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));

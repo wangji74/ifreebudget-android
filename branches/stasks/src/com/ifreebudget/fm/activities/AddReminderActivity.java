@@ -38,6 +38,7 @@ import com.ifreebudget.fm.scheduler.task.STaskAlarmReceiver;
 import com.ifreebudget.fm.scheduler.task.Schedule;
 import com.ifreebudget.fm.scheduler.task.Schedule.DayOfWeek;
 import com.ifreebudget.fm.scheduler.task.Schedule.RepeatType;
+import com.ifreebudget.fm.scheduler.task.ScheduledTx;
 import com.ifreebudget.fm.scheduler.task.Task;
 import com.ifreebudget.fm.scheduler.task.WeekSchedule;
 import com.ifreebudget.fm.scheduler.task.constraints.WeekConstraint;
@@ -65,12 +66,23 @@ public class AddReminderActivity extends Activity {
     };
 
     private TASK_TYPE_ENUM taskType;
+    
+    private Long txId = 0l;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.add_reminder_layout);
 
+        Intent intent = this.getIntent();
+
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null && bundle.containsKey(UpdateTransactionActivity.TXID)) {
+                txId = (Long) bundle.get(UpdateTransactionActivity.TXID);
+            }
+        }
+        
         startDtBtn = (Button) findViewById(R.id.start_date_btn);
         endDtBtn = (Button) findViewById(R.id.end_date_btn);
 
@@ -253,7 +265,7 @@ public class AddReminderActivity extends Activity {
         }
         String name = rem_title_tf.getText().toString();
 
-        Task t = new BasicTask(name);
+        Task t = new ScheduledTx(name, txId);
 
         Schedule s = getSchedule();
 

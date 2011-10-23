@@ -22,9 +22,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class ManageRemindersActivity extends ListActivity {
     private static final String TAG = "ManageRemindersActivity";
+    public static final String REMINDERIDKEY = "REMINDERIDKEY";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,22 @@ public class ManageRemindersActivity extends ListActivity {
         startActivity(txIntent);
     }
 
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        
+        Object obj = this.getListAdapter().getItem(position);
+        
+        ListEntry e = (ListEntry) obj;
+        
+
+        Intent intent = new Intent(this, ViewReminderActivity.class);
+
+        intent.putExtra(REMINDERIDKEY, e.entity.getId());
+
+        startActivity(intent);        
+    }
+    
     class ListEntry {
         TaskEntity entity;
         ScheduleEntity schedule;
@@ -112,7 +130,7 @@ public class ManageRemindersActivity extends ListActivity {
         @Override
         public String toString() {
             StringBuilder ret = new StringBuilder(entity.getName());
-            ret.append("\nNext: ");
+            ret.append("\n\tNext: ");
             ret.append(nextTime);
             return ret.toString();
         }
