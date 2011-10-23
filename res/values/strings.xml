@@ -122,6 +122,8 @@
 	<string
 		name="view_tx_title_lbl">Transaction details</string>
 	<string
+		name="view_rem_title_lbl">Reminder details</string>
+	<string
 		name="tx_list_lbl">Transactions</string>
 	<string
 		name="back">Back</string>
@@ -226,6 +228,8 @@
 		<item>Add expense</item>
 		<item>Reminders</item>
 	</string-array>
+	<string
+		name="reminder">Reminder</string>
 	<string
 		name="show_filter_selector">showFilterSelector</string>
 	<string

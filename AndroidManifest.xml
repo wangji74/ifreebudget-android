@@ -12,7 +12,7 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<application android:icon="@drawable/icon" android:label="@string/app_name"
-		android:theme="@android:style/Theme.NoTitleBar" android:debuggable="false">
+		android:theme="@android:style/Theme.NoTitleBar" android:debuggable="true">
 		<provider android:name=".activities.TxSearchSuggestionProvider"
 			android:authorities="com.ifreebudget.fm.TxSearchSuggestionProvider" />
 		<activity android:name=".iFreeBudget" android:label="@string/app_name">
@@ -64,6 +64,8 @@
 		<activity android:name=".activities.AddReminderActivity"
 			android:label="iFreeBudget"></activity>
 		<activity android:name=".activities.ManageRemindersActivity"
+			android:label="iFreeBudget"></activity>
+		<activity android:name=".activities.ViewReminderActivity"
 			android:label="iFreeBudget"></activity>
 		<receiver android:name=".scheduler.task.STaskAlarmReceiver"></receiver>
 	</application>

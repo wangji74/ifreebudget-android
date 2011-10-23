@@ -160,6 +160,9 @@ public class ListTransactionsActivity extends ListActivity {
         else if (item.getItemId() == R.id.delete_item) {
             doDeleteAction(obj);
         }
+        else if (item.getItemId() == R.id.reminder_item) {
+            doReminderAction(obj);
+        }
         return true;
     }
 
@@ -170,6 +173,13 @@ public class ListTransactionsActivity extends ListActivity {
         startActivity(intent);
     }
 
+    private void doReminderAction(TxHolder entity) {
+        Transaction a = entity.t;
+        Intent intent = new Intent(this, AddReminderActivity.class);
+        intent.putExtra(UpdateTransactionActivity.TXID, a.getTxId());
+        startActivity(intent);
+    }
+    
     private void doDeleteAction(TxHolder entity) {
         Transaction a = entity.t;
         try {

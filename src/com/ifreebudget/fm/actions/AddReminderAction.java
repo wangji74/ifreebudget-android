@@ -11,6 +11,7 @@ import com.ifreebudget.fm.entity.beans.ConstraintEntity;
 import com.ifreebudget.fm.entity.beans.ScheduleEntity;
 import com.ifreebudget.fm.entity.beans.TaskEntity;
 import com.ifreebudget.fm.scheduler.task.Schedule;
+import com.ifreebudget.fm.scheduler.task.ScheduledTx;
 import com.ifreebudget.fm.scheduler.task.Task;
 import com.ifreebudget.fm.scheduler.task.TaskUtils.SerializationHelper;
 import com.ifreebudget.fm.scheduler.task.constraints.Constraint;
@@ -84,6 +85,8 @@ public class AddReminderAction {
         te.setStartTime(t.getSchedule().getStartTime().getTime());
         te.setEndTime(t.getSchedule().getEndTime().getTime());
         te.setTaskType(taskType);
+        ScheduledTx stx = (ScheduledTx) t;
+        te.setBusinessObjectId(stx.getTxId());
         return te;
     }
 

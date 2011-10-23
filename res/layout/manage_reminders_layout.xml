@@ -43,7 +43,7 @@
 					android:background="@null"
 					android:gravity="center"
 					android:onClick="@string/add"
-					android:src="@android:drawable/ic_menu_add" />
+					android:src="@drawable/list_add" />
 			</LinearLayout>
 		</RelativeLayout>
 	</LinearLayout>

@@ -22,4 +22,7 @@
     <item
         android:title="@string/delete"
         android:id="@+id/delete_item"></item>
+    <item
+        android:title="@string/reminder"
+        android:id="@+id/reminder_item"></item>    
 </menu>
