@@ -1,6 +1,7 @@
 package com.ifreebudget.fm.entity.beans;
 
 public class ConstraintEntity implements FManEntity {
+    private static final long serialVersionUID = 1L;
     Long id;
     int constraintType;
     byte[] constraint;   

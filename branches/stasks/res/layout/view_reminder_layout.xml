@@ -1,151 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_weight="0.8"
-    android:background="#ffffff">
-    <TextView
-        android:text="@string/view_rem_title_lbl"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:background="@android:drawable/title_bar"
-        android:paddingTop="5dip"
-        android:paddingBottom="5dip" />
-    <TableLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:stretchColumns="1"
-        android:layout_weight="1"
-        android:padding="2pt">
-        <TableRow>
-            <TextView
-                android:text="@string/name"
-                android:textColor="#000000"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="5px"
-                android:textStyle="bold"
-                android:layout_weight="0.5" />
-            <TextView
-                android:id="@+id/name_val"
-                android:textColor="#000000"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="5px"
-                android:gravity="right"
-                android:layout_weight="0.5" />
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:text="@string/Start"
-                android:textColor="#000000"
-                android:layout_width="fill_parent"
-                android:padding="5px"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:layout_weight="0.5" />
-            <TextView
-                android:id="@+id/start_val"
-                android:textColor="#000000"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="5px"
-                android:gravity="right"
-                android:layout_weight="0.5" />
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:text="@string/End"
-                android:textColor="#000000"
-                android:layout_width="fill_parent"
-                android:padding="5px"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:layout_weight="0.5" />
-            <TextView
-                android:id="@+id/end_val"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:padding="5px"
-                android:gravity="right"
-                android:layout_weight="0.5" />
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:text="@string/next"
-                android:textColor="#000000"
-                android:layout_width="fill_parent"
-                android:padding="5px"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:layout_weight="0.5" />
-            <TextView
-                android:id="@+id/next_val"
-                android:textColor="#000000"
-                android:padding="5px"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:layout_weight="0.5" />
-        </TableRow>
-        <TableRow>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_span="2">
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:text="@string/tx_tagged_lbl"
-                    android:padding="5px"
-                    android:layout_weight="0.2"
-                    android:textStyle="bold"
-                    android:textColor="#000000" />
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dip"
-                    android:background="#C0C0C0" />
-                <TextView
-                    android:id="@+id/rem_notes_tf"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:padding="5px"
-                    android:minLines="5"
-                    android:layout_weight="0.8"
-                    android:gravity="top"
-                    android:textColor="#000000" />
-            </LinearLayout>
-        </TableRow>
-    </TableLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.1"
-        android:layout_span="2"
-        android:layout_gravity="bottom">
-        <Button
-            android:id="@+id/delete_button"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/delete"
-            android:layout_weight="0.5"
-            android:width="80px"
-            android:onClick="@string/delete_rem_action" />
-        <Button
-            android:id="@+id/cancel_button"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/back"
-            android:layout_weight="0.5"
-            android:width="80px"
-            android:onClick="@string/cancel_action" />
-    </LinearLayout>
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:layout_weight="0.8"
+	android:background="#ffffff">
+	<TextView
+		android:text="@string/view_rem_title_lbl"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:textStyle="bold"
+		android:textColor="#FFFFFF"
+		android:background="@android:drawable/title_bar"
+		android:paddingTop="5dip"
+		android:paddingBottom="5dip" />
+	<TableLayout
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:stretchColumns="1"
+		android:layout_weight="1"
+		android:padding="2pt">
+		<TableRow>
+			<TextView
+				android:text="@string/name"
+				android:textColor="#000000"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:padding="5px"
+				android:textStyle="bold"
+				android:layout_weight="0.5" />
+			<TextView
+				android:id="@+id/name_val"
+				android:textColor="#000000"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:padding="5px"
+				android:gravity="right"
+				android:layout_weight="0.5" />
+		</TableRow>
+		<TableRow>
+			<TextView
+				android:text="@string/Start"
+				android:textColor="#000000"
+				android:layout_width="fill_parent"
+				android:padding="5px"
+				android:layout_height="wrap_content"
+				android:textStyle="bold"
+				android:layout_weight="0.5" />
+			<TextView
+				android:id="@+id/start_val"
+				android:textColor="#000000"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:padding="5px"
+				android:gravity="right"
+				android:layout_weight="0.5" />
+		</TableRow>
+		<TableRow>
+			<TextView
+				android:text="@string/End"
+				android:textColor="#000000"
+				android:layout_width="fill_parent"
+				android:padding="5px"
+				android:layout_height="wrap_content"
+				android:textStyle="bold"
+				android:layout_weight="0.5" />
+			<TextView
+				android:id="@+id/end_val"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:textColor="#000000"
+				android:padding="5px"
+				android:gravity="right"
+				android:layout_weight="0.5" />
+		</TableRow>
+		<TableRow>
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:layout_span="2">
+				<!-- TextView android:layout_width="fill_parent" android:layout_height="fill_parent" 
+					android:text="@string/tx_tagged_lbl" android:padding="5px" android:layout_weight="0.2" 
+					android:textStyle="bold" android:textColor="#000000" / -->
+				<View
+					android:layout_width="fill_parent"
+					android:layout_height="2dip"
+					android:background="#C0C0C0" />
+				<TextView
+					android:id="@+id/rem_notes_tf"
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent"
+					android:padding="5px"
+					android:minLines="5"
+					android:layout_weight="0.8"
+					android:gravity="top"
+					android:textColor="#000000" />
+			</LinearLayout>
+		</TableRow>
+	</TableLayout>
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="0.1"
+		android:layout_span="2"
+		android:layout_gravity="bottom">
+		<Button
+			android:id="@+id/delete_button"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="@string/delete"
+			android:layout_weight="0.5"
+			android:width="80px"
+			android:onClick="@string/delete_rem_action" />
+		<Button
+			android:id="@+id/cancel_button"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="@string/back"
+			android:layout_weight="0.5"
+			android:width="80px"
+			android:onClick="@string/cancel_action" />
+	</LinearLayout>
 </LinearLayout>

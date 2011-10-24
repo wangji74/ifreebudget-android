@@ -21,6 +21,8 @@ import com.ifreebudget.fm.actions.DeleteReminderAction;
 import com.ifreebudget.fm.entity.DBException;
 import com.ifreebudget.fm.entity.FManEntityManager;
 import com.ifreebudget.fm.entity.beans.Account;
+import com.ifreebudget.fm.entity.beans.ConstraintEntity;
+import com.ifreebudget.fm.entity.beans.ScheduleEntity;
 import com.ifreebudget.fm.entity.beans.TaskEntity;
 import com.ifreebudget.fm.entity.beans.Transaction;
 import com.ifreebudget.fm.services.SessionManager;
@@ -54,6 +56,8 @@ public class ViewReminderActivity extends Activity {
             SimpleDateFormat sdf = SessionManager.getDateFormat();
             FManEntityManager em = FManEntityManager.getInstance();
             TaskEntity te = em.getTask(txId);
+            ScheduleEntity se = em.getScheduleByTaskId(te.getId());
+            ConstraintEntity ce = em.getConstraintByScheduleId(se.getId());
 
             TextView fromTf = (TextView) findViewById(R.id.name_val);
             fromTf.setText(te.getName());
