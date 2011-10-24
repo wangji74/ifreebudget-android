@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +17,7 @@ import android.widget.Toast;
 import com.ifreebudget.fm.R;
 import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.ActionResponse;
-import com.ifreebudget.fm.actions.DeleteTransactionAction;
+import com.ifreebudget.fm.actions.DeleteReminderAction;
 import com.ifreebudget.fm.entity.DBException;
 import com.ifreebudget.fm.entity.FManEntityManager;
 import com.ifreebudget.fm.entity.beans.Account;
@@ -29,7 +28,7 @@ import com.ifreebudget.fm.utils.MiscUtils;
 
 public class ViewReminderActivity extends Activity {
     private static final String TAG = "ViewTransactionActivity";
-    private Long txId = null;
+    private Long reminderId = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +48,7 @@ public class ViewReminderActivity extends Activity {
         if (txId == null) {
             return;
         }
-        this.txId = txId;
+        this.reminderId = txId;
 
         try {
             SimpleDateFormat sdf = SessionManager.getDateFormat();
@@ -71,16 +70,18 @@ public class ViewReminderActivity extends Activity {
                 Account f = em.getAccount(tx.getFromAccountId());
                 Account t = em.getAccount(tx.getToAccountId());
 
-                StringBuilder notes = new StringBuilder();
-                notes.append("Scheduled transaction: for: ")
-                        .append(t.getAccountName()).append(" payee: ")
-                        .append(f.getAccountName());
-                notes.append("\n\n");
-
-                NumberFormat nf = NumberFormat.getInstance(SessionManager
+                NumberFormat nf = NumberFormat.getCurrencyInstance(SessionManager
                         .getCurrencyLocale());
 
+                StringBuilder notes = new StringBuilder();
+                notes.append("Scheduled transaction\n\n\t\t")
+                        .append(f.getAccountName()).append("\t\t>\t\t")
+                        .append(t.getAccountName());
+                notes.append("\n\n\t\tAmount ");
                 notes.append(nf.format(tx.getTxAmount()));
+                
+                Log.i(TAG, "55555 : " + nf.format(tx.getTxAmount()));
+                
                 TextView remNotesTf = (TextView) findViewById(R.id.rem_notes_tf);
                 remNotesTf.setText(notes.toString());
             }
@@ -113,10 +114,10 @@ public class ViewReminderActivity extends Activity {
     public void deleteReminder(View view) {
         try {
             ActionRequest req = new ActionRequest();
-            req.setActionName("deleteTransactionAction");
-            req.setProperty("TXID", txId);
+            req.setActionName("deleteReminderAction");
+            req.setProperty("ID", reminderId);
 
-            ActionResponse resp = new DeleteTransactionAction()
+            ActionResponse resp = new DeleteReminderAction()
                     .executeAction(req);
             if (resp.getErrorCode() == ActionResponse.NOERROR) {
                 super.finish();

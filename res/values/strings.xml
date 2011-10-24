@@ -112,6 +112,8 @@
 	<string
 		name="delete_tx_action">deleteTransaction</string>
 	<string
+		name="delete_rem_action">deleteReminder</string>
+	<string
 		name="default_color">#6F8BBA</string>
 	<string
 		name="add_acct_title_lbl">Account details</string>
