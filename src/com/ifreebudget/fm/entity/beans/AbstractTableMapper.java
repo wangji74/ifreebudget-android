@@ -130,8 +130,9 @@ public abstract class AbstractTableMapper implements TableMapper {
         else if (type.equals(Integer.class)) {
             return c.getInt(columnIndex);
         }
-        else if (type.equals(byte[].class)) {
-            return c.getBlob(columnIndex);
+        else if (type.equals(Byte[].class)) {
+            byte[] b = c.getBlob(columnIndex);
+            return b;
         }
         else {
             return c.getString(columnIndex);

@@ -247,7 +247,7 @@ public class AddReminderActivity extends Activity {
         Date dt = fmt.parse(dateSt + " " + timeSt);
         Calendar cal = Calendar.getInstance();
         cal.setTime(dt);
-        cal.add(Calendar.MINUTE, 2);
+//        cal.add(Calendar.MINUTE, 2);
         return cal.getTime();
     }
 
@@ -347,7 +347,7 @@ public class AddReminderActivity extends Activity {
                 Log.e(TAG, "Unparseable step value for daily schedule: " + val);
             }
         }
-        s.setRepeatType(RepeatType.MINUTE, step);
+        s.setRepeatType(RepeatType.DATE, step);
 
         return s;
     }

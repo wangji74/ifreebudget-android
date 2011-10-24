@@ -1,9 +1,5 @@
 package com.ifreebudget.fm.actions;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-
 import android.util.Log;
 
 import com.ifreebudget.fm.entity.FManEntityManager;
@@ -89,16 +85,4 @@ public class AddReminderAction {
         te.setBusinessObjectId(stx.getTxId());
         return te;
     }
-
-    // private byte[] toByteArray(Object obj) throws IOException {
-    // byte[] bytes = null;
-    // ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    // ObjectOutputStream oos = new ObjectOutputStream(bos);
-    // oos.writeObject(obj);
-    // oos.flush();
-    // oos.close();
-    // bos.close();
-    // bytes = bos.toByteArray();
-    // return bytes;
-    // }
 }
