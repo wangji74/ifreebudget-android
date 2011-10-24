@@ -138,7 +138,7 @@
             android:text="@string/delete"
             android:layout_weight="0.5"
             android:width="80px"
-            android:onClick="@string/delete_tx_action" />
+            android:onClick="@string/delete_rem_action" />
         <Button
             android:id="@+id/cancel_button"
             android:layout_height="wrap_content"
