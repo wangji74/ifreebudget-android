@@ -45,7 +45,6 @@ import android.widget.TextView;
 import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.ActionResponse;
 import com.ifreebudget.fm.actions.GetNetWorthAction;
-import com.ifreebudget.fm.activities.AddReminderActivity;
 import com.ifreebudget.fm.activities.AddTransactionActivity;
 import com.ifreebudget.fm.activities.DocActivity;
 import com.ifreebudget.fm.activities.ListTransactionsActivity;
@@ -55,7 +54,6 @@ import com.ifreebudget.fm.activities.ManageDBActivity;
 import com.ifreebudget.fm.activities.ManageRemindersActivity;
 import com.ifreebudget.fm.activities.ViewReportActivity;
 import com.ifreebudget.fm.entity.FManEntityManager;
-import com.ifreebudget.fm.scheduler.task.TaskRestarterService;
 import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
 
