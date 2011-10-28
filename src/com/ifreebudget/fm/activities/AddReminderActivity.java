@@ -8,6 +8,7 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -62,11 +64,11 @@ public class AddReminderActivity extends Activity {
     private static final String TIME_FORMAT = "hh:mm a";
 
     private enum TASK_TYPE_ENUM {
-        daily, weekly
+        daily, weekly, monthly
     };
 
     private TASK_TYPE_ENUM taskType;
-    
+
     private Long txId = 0l;
 
     @Override
@@ -78,13 +80,27 @@ public class AddReminderActivity extends Activity {
 
         if (intent != null) {
             Bundle bundle = intent.getExtras();
-            if (bundle != null && bundle.containsKey(UpdateTransactionActivity.TXID)) {
+            if (bundle != null
+                    && bundle.containsKey(UpdateTransactionActivity.TXID)) {
                 txId = (Long) bundle.get(UpdateTransactionActivity.TXID);
             }
         }
-        
+
         startDtBtn = (Button) findViewById(R.id.start_date_btn);
+        startDtBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog(ST_DATE_DIALOG);
+            }
+        });
+
         endDtBtn = (Button) findViewById(R.id.end_date_btn);
+        endDtBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog(EN_DATE_DIALOG);
+            }
+        });
 
         startTimeBtn = (Button) findViewById(R.id.start_time_btn);
         startTimeBtn.setOnClickListener(new OnClickListener() {
@@ -126,7 +142,6 @@ public class AddReminderActivity extends Activity {
         dailyBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("AddReminderActivity", "Clicked");
                 taskType = TASK_TYPE_ENUM.daily;
                 setRepeatsView(v, R.layout.daily_repeat_layout);
             }
@@ -136,8 +151,16 @@ public class AddReminderActivity extends Activity {
         weeklyBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("AddReminderActivity", "Clicked");
                 taskType = TASK_TYPE_ENUM.weekly;
+                setRepeatsView(v, R.layout.weekly_repeat_layout);
+            }
+        });
+
+        monthlyBtn = (RadioButton) findViewById(R.id.monthly_btn);
+        monthlyBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                taskType = TASK_TYPE_ENUM.monthly;
                 setRepeatsView(v, R.layout.weekly_repeat_layout);
             }
         });
@@ -148,6 +171,12 @@ public class AddReminderActivity extends Activity {
     protected Dialog onCreateDialog(int id) {
         String txt = null;
         switch (id) {
+        case ST_DATE_DIALOG:
+            txt = startDtBtn.getText().toString();
+            return getDatePickerDialog(stDatePickerListener, txt);
+        case EN_DATE_DIALOG:
+            txt = endDtBtn.getText().toString();
+            return getDatePickerDialog(enDatePickerListener, txt);
         case ST_TIME_DIALOG:
             txt = startTimeBtn.getText().toString();
             return getTimePickerDialog(stTimePickerListener, txt);
@@ -156,6 +185,25 @@ public class AddReminderActivity extends Activity {
             return getTimePickerDialog(enTimePickerListener, txt);
         }
         return null;
+    }
+
+    public DatePickerDialog getDatePickerDialog(
+            DatePickerDialog.OnDateSetListener listener, String txt) {
+        SimpleDateFormat sdf = SessionManager.getDateFormat();
+        int yr = 2011;
+        int mo = 10;
+        int dt = 27;
+        try {
+            Calendar c = Calendar.getInstance();
+            c.setTime(sdf.parse(txt));
+            yr = c.get(Calendar.YEAR);
+            mo = c.get(Calendar.MONTH);
+            dt = c.get(Calendar.DATE);
+        }
+        catch (Exception e) {
+            Log.e(TAG, "Error parsing time for start time dialog: " + txt);
+        }
+        return new DatePickerDialog(this, listener, yr, mo, dt);
     }
 
     public TimePickerDialog getTimePickerDialog(
@@ -184,6 +232,16 @@ public class AddReminderActivity extends Activity {
         view.setText(sdf.format(c.getTime()));
     }
 
+    private void updateDateDisplay(Button view, int year, int month, int date) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DATE, date);
+
+        SimpleDateFormat sdf = SessionManager.getDateFormat();
+        view.setText(sdf.format(c.getTime()));
+    }
+
     private TimePickerDialog.OnTimeSetListener stTimePickerListener = new TimePickerDialog.OnTimeSetListener() {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             updateTimeDisplay(startTimeBtn, hourOfDay, minute);
@@ -196,8 +254,23 @@ public class AddReminderActivity extends Activity {
         }
     };
 
+    private DatePickerDialog.OnDateSetListener stDatePickerListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                int dayOfMonth) {
+            updateDateDisplay(startDtBtn, year, monthOfYear, dayOfMonth);
+        }
+    };
+
+    private DatePickerDialog.OnDateSetListener enDatePickerListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                int dayOfMonth) {
+            updateDateDisplay(endDtBtn, year, monthOfYear, dayOfMonth);
+        }
+    };
+
     private void setRepeatsView(View v, int layoutId) {
-        Log.e("AddReminderActivity", "Clicked" + layoutId);
         Context c = v.getContext();
         LayoutInflater li = (LayoutInflater) c
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -226,7 +299,8 @@ public class AddReminderActivity extends Activity {
             if (resp.getErrorCode() == ActionResponse.NOERROR) {
                 Long dbId = (Long) resp.getResult("TASKID");
                 AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-                scheduleEvent(am, getApplicationContext(), dbId, task);
+                scheduleEvent(am, getApplicationContext(), dbId, task
+                        .getSchedule().getNextRunTime());
                 super.finish();
             }
         }
@@ -247,7 +321,7 @@ public class AddReminderActivity extends Activity {
         Date dt = fmt.parse(dateSt + " " + timeSt);
         Calendar cal = Calendar.getInstance();
         cal.setTime(dt);
-//        cal.add(Calendar.MINUTE, 2);
+        // cal.add(Calendar.MINUTE, 2);
         return cal.getTime();
     }
 
@@ -406,14 +480,14 @@ public class AddReminderActivity extends Activity {
     }
 
     public static void scheduleEvent(AlarmManager manager, Context context,
-            Long dbId, Task task) {
+            Long dbId, Date nextRunTime) {
         Intent intent = new Intent(context, STaskAlarmReceiver.class);
         intent.putExtra(TASK_ALARM_ID, dbId);
         PendingIntent sender = PendingIntent.getBroadcast(context,
                 Short.MAX_VALUE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Date dt = task.getSchedule().getNextRunTime();
-        Log.i(TAG, "Scheduled event for: " + dt.toString());
-        manager.set(AlarmManager.RTC_WAKEUP, dt.getTime(), sender);
+        // Date dt = task.getSchedule().getNextRunTime();
+        Log.i(TAG, "Scheduled event for: " + nextRunTime.toString());
+        manager.set(AlarmManager.RTC_WAKEUP, nextRunTime.getTime(), sender);
     }
 }
