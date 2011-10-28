@@ -272,4 +272,5 @@
 	<string
 		name="title_lbl">Title</string>
 	<string name="save_reminder_action">saveReminder</string>
+	<string name="refresh">Refresh</string>
 </resources>
