@@ -6,69 +6,110 @@
 	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
 	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
 	the specific language governing permissions and limitations under the License. -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.ifreebudget.fm" android:versionName="4.5"
+<manifest
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	package="com.ifreebudget.fm"
+	android:versionName="4.5"
 	android:versionCode="36">
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.INTERNET" />
-	<application android:icon="@drawable/icon" android:label="@string/app_name"
-		android:theme="@android:style/Theme.NoTitleBar" android:debuggable="true">
-		<provider android:name=".activities.TxSearchSuggestionProvider"
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	<application
+		android:icon="@drawable/icon"
+		android:label="@string/app_name"
+		android:theme="@android:style/Theme.NoTitleBar"
+		android:debuggable="true">
+		<provider
+			android:name=".activities.TxSearchSuggestionProvider"
 			android:authorities="com.ifreebudget.fm.TxSearchSuggestionProvider" />
-		<activity android:name=".iFreeBudget" android:label="@string/app_name">
+		<activity
+			android:name=".iFreeBudget"
+			android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".activities.ManageAccountsActivity"
+		<activity
+			android:name=".activities.ManageAccountsActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.AddTransactionActivity"
+		<activity
+			android:name=".activities.AddTransactionActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.AddCategoryActivity"
+		<activity
+			android:name=".activities.AddCategoryActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.AddAccountActivity"
+		<activity
+			android:name=".activities.AddAccountActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.UpdateAccountActivity"
+		<activity
+			android:name=".activities.UpdateAccountActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.UpdateCategoryActivity"
+		<activity
+			android:name=".activities.UpdateCategoryActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.ListTransactionsActivity"
+		<activity
+			android:name=".activities.ListTransactionsActivity"
 			android:label="iFreeBudget">
 			<intent-filter>
 				<action android:name="android.intent.action.SEARCH" />
 			</intent-filter>
-			<meta-data android:name="android.app.searchable"
+			<meta-data
+				android:name="android.app.searchable"
 				android:resource="@xml/searchable" />
 		</activity>
-		<activity android:name=".activities.ViewTransactionActivity"
+		<activity
+			android:name=".activities.ViewTransactionActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.ManageBudgetsActivity"
+		<activity
+			android:name=".activities.ManageBudgetsActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.ViewBudgetActivity"
+		<activity
+			android:name=".activities.ViewBudgetActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.QuickAddTransactionActivity"
+		<activity
+			android:name=".activities.QuickAddTransactionActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.ViewReportActivity"
+		<activity
+			android:name=".activities.ViewReportActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.ManageDBActivity"
+		<activity
+			android:name=".activities.ManageDBActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.UpdateTransactionActivity"
+		<activity
+			android:name=".activities.UpdateTransactionActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.wizards.budget.BudgetDetailsActivity"
+		<activity
+			android:name=".activities.wizards.budget.BudgetDetailsActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.DocActivity"
+		<activity
+			android:name=".activities.DocActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.wizards.budget.AddBudgetActivity"
+		<activity
+			android:name=".activities.wizards.budget.AddBudgetActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.AddReminderActivity"
+		<activity
+			android:name=".activities.AddReminderActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.ManageRemindersActivity"
+		<activity
+			android:name=".activities.ManageRemindersActivity"
 			android:label="iFreeBudget"></activity>
-		<activity android:name=".activities.ViewReminderActivity"
+		<activity
+			android:name=".activities.ViewReminderActivity"
 			android:label="iFreeBudget"></activity>
-		<receiver android:name=".scheduler.task.STaskAlarmReceiver"></receiver>
+		<receiver android:name=".scheduler.task.STaskAlarmReceiver" />
+		<receiver android:name=".scheduler.task.SystemEventReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+				<action android:name="android.intent.action.PACKAGE_CHANGED" />
+				<action android:name="android.intent.action.PACKAGE_RESTARTED" />
+			</intent-filter>
+		</receiver>
+		<service android:name=".scheduler.task.TaskRestarterService" />
 	</application>
-	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="8">
+	<uses-sdk
+		android:minSdkVersion="7"
+		android:targetSdkVersion="8">
 	</uses-sdk>
 </manifest>
