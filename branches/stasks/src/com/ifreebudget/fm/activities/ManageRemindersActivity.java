@@ -13,6 +13,7 @@ import com.ifreebudget.fm.entity.beans.Budget;
 import com.ifreebudget.fm.entity.beans.FManEntity;
 import com.ifreebudget.fm.entity.beans.ScheduleEntity;
 import com.ifreebudget.fm.entity.beans.TaskEntity;
+import com.ifreebudget.fm.scheduler.task.TaskRestarterService;
 import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
 
@@ -75,6 +76,10 @@ public class ManageRemindersActivity extends ListActivity {
         startActivity(txIntent);
     }
 
+    public void Refresh(View view) {
+        startService(new Intent(this, TaskRestarterService.class));
+    }
+    
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);

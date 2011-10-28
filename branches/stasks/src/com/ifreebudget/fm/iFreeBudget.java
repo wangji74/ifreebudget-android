@@ -88,7 +88,6 @@ public class iFreeBudget extends Activity {
             }
         });
         Log.i(TAG, "Starting task restarter service");
-        startService(new Intent(this, TaskRestarterService.class));        
     }
 
     @Override

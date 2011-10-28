@@ -35,7 +35,6 @@ import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.ActionResponse;
 import com.ifreebudget.fm.actions.AddReminderAction;
 import com.ifreebudget.fm.scheduler.task.BasicSchedule;
-import com.ifreebudget.fm.scheduler.task.BasicTask;
 import com.ifreebudget.fm.scheduler.task.STaskAlarmReceiver;
 import com.ifreebudget.fm.scheduler.task.Schedule;
 import com.ifreebudget.fm.scheduler.task.Schedule.DayOfWeek;
