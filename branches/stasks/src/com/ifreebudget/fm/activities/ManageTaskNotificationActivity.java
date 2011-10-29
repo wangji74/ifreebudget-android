@@ -1,7 +1,5 @@
 package com.ifreebudget.fm.activities;
 
-import static com.ifreebudget.fm.utils.Messages.tr;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,27 +11,24 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.ifreebudget.fm.R;
 import com.ifreebudget.fm.iFreeBudget;
 import com.ifreebudget.fm.entity.DBException;
 import com.ifreebudget.fm.entity.FManEntityManager;
 import com.ifreebudget.fm.entity.beans.FManEntity;
-import com.ifreebudget.fm.entity.beans.ScheduleEntity;
 import com.ifreebudget.fm.entity.beans.TaskEntity;
-import com.ifreebudget.fm.scheduler.task.TaskRestarterService;
+import com.ifreebudget.fm.entity.beans.TaskNotification;
 import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
 
-public class ManageRemindersActivity extends ListActivity {
-    private static final String TAG = "ManageRemindersActivity";
-    public static final String REMINDERIDKEY = "REMINDERIDKEY";
+public class ManageTaskNotificationActivity extends ListActivity {
+    public static final String TAG = "ManageTaskNotificationActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.setContentView(R.layout.manage_reminders_layout);
+        super.setContentView(R.layout.manage_task_notifs_layout);
     }
 
     @Override
@@ -41,12 +36,13 @@ public class ManageRemindersActivity extends ListActivity {
         super.onResume();
         FManEntityManager em = FManEntityManager.getInstance();
         try {
-            List<FManEntity> tasks = em.getList(TaskEntity.class);
-            if (tasks != null) {
+            List<FManEntity> notifs = em.getList(TaskNotification.class);
+
+            if (notifs != null) {
                 List<ListEntry> list = new ArrayList<ListEntry>();
 
-                for (FManEntity fe : tasks) {
-                    ListEntry le = new ListEntry((TaskEntity) fe);
+                for (FManEntity fe : notifs) {
+                    ListEntry le = new ListEntry((TaskNotification) fe);
                     if (le.valid) {
                         list.add(le);
                     }
@@ -58,6 +54,7 @@ public class ManageRemindersActivity extends ListActivity {
                         // android.R.layout.simple_list_item_1,
                         arr));
             }
+
         }
         catch (DBException e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
@@ -72,18 +69,6 @@ public class ManageRemindersActivity extends ListActivity {
         startActivity(intent);
     }
 
-    public void Add(View view) {
-        Intent txIntent = new Intent(this, AddReminderActivity.class);
-        startActivity(txIntent);
-    }
-
-    public void Refresh(View view) {
-        startService(new Intent(this, TaskRestarterService.class));
-        Toast toast = Toast.makeText(getApplicationContext(),
-                tr("Refreshing tasks..."), Toast.LENGTH_SHORT);
-        toast.show();
-    }
-
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
@@ -92,41 +77,32 @@ public class ManageRemindersActivity extends ListActivity {
 
         ListEntry e = (ListEntry) obj;
 
-        Intent intent = new Intent(this, ViewReminderActivity.class);
+        Intent intent = new Intent(this, AddTransactionActivity.class);
 
-        intent.putExtra(REMINDERIDKEY, e.entity.getId());
+        intent.putExtra(ManageRemindersActivity.REMINDERIDKEY,
+                e.taskEntity.getId());
 
         startActivity(intent);
     }
 
+    /* Inner class for list entry */
     class ListEntry {
-        TaskEntity entity;
-        ScheduleEntity schedule;
-        String nextTime;
-
+        TaskNotification notif;
+        TaskEntity taskEntity;
         boolean valid = true;
+        String time = null;
 
-        ListEntry(TaskEntity entity) {
-            this.entity = entity;
+        ListEntry(TaskNotification notif) {
+            this.notif = notif;
             FManEntityManager em = FManEntityManager.getInstance();
             try {
-                List<FManEntity> list = em.getList(ScheduleEntity.class,
-                        " WHERE SCHTASKID = " + entity.getId());
-                if (list == null) {
+                taskEntity = em.getTask(notif.getTaskId());
+                if (taskEntity == null) {
                     valid = false;
                     return;
                 }
-                if (list.size() != 1) {
-                    Log.e(TAG,
-                            "Invalid schedule for task: " + entity.getName()
-                                    + "[" + entity.getId() + "], found : "
-                                    + list.size() + " schedules");
-                    valid = false;
-                    return;
-                }
-                ScheduleEntity se = (ScheduleEntity) list.get(0);
-                nextTime = SessionManager.getDateTimeFormat().format(
-                        new Date(se.getNextRunTime()));
+                time = SessionManager.getDateTimeFormat().format(
+                        new Date(System.currentTimeMillis()));
             }
             catch (DBException e) {
                 valid = false;
@@ -137,10 +113,11 @@ public class ManageRemindersActivity extends ListActivity {
 
         @Override
         public String toString() {
-            StringBuilder ret = new StringBuilder(entity.getName());
-            ret.append("\n\tNext: ");
-            ret.append(nextTime);
+            StringBuilder ret = new StringBuilder(taskEntity.getName());
+            ret.append("\n\t @ ");
+            ret.append(time);
             return ret.toString();
         }
     }
+    /* End inner class */
 }

@@ -95,6 +95,9 @@
 			android:name=".activities.ManageRemindersActivity"
 			android:label="iFreeBudget"></activity>
 		<activity
+			android:name=".activities.ManageTaskNotificationActivity"
+			android:label="iFreeBudget"></activity>
+		<activity
 			android:name=".activities.ViewReminderActivity"
 			android:label="iFreeBudget"></activity>
 		<receiver android:name=".scheduler.task.STaskAlarmReceiver" />
