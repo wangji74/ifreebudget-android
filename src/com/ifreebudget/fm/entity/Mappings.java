@@ -34,4 +34,9 @@ public class Mappings {
         "CONSTRTYPE:INTEGER:true:false:false:ConstraintType:java.lang.Integer",
         "CONSTR:BLOB:true:false:false:Constraint:[Ljava.lang.Byte;",
         "SCHEDID:INTEGER:true:false:false:ScheduleId:java.lang.Long" };
+
+    public static String TaskNotificationMapperMappings[] = {
+        "ID:INTEGER:true:true:true:Id:java.lang.Long", 
+        "TASKID:INTEGER:true:false:false:TaskId:java.lang.Long",
+        "NOTIFTIME:INTEGER:true:false:false:Timestamp:java.lang.Long"};    
 }

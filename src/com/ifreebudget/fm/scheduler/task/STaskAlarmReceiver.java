@@ -18,10 +18,12 @@ import android.widget.Toast;
 import com.ifreebudget.fm.R;
 import com.ifreebudget.fm.activities.AddReminderActivity;
 import com.ifreebudget.fm.activities.AddTransactionActivity;
+import com.ifreebudget.fm.activities.ManageTaskNotificationActivity;
 import com.ifreebudget.fm.entity.FManEntityManager;
 import com.ifreebudget.fm.entity.beans.ConstraintEntity;
 import com.ifreebudget.fm.entity.beans.ScheduleEntity;
 import com.ifreebudget.fm.entity.beans.TaskEntity;
+import com.ifreebudget.fm.entity.beans.TaskNotification;
 import com.ifreebudget.fm.utils.MiscUtils;
 
 public class STaskAlarmReceiver extends BroadcastReceiver {
@@ -41,13 +43,19 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
         try {
             FManEntityManager em = FManEntityManager.getInstance();
             TaskEntity taskEntity = em.getTask(id);
+
+            createNotificationEntity(context, taskEntity.getId(),
+                    System.currentTimeMillis());
+
             ScheduleEntity scheduleEntity = em.getScheduleByTaskId(taskEntity
                     .getId());
+
             ConstraintEntity constraintEntity = em
                     .getConstraintByScheduleId(scheduleEntity.getId());
 
             ScheduledTx t = new ScheduledTx(taskEntity.getName(),
                     taskEntity.getBusinessObjectId());
+
             Schedule sch = TaskUtils.rebuildSchedule(
                     new Date(scheduleEntity.getNextRunTime()), new Date(
                             taskEntity.getEndTime()), scheduleEntity,
@@ -63,8 +71,25 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
             em.updateEntity(scheduleEntity);
 
             String tickerText = taskEntity.getName() + " reminder";
-            sendNotification(context, AddTransactionActivity.class, tickerText,
-                    "iFreeBudget", tickerText, 1, true, false);
+            sendNotification(context, ManageTaskNotificationActivity.class,
+                    tickerText, "iFreeBudget", tickerText, 1, true, false);
+        }
+        catch (Exception e) {
+            Log.e(TAG, MiscUtils.stackTrace2String(e));
+        }
+    }
+
+    private void createNotificationEntity(Context context, Long taskId,
+            Long timeStamp) {
+        try {
+            TaskNotification tn = new TaskNotification();
+            tn.setTaskId(taskId);
+            tn.setTimestamp(timeStamp);
+
+            FManEntityManager em = FManEntityManager.getInstance();
+            em.createEntity(tn);
+            
+            Log.i(TAG, "Created notification entity id: " + tn.getId());
         }
         catch (Exception e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
@@ -75,8 +100,9 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
         try {
             AlarmManager am = (AlarmManager) context
                     .getSystemService(Context.ALARM_SERVICE);
-            Date nextRunTime = task.getSchedule().getNextRunTime();            
-            AddReminderActivity.scheduleEvent(am, context, taskDbId, nextRunTime);
+            Date nextRunTime = task.getSchedule().getNextRunTime();
+            AddReminderActivity.scheduleEvent(am, context, taskDbId,
+                    nextRunTime);
         }
         catch (Exception e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
@@ -109,8 +135,7 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
         }
 
         if (vibrate) {
-            notify.vibrate = new long[] { 100, 200, 200, 200, 200, 200, 1000,
-                    200, 200, 200, 1000, 200 };
+            notify.defaults |= Notification.DEFAULT_VIBRATE;
         }
 
         Intent toLaunch = new Intent(caller, activityToLaunch);

@@ -1,16 +1,16 @@
 package com.ifreebudget.fm.entity.beans;
 
+import com.ifreebudget.fm.entity.Mappings;
+
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.ifreebudget.fm.entity.Mappings;
+public class TaskNotificationMapper extends DefaultAbstractTableMapper {
 
-public class TaskEntityMapper extends DefaultAbstractTableMapper {
+    private final String TABLENAME = "TASKNOTIF";
+    private final String TAG = "TaskNotificationMapper";
 
-    private final String TABLENAME = "STASK";
-    private final String TAG = "ScheduledTaskMapper";
-    
-    public TaskEntityMapper() {
+    public TaskNotificationMapper() {
         super();
     }
 
@@ -18,12 +18,13 @@ public class TaskEntityMapper extends DefaultAbstractTableMapper {
     public String getTableName() {
         return TABLENAME;
     }
-    
+
+    @Override
     public void doUpdate(SQLiteDatabase database, FManEntity entity)
             throws SQLException {
         throw new RuntimeException("Do not use!!!");
     }
-    
+
     @Override
     protected String getTag() {
         return TAG;
@@ -31,11 +32,12 @@ public class TaskEntityMapper extends DefaultAbstractTableMapper {
 
     @Override
     protected String[] getMappings() {
-        return Mappings.ScheduledTaskMapperMappings;
-    } 
-    
+        return Mappings.TaskNotificationMapperMappings;
+    }
+
     @Override
     protected FManEntity self() {
-        return new TaskEntity();
+        return new TaskNotification();
     }
+
 }

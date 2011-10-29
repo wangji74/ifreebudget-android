@@ -15,15 +15,11 @@
  ******************************************************************************/
 package com.ifreebudget.fm.entity;
 
-import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import android.content.Context;
@@ -36,7 +32,6 @@ import android.util.Log;
 
 import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.CreateInitialAccounts;
-import com.ifreebudget.fm.entity.beans.AbstractTableMapper;
 import com.ifreebudget.fm.entity.beans.Account;
 import com.ifreebudget.fm.entity.beans.AccountCategory;
 import com.ifreebudget.fm.entity.beans.AccountCategoryMapper;
@@ -52,21 +47,21 @@ import com.ifreebudget.fm.entity.beans.ConstraintEntityMapper;
 import com.ifreebudget.fm.entity.beans.FManEntity;
 import com.ifreebudget.fm.entity.beans.ScheduleEntity;
 import com.ifreebudget.fm.entity.beans.ScheduleEntityMapper;
+import com.ifreebudget.fm.entity.beans.TableMapper;
 import com.ifreebudget.fm.entity.beans.TaskEntity;
 import com.ifreebudget.fm.entity.beans.TaskEntityMapper;
-import com.ifreebudget.fm.entity.beans.TableMapper;
+import com.ifreebudget.fm.entity.beans.TaskNotificationMapper;
 import com.ifreebudget.fm.entity.beans.Transaction;
 import com.ifreebudget.fm.entity.beans.TransactionMapper;
 import com.ifreebudget.fm.entity.beans.TxHistory;
 import com.ifreebudget.fm.entity.beans.TxHistoryMapper;
-import com.ifreebudget.fm.scheduler.task.Task;
 import com.ifreebudget.fm.utils.MiscUtils;
 
 public class FManEntityManager {
     private static final String TAG = "DBHelper";
 
     public static final String DATABASE_NAME = "com.ifreebudget.db";
-    private static final int DATABASE_VERSION = 2 + 1 + 1 + 1;
+    private static final int DATABASE_VERSION = 5;
 
     private static FManEntityManager em = null;
 
@@ -117,6 +112,7 @@ public class FManEntityManager {
         mappers.put(TaskEntity.class, new TaskEntityMapper());
         mappers.put(ScheduleEntity.class, new ScheduleEntityMapper());
         mappers.put(ConstraintEntity.class, new ConstraintEntityMapper());
+        mappers.put(TaskNotificationMapper.class, new TaskNotificationMapper());
     }
 
     /* API methods */
@@ -809,7 +805,9 @@ public class FManEntityManager {
                 Log.i(TAG, "Created Schedule table...Success");
                 db.execSQL(new ConstraintEntityMapper().getCreateSql());
                 Log.i(TAG, "Created Constraint table...Success");
-
+                db.execSQL(new TaskNotificationMapper().getCreateSql());                               
+                Log.i(TAG, "Created TaskNotification table...Success");
+                
                 Log.i(TAG, "Creating initial accounts");
 
                 ActionRequest req = new ActionRequest();
@@ -830,6 +828,8 @@ public class FManEntityManager {
             Log.i(TAG, "Created Schedule table...Success");
             db.execSQL(new ConstraintEntityMapper().getCreateSql());
             Log.i(TAG, "Created Constraint table...Success");
+            db.execSQL(new TaskNotificationMapper().getCreateSql());
+            Log.i(TAG, "Created TaskNotification table...Success");
         }
 
         @Override
