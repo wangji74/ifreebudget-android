@@ -23,8 +23,10 @@ import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
 
 public class ManageTaskNotificationActivity extends ListActivity {
-    public static final String TAG = "ManageTaskNotificationActivity";
+    private static final String TAG = "ManageTaskNotificationActivity";
 
+    public static final String NOTIFIDKEY = "NOTIFIDKEY";
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +37,11 @@ public class ManageTaskNotificationActivity extends ListActivity {
     public void onResume() {
         super.onResume();
         FManEntityManager em = FManEntityManager.getInstance();
+        if(em == null) {
+            Log.w(TAG, "Null FManEntityManager, re-initializing");
+            em = FManEntityManager.getInstance(getApplicationContext());
+        }
+        
         try {
             List<FManEntity> notifs = em.getList(TaskNotification.class);
 
@@ -68,7 +75,7 @@ public class ManageTaskNotificationActivity extends ListActivity {
         Intent intent = new Intent(this, iFreeBudget.class);
         startActivity(intent);
     }
-
+    
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
@@ -77,11 +84,14 @@ public class ManageTaskNotificationActivity extends ListActivity {
 
         ListEntry e = (ListEntry) obj;
 
-        Intent intent = new Intent(this, AddTransactionActivity.class);
+        Intent intent = new Intent(this, QuickAddTransactionActivity.class);
 
-        intent.putExtra(ManageRemindersActivity.REMINDERIDKEY,
-                e.taskEntity.getId());
+        intent.putExtra(NOTIFIDKEY,
+                e.notif.getId());
 
+        intent.putExtra(QuickAddTransactionActivity.TXIDKEY,
+                e.taskEntity.getBusinessObjectId());
+        
         startActivity(intent);
     }
 
@@ -102,7 +112,7 @@ public class ManageTaskNotificationActivity extends ListActivity {
                     return;
                 }
                 time = SessionManager.getDateTimeFormat().format(
-                        new Date(System.currentTimeMillis()));
+                        new Date(notif.getTimestamp()));
             }
             catch (DBException e) {
                 valid = false;

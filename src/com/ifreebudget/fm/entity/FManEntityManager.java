@@ -50,6 +50,7 @@ import com.ifreebudget.fm.entity.beans.ScheduleEntityMapper;
 import com.ifreebudget.fm.entity.beans.TableMapper;
 import com.ifreebudget.fm.entity.beans.TaskEntity;
 import com.ifreebudget.fm.entity.beans.TaskEntityMapper;
+import com.ifreebudget.fm.entity.beans.TaskNotification;
 import com.ifreebudget.fm.entity.beans.TaskNotificationMapper;
 import com.ifreebudget.fm.entity.beans.Transaction;
 import com.ifreebudget.fm.entity.beans.TransactionMapper;
@@ -112,7 +113,7 @@ public class FManEntityManager {
         mappers.put(TaskEntity.class, new TaskEntityMapper());
         mappers.put(ScheduleEntity.class, new ScheduleEntityMapper());
         mappers.put(ConstraintEntity.class, new ConstraintEntityMapper());
-        mappers.put(TaskNotificationMapper.class, new TaskNotificationMapper());
+        mappers.put(TaskNotification.class, new TaskNotificationMapper());
     }
 
     /* API methods */
@@ -503,6 +504,27 @@ public class FManEntityManager {
         }
     }
 
+    public TaskNotification getTaskNotification(Long id) throws DBException {
+        try {
+            TaskNotificationMapper mapper = (TaskNotificationMapper) mappers
+                    .get(TaskNotification.class);
+            List<Field> pkList = mapper.getPrimaryKeys();
+            Field pk = pkList.get(0);
+            String filter = String.format(" WHERE %s = %d", pk.getDbName(), id);
+            List<FManEntity> list = mapper.getList(database, filter, 0, 0);
+            if (list != null) {
+                if (list.size() != 1) {
+                    throw new DBException("Non unique taskId:" + id);
+                }
+                return (TaskNotification) list.get(0);
+            }
+            return null;
+        }
+        catch (SQLException e) {
+            throw new DBException(e);
+        }
+    }
+    
     public TaskEntity getTask(Long id) throws DBException {
         try {
             TaskEntityMapper mapper = (TaskEntityMapper) mappers
@@ -522,7 +544,6 @@ public class FManEntityManager {
         catch (SQLException e) {
             throw new DBException(e);
         }
-
     }
 
     public ScheduleEntity getScheduleByTaskId(Long taskId) throws DBException {

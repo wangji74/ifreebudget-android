@@ -3,6 +3,8 @@ package com.ifreebudget.fm.activities;
 import static com.ifreebudget.fm.utils.Messages.tr;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -51,6 +53,9 @@ public class ManageRemindersActivity extends ListActivity {
                         list.add(le);
                     }
                 }
+                
+                Comparator<ListEntry> c = Collections.reverseOrder(new ListEntryComparator());
+                Collections.sort(list, c);
                 ListEntry[] arr = new ListEntry[list.size()];
                 list.toArray(arr);
                 this.setListAdapter(new ArrayAdapter<ListEntry>(this,
@@ -67,6 +72,14 @@ public class ManageRemindersActivity extends ListActivity {
         }
     }
 
+    private class ListEntryComparator implements Comparator<ListEntry> {
+
+        @Override
+        public int compare(ListEntry object1, ListEntry object2) {
+            return object1.nextTime.compareTo(object2.nextTime);
+        }
+    }
+    
     public void gotoHomeScreen(View view) {
         Intent intent = new Intent(this, iFreeBudget.class);
         startActivity(intent);
@@ -102,7 +115,7 @@ public class ManageRemindersActivity extends ListActivity {
     class ListEntry {
         TaskEntity entity;
         ScheduleEntity schedule;
-        String nextTime;
+        Date nextTime;
 
         boolean valid = true;
 
@@ -125,8 +138,7 @@ public class ManageRemindersActivity extends ListActivity {
                     return;
                 }
                 ScheduleEntity se = (ScheduleEntity) list.get(0);
-                nextTime = SessionManager.getDateTimeFormat().format(
-                        new Date(se.getNextRunTime()));
+                nextTime = new Date(se.getNextRunTime());
             }
             catch (DBException e) {
                 valid = false;
@@ -139,7 +151,12 @@ public class ManageRemindersActivity extends ListActivity {
         public String toString() {
             StringBuilder ret = new StringBuilder(entity.getName());
             ret.append("\n\tNext: ");
-            ret.append(nextTime);
+            
+            String next = SessionManager.getDateTimeFormat().format(nextTime);
+            
+            ret.append(next);
+            
+//            ret.append(" ( " + entity.getId() + " )");
             return ret.toString();
         }
     }

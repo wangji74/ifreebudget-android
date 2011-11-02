@@ -22,7 +22,7 @@ import com.ifreebudget.fm.entity.beans.TaskEntity;
 import com.ifreebudget.fm.utils.MiscUtils;
 
 public class TaskRestarterService extends IntentService {
-    private static final String TAG = "AlarmManagerHelper";
+    private static final String TAG = "TaskRestarterService";
 
     public TaskRestarterService() {
         super("TaskRestarterService");
@@ -43,25 +43,44 @@ public class TaskRestarterService extends IntentService {
                 try {
                     ScheduleEntity se = em.getScheduleByTaskId(te.getId());
 
+                    ConstraintEntity ce = em.getConstraintByScheduleId(se
+                            .getId());
+
+                    Schedule sch = TaskUtils.rebuildSchedule(
+                            new Date(se.getNextRunTime()),
+                            new Date(te.getEndTime()), se, ce);
+
                     Date next = new Date(se.getNextRunTime());
                     Date now = new Date();
+                    Date end = new Date(te.getEndTime());
 
+                    // Task has ended
+                    if (now.after(end)) {
+                        continue;
+                    }
+
+                    // Some schedules were missed
                     if (now.after(next)) {
-                        ConstraintEntity ce = em.getConstraintByScheduleId(se
-                                .getId());
-
                         ScheduledTx t = new ScheduledTx(te.getName(),
                                 te.getBusinessObjectId());
 
-                        Schedule sch = TaskUtils.rebuildSchedule(
-                                new Date(se.getNextRunTime()),
-                                new Date(te.getEndTime()), se, ce);
-
                         t.setSchedule(sch);
 
-                        se.setLastRunTime(new Date().getTime());
+                        List<Date> missed = null;
+                        if (se.getLastRunTime() != null) {
+                            missed = sch.getRunTimesBetween(
+                                    new Date(se.getLastRunTime()), now);
+                        }
+                        else {
+                            missed = sch.getRunTimesBetween(
+                                    new Date(te.getStartTime()), now);
+                        }
 
-                        next = sch.getNextRunTimeAfter(now);
+                        // createMissedNotifications(missed);
+
+                        if (missed != null && missed.size() > 0) {
+                            next = missed.get(missed.size() - 1);
+                        }
 
                         se.setNextRunTime(next.getTime());
 
@@ -86,7 +105,7 @@ public class TaskRestarterService extends IntentService {
         try {
             AlarmManager am = (AlarmManager) context
                     .getSystemService(Context.ALARM_SERVICE);
-            AddReminderActivity.scheduleEvent(am, context, taskDbId,
+            AddReminderActivity.scheduleEvent(TAG, am, context, taskDbId,
                     nextRunTime);
         }
         catch (Exception e) {
