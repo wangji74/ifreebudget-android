@@ -31,6 +31,7 @@ import com.ifreebudget.fm.actions.AddNestedTransactions;
 import com.ifreebudget.fm.entity.DBException;
 import com.ifreebudget.fm.entity.FManEntityManager;
 import com.ifreebudget.fm.entity.beans.Account;
+import com.ifreebudget.fm.entity.beans.TaskNotification;
 import com.ifreebudget.fm.entity.beans.Transaction;
 import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
@@ -51,13 +52,12 @@ import android.widget.Toast;
 
 public class QuickAddTransactionActivity extends Activity {
 
-    public static final String ACCOUNTKEY = "ACCOUNT";
-    public static final String PAYEEKEY = "PAYEE";
+    public static final String TXIDKEY = "TXIDKEY";
 
     private static final int DATE_DIALOG_ID = 0;
 
-    private Long accountId;
-    private Long payeeId;
+    private Long txId;
+    private Long notificationId;
 
     private Account from = null;
     private Account to = null;
@@ -88,18 +88,42 @@ public class QuickAddTransactionActivity extends Activity {
 
         if (intent != null) {
             Bundle bundle = intent.getExtras();
-            if (bundle != null && bundle.containsKey(ACCOUNTKEY)) {
-                accountId = (Long) bundle.get(ACCOUNTKEY);
+            if (bundle != null
+                    && bundle
+                            .containsKey(ManageTaskNotificationActivity.NOTIFIDKEY)) {
+                notificationId = (Long) bundle
+                        .get(ManageTaskNotificationActivity.NOTIFIDKEY);
             }
-            if (bundle != null && bundle.containsKey(PAYEEKEY)) {
-                payeeId = (Long) bundle.get(PAYEEKEY);
+            if (bundle != null && bundle.containsKey(TXIDKEY)) {
+                txId = (Long) bundle.get(TXIDKEY);
             }
         }
 
         FManEntityManager em = FManEntityManager.getInstance();
         try {
-            from = em.getAccount(accountId);
-            to = em.getAccount(payeeId);
+            TaskNotification notif = em.getTaskNotification(notificationId);
+
+            if (notif == null) {
+                Log.e(TAG, "Missing task notification entity: "
+                        + notificationId);
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        tr("Can not find notification details!"),
+                        Toast.LENGTH_SHORT);
+                toast.show();
+                return;
+            }
+
+            Transaction tx = em.getTransaction(txId);
+            if (tx == null) {
+                String msg = "Missing transaction for scheduling!";
+                Log.e(TAG, msg + ", notification: " + notif.getTaskId());
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        tr("msg"), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+
+            from = em.getAccount(tx.getFromAccountId());
+            to = em.getAccount(tx.getToAccountId());
 
             fromAcctTf.setText(from.getAccountName());
             toAcctTf.setText(to.getAccountName());
@@ -180,6 +204,10 @@ public class QuickAddTransactionActivity extends Activity {
                 toast.show();
             }
             else {
+                /* Tx was added successfully, delete the notif */
+                TaskNotification tn = new TaskNotification();
+                tn.setId(notificationId);
+                FManEntityManager.getInstance().deleteEntity(tn);
                 super.finish();
             }
         }
@@ -209,6 +237,20 @@ public class QuickAddTransactionActivity extends Activity {
 
     public void doCancelAction(View view) {
         super.finish();
+    }
+
+    public void cancelTxNotification(View view) {
+        try {
+            TaskNotification tn = new TaskNotification();
+            tn.setId(notificationId);
+            FManEntityManager.getInstance().deleteEntity(tn);
+        }
+        catch (Exception e) {
+            Log.e(TAG, MiscUtils.stackTrace2String(e));
+        }
+        finally {
+            super.finish();
+        }
     }
 
     private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {

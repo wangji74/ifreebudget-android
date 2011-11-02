@@ -52,6 +52,7 @@ import com.ifreebudget.fm.activities.ManageAccountsActivity;
 import com.ifreebudget.fm.activities.ManageBudgetsActivity;
 import com.ifreebudget.fm.activities.ManageDBActivity;
 import com.ifreebudget.fm.activities.ManageRemindersActivity;
+import com.ifreebudget.fm.activities.ManageTaskNotificationActivity;
 import com.ifreebudget.fm.activities.ViewReportActivity;
 import com.ifreebudget.fm.entity.FManEntityManager;
 import com.ifreebudget.fm.services.SessionManager;
@@ -118,6 +119,9 @@ public class iFreeBudget extends Activity {
         case R.id.mItemHelp:
             gotoHelp();
             return true;
+        case R.id.mItemNotifs:
+            manageNotifications();
+            return true;
         default:
             return super.onOptionsItemSelected(item);
 
@@ -141,13 +145,13 @@ public class iFreeBudget extends Activity {
         case 3:
             gotoReports();
             return;
-        case 4:
+        case 6:
             manageBackups(view);
             return;
-        case 5:
+        case 4:
             addTransaction(view);
             return;
-        case 6:
+        case 5:
             manageReminders(view);
             return;
         default:
@@ -216,9 +220,15 @@ public class iFreeBudget extends Activity {
 
     public void manageReminders(View view) {
         Intent txIntent = new Intent(this, ManageRemindersActivity.class);
+//        Intent txIntent = new Intent(this, ManageTaskNotificationActivity.class);
         startActivity(txIntent);
     }
 
+    public void manageNotifications() {
+        Intent txIntent = new Intent(this, ManageTaskNotificationActivity.class);
+        startActivity(txIntent);
+    }
+    
     private void getNetworth() {
         ActionRequest req = new ActionRequest();
         try {
@@ -335,7 +345,7 @@ public class iFreeBudget extends Activity {
 
         private Integer[] mThumbIds = { R.drawable.gitem_accounts,
                 R.drawable.gitem_transactions, R.drawable.gitem_budgets,
-                R.drawable.gitem_reports, R.drawable.gitem_backups,
-                R.drawable.gitem_newtx, R.drawable.reminder };
+                R.drawable.gitem_reports, R.drawable.gitem_newtx, 
+                R.drawable.reminder, R.drawable.gitem_backups };
     }
 }

@@ -20,6 +20,12 @@
         android:title="Reports"
         android:icon="@drawable/reports"
         android:titleCondensed="Reports" /-->
+
+    <item
+        android:id="@+id/mItemNotifs"
+        android:title="Notifications"
+        android:icon="@drawable/about"
+        android:titleCondensed="Notifications"/>
     <item
         android:id="@+id/mItemHelp"
         android:title="Help"

@@ -44,14 +44,14 @@
 					android:gravity="center"
 					android:onClick="@string/refresh"
 					android:src="@drawable/refresh" />
-				<ImageButton
+				<!-- ImageButton
 					android:id="@+id/add_reminder_btn"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:background="@null"
 					android:gravity="center"
 					android:onClick="@string/add"
-					android:src="@drawable/list_add" />
+					android:src="@drawable/list_add" /-->
 			</LinearLayout>
 		</RelativeLayout>
 	</LinearLayout>

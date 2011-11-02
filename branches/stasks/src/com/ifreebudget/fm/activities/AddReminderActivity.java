@@ -299,7 +299,7 @@ public class AddReminderActivity extends Activity {
             if (resp.getErrorCode() == ActionResponse.NOERROR) {
                 Long dbId = (Long) resp.getResult("TASKID");
                 AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-                scheduleEvent(am, getApplicationContext(), dbId, task
+                scheduleEvent(TAG, am, getApplicationContext(), dbId, task
                         .getSchedule().getNextRunTime());
                 super.finish();
             }
@@ -479,15 +479,19 @@ public class AddReminderActivity extends Activity {
         return s;
     }
 
-    public static void scheduleEvent(AlarmManager manager, Context context,
-            Long dbId, Date nextRunTime) {
+    public static void scheduleEvent(String debugTag, AlarmManager manager,
+            Context context, Long dbId, Date nextRunTime) throws Exception {
+        if (nextRunTime.before(new Date())) {
+            throw new RuntimeException(
+                    "Next run time for task is before current time, taskid: "
+                            + dbId);
+        }
         Intent intent = new Intent(context, STaskAlarmReceiver.class);
         intent.putExtra(TASK_ALARM_ID, dbId);
         PendingIntent sender = PendingIntent.getBroadcast(context,
                 Short.MAX_VALUE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // Date dt = task.getSchedule().getNextRunTime();
-        Log.i(TAG, "Scheduled event for: " + nextRunTime.toString());
+        Log.i(debugTag, "Scheduled event for: " + nextRunTime.toString());
         manager.set(AlarmManager.RTC_WAKEUP, nextRunTime.getTime(), sender);
     }
 }

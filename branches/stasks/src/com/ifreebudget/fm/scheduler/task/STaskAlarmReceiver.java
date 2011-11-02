@@ -41,7 +41,7 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
             return;
         }
         try {
-            FManEntityManager em = FManEntityManager.getInstance();
+            FManEntityManager em = FManEntityManager.getInstance(context);
             TaskEntity taskEntity = em.getTask(id);
 
             createNotificationEntity(context, taskEntity.getId(),
@@ -101,7 +101,7 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
             AlarmManager am = (AlarmManager) context
                     .getSystemService(Context.ALARM_SERVICE);
             Date nextRunTime = task.getSchedule().getNextRunTime();
-            AddReminderActivity.scheduleEvent(am, context, taskDbId,
+            AddReminderActivity.scheduleEvent(TAG, am, context, taskDbId,
                     nextRunTime);
         }
         catch (Exception e) {
