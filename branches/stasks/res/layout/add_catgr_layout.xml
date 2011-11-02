@@ -51,10 +51,9 @@
 						android:id="@+id/add_tx_btn"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:background="@null"
+						android:background="@drawable/document_save_selector"
 						android:gravity="center"
-						android:onClick="@string/save_category"
-						android:src="@drawable/document_save" />
+						android:onClick="@string/save_category"/>
 				</LinearLayout>
 			</RelativeLayout>
 		</LinearLayout>
