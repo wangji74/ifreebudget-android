@@ -47,10 +47,9 @@
 					android:id="@+id/add_tx_btn"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:background="@null"
+					android:background="@drawable/list_add_selector"
 					android:gravity="center"
-					android:onClick="@string/add_budget_action"
-					android:src="@drawable/list_add" />
+					android:onClick="@string/add_budget_action"/>
 			</LinearLayout>
 		</RelativeLayout>
 	</LinearLayout>
