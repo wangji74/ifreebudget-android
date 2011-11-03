@@ -44,7 +44,7 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
             FManEntityManager em = FManEntityManager.getInstance(context);
             TaskEntity taskEntity = em.getTask(id);
 
-            createNotificationEntity(context, taskEntity.getId(),
+            TaskUtils.createNotificationEntity(TAG, context, taskEntity.getId(),
                     System.currentTimeMillis());
 
             ScheduleEntity scheduleEntity = em.getScheduleByTaskId(taskEntity
@@ -68,28 +68,11 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
 
             reSchedule(context, taskEntity.getId(), t);
 
-            em.updateEntity(scheduleEntity);
+//            em.updateEntity(scheduleEntity);
 
             String tickerText = taskEntity.getName() + " reminder";
             sendNotification(context, ManageTaskNotificationActivity.class,
                     tickerText, "iFreeBudget", tickerText, 1, true, false);
-        }
-        catch (Exception e) {
-            Log.e(TAG, MiscUtils.stackTrace2String(e));
-        }
-    }
-
-    private void createNotificationEntity(Context context, Long taskId,
-            Long timeStamp) {
-        try {
-            TaskNotification tn = new TaskNotification();
-            tn.setTaskId(taskId);
-            tn.setTimestamp(timeStamp);
-
-            FManEntityManager em = FManEntityManager.getInstance();
-            em.createEntity(tn);
-            
-            Log.i(TAG, "Created notification entity id: " + tn.getId());
         }
         catch (Exception e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
