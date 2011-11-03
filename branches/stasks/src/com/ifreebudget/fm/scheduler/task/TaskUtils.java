@@ -7,25 +7,33 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.ifreebudget.fm.entity.FManEntityManager;
 import com.ifreebudget.fm.entity.beans.ConstraintEntity;
 import com.ifreebudget.fm.entity.beans.ScheduleEntity;
+import com.ifreebudget.fm.entity.beans.TaskNotification;
 import com.ifreebudget.fm.scheduler.task.Schedule.RepeatType;
 import com.ifreebudget.fm.scheduler.task.constraints.Constraint;
 import com.ifreebudget.fm.scheduler.task.constraints.MonthConstraint;
 import com.ifreebudget.fm.scheduler.task.constraints.MonthConstraintDayBased;
+import com.ifreebudget.fm.utils.MiscUtils;
 
 public class TaskUtils {
 
     public static Schedule rebuildSchedule(Date next, Date end,
-            ScheduleEntity ts, ConstraintEntity constr) throws Exception {
-        Schedule.RepeatType type = getTypeFromInt(ts.getRepeatType());
+            ScheduleEntity scheduleEntity, ConstraintEntity constr)
+            throws Exception {
+        Schedule.RepeatType type = getTypeFromInt(scheduleEntity
+                .getRepeatType());
 
         if (type == RepeatType.WEEK) {
             if (constr != null) {
                 Schedule sch = new WeekSchedule(next, end);
                 byte[] bb = constr.getConstraint();
                 Constraint s = (Constraint) SerializationHelper.deserialize(bb);
-                sch.setRepeatType(type, ts.getStep());
+                sch.setRepeatType(type, scheduleEntity.getStep());
                 sch.setConstraint(s);
                 return sch;
             }
@@ -41,14 +49,14 @@ public class TaskUtils {
                 else if (s instanceof MonthConstraintDayBased) {
                     sch = new MonthScheduleDayBased(next, end);
                 }
-                sch.setRepeatType(type, ts.getStep());
+                sch.setRepeatType(type, scheduleEntity.getStep());
                 sch.setConstraint(s);
                 return sch;
             }
         }
         else {
             Schedule sch = new BasicSchedule(next, end);
-            sch.setRepeatType(type, ts.getStep());
+            sch.setRepeatType(type, scheduleEntity.getStep());
             return sch;
         }
         return null;
@@ -100,6 +108,23 @@ public class TaskUtils {
             ObjectInputStream ois = new ObjectInputStream(bis);
             Object o = ois.readObject();
             return o;
+        }
+    }
+
+    public static void createNotificationEntity(String TAG, Context context,
+            Long taskId, Long timeStamp) {
+        try {
+            TaskNotification tn = new TaskNotification();
+            tn.setTaskId(taskId);
+            tn.setTimestamp(timeStamp);
+
+            FManEntityManager em = FManEntityManager.getInstance();
+            em.createEntity(tn);
+
+            Log.i(TAG, "Created notification entity id: " + tn.getId());
+        }
+        catch (Exception e) {
+            Log.e(TAG, MiscUtils.stackTrace2String(e));
         }
     }
 }

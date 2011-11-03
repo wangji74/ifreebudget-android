@@ -2,7 +2,10 @@ package com.ifreebudget.fm.scheduler.task;
 
 import static com.ifreebudget.fm.utils.Messages.tr;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import android.app.AlarmManager;
@@ -43,6 +46,11 @@ public class TaskRestarterService extends IntentService {
                 try {
                     ScheduleEntity se = em.getScheduleByTaskId(te.getId());
 
+                    Log.i(TAG,
+                            te.getName() + " last:"
+                                    + new Date(se.getLastRunTime()) + " next:"
+                                    + new Date(se.getNextRunTime()));
+
                     ConstraintEntity ce = em.getConstraintByScheduleId(se
                             .getId());
 
@@ -61,25 +69,54 @@ public class TaskRestarterService extends IntentService {
 
                     // Some schedules were missed
                     if (now.after(next)) {
+                        Log.i(TAG,
+                                "Some schedules were missed for task: "
+                                        + te.getName());
                         ScheduledTx t = new ScheduledTx(te.getName(),
                                 te.getBusinessObjectId());
 
                         t.setSchedule(sch);
 
-                        List<Date> missed = null;
-                        if (se.getLastRunTime() != null) {
-                            missed = sch.getRunTimesBetween(
-                                    new Date(se.getLastRunTime()), now);
-                        }
-                        else {
-                            missed = sch.getRunTimesBetween(
-                                    new Date(te.getStartTime()), now);
-                        }
+                        List<Date> all = sch.getRunTimesBetween(
+                                sch.getStartTime(), sch.getEndTime());
+                        List<Date> missed = new ArrayList<Date>();
 
-                        // createMissedNotifications(missed);
+                        Iterator<Date> iter = all.iterator();
+
+                        Date last = new Date(se.getLastRunTime());
+
+                        /*
+                         * Special case 1 : Task never ran. Add the task start
+                         * time as first missed
+                         */
+                        if (se.getLastRunTime() == null
+                                || se.getLastRunTime().longValue() == 0l) {
+                            missed.add(new Date(te.getStartTime()));
+                        }
+                        while (iter.hasNext()) {
+                            Date d = iter.next();
+                            if (d.before(last)) {
+                                continue;
+                            }
+                            else {
+                                if (d.before(now)) {
+                                    // createMissedNotif(d);
+                                    missed.add(d);
+                                }
+                                else {
+                                    next = d;
+                                    break;
+                                }
+                            }
+                        }
 
                         if (missed != null && missed.size() > 0) {
-                            next = missed.get(missed.size() - 1);
+                            Log.i(TAG, te.getName() + ", num missed notifs: "
+                                    + all.size() + ":" + missed);
+                            for (Date d : missed) {
+                                TaskUtils.createNotificationEntity(TAG,
+                                        context, te.getId(), d.getTime());
+                            }
                         }
 
                         se.setNextRunTime(next.getTime());
