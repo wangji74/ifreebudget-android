@@ -68,7 +68,7 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
 
             reSchedule(context, taskEntity.getId(), t);
 
-//            em.updateEntity(scheduleEntity);
+            em.updateEntity(scheduleEntity);
 
             String tickerText = taskEntity.getName() + " reminder";
             sendNotification(context, ManageTaskNotificationActivity.class,
