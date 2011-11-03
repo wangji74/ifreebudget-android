@@ -112,7 +112,7 @@ public class TaskRestarterService extends IntentService {
 
                         if (missed != null && missed.size() > 0) {
                             Log.i(TAG, te.getName() + ", num missed notifs: "
-                                    + all.size() + ":" + missed);
+                                    + missed.size() + ":" + missed);
                             for (Date d : missed) {
                                 TaskUtils.createNotificationEntity(TAG,
                                         context, te.getId(), d.getTime());
