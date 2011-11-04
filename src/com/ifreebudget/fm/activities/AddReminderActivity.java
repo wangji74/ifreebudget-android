@@ -35,6 +35,7 @@ import com.ifreebudget.fm.R;
 import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.ActionResponse;
 import com.ifreebudget.fm.actions.AddReminderAction;
+import com.ifreebudget.fm.actions.GetBudgetSummaryAction;
 import com.ifreebudget.fm.scheduler.task.BasicSchedule;
 import com.ifreebudget.fm.scheduler.task.STaskAlarmReceiver;
 import com.ifreebudget.fm.scheduler.task.Schedule;
@@ -489,9 +490,21 @@ public class AddReminderActivity extends Activity {
         Intent intent = new Intent(context, STaskAlarmReceiver.class);
         intent.putExtra(TASK_ALARM_ID, dbId);
         PendingIntent sender = PendingIntent.getBroadcast(context,
-                Short.MAX_VALUE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                Short.MAX_VALUE, intent, PendingIntent.FLAG_ONE_SHOT);
 
         Log.i(debugTag, "Scheduled event for: " + nextRunTime.toString());
         manager.set(AlarmManager.RTC_WAKEUP, nextRunTime.getTime(), sender);
     }
+
+    public static void cancelEvent(String debugTag, AlarmManager manager,
+            Context context, Long dbId) throws Exception {
+        Intent intent = new Intent(context, STaskAlarmReceiver.class);
+        intent.putExtra(TASK_ALARM_ID, dbId);
+        PendingIntent sender = PendingIntent.getBroadcast(context,
+                Short.MAX_VALUE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Log.i(debugTag, "Cancelled event for id: " + dbId);
+        manager.cancel(sender);
+    }
+
 }

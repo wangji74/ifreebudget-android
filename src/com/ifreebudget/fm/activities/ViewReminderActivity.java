@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,7 +30,7 @@ import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
 
 public class ViewReminderActivity extends Activity {
-    private static final String TAG = "ViewTransactionActivity";
+    private static final String TAG = "ViewReminderActivity";
     private Long reminderId = null;
 
     @Override
@@ -84,8 +85,6 @@ public class ViewReminderActivity extends Activity {
                 notes.append("\n\n\t\tAmount ");
                 notes.append(nf.format(tx.getTxAmount()));
                 
-                Log.i(TAG, "55555 : " + nf.format(tx.getTxAmount()));
-                
                 TextView remNotesTf = (TextView) findViewById(R.id.rem_notes_tf);
                 remNotesTf.setText(notes.toString());
             }
@@ -124,6 +123,9 @@ public class ViewReminderActivity extends Activity {
             ActionResponse resp = new DeleteReminderAction()
                     .executeAction(req);
             if (resp.getErrorCode() == ActionResponse.NOERROR) {
+                AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+                AddReminderActivity.cancelEvent(TAG, am,
+                        getApplicationContext(), reminderId);
                 super.finish();
             }
             else {

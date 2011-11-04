@@ -11,6 +11,7 @@ import java.util.List;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -61,7 +62,6 @@ public class ManageRemindersActivity extends ListActivity {
                 list.toArray(arr);
                 this.setListAdapter(new ArrayAdapter<ListEntry>(this,
                         R.layout.budget_list_row,
-                        // android.R.layout.simple_list_item_1,
                         arr));
             }
         }
@@ -151,14 +151,9 @@ public class ManageRemindersActivity extends ListActivity {
         @Override
         public String toString() {
             StringBuilder ret = new StringBuilder(entity.getName());
-            ret.append("\n");
-
-            // String next =
-            // SessionManager.getDateTimeFormat().format(nextTime);
 
             ret.append(getDateDiff(nextTime));
 
-            // ret.append(" ( " + entity.getId() + " )");
             return ret.toString();
         }
 
@@ -167,27 +162,16 @@ public class ManageRemindersActivity extends ListActivity {
 
             long diff = (ref.getTime() - now.getTime()) / 1000;
 
-            // if(diff < 0) {
-            // return String.valueOf(0);
-            // }
-            //
-            // long numHrs = diff / (60 * 60);
-            //
-            // if(numHrs == 0) {
-            // long mins = diff / (60);
-            // return String.format("Due in %s minutes", mins + ":" + diff);
-            // }
-            // return String.format("Due in %s hours", numHrs + ":" + diff);
-
             long hours = diff / 3600;
             long remainder = diff % 3600;
             long minutes = remainder / 60;
             long seconds = remainder % 60;
 
-            return "\n" 
-                    + ((hours < 10 ? "0" : "") + hours + " hours, "
-                    + (minutes < 10 ? "0" : "") + minutes + " minutes");
-
+            StringBuilder ret = new StringBuilder("\n");
+            ret.append(hours > 0 ? hours + " hours, " : "");
+            ret.append(minutes > 0 ? minutes + " minutes" : "");
+            
+            return ret.toString();
         }
     }
 }
