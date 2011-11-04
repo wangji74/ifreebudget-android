@@ -53,8 +53,9 @@ public class ManageRemindersActivity extends ListActivity {
                         list.add(le);
                     }
                 }
-                
-                Comparator<ListEntry> c = Collections.reverseOrder(new ListEntryComparator());
+
+                Comparator<ListEntry> c = Collections
+                        .reverseOrder(new ListEntryComparator());
                 Collections.sort(list, c);
                 ListEntry[] arr = new ListEntry[list.size()];
                 list.toArray(arr);
@@ -79,7 +80,7 @@ public class ManageRemindersActivity extends ListActivity {
             return object1.nextTime.compareTo(object2.nextTime);
         }
     }
-    
+
     public void gotoHomeScreen(View view) {
         Intent intent = new Intent(this, iFreeBudget.class);
         startActivity(intent);
@@ -150,14 +151,43 @@ public class ManageRemindersActivity extends ListActivity {
         @Override
         public String toString() {
             StringBuilder ret = new StringBuilder(entity.getName());
-            ret.append("\n\tNext: ");
-            
-            String next = SessionManager.getDateTimeFormat().format(nextTime);
-            
-            ret.append(next);
-            
-//            ret.append(" ( " + entity.getId() + " )");
+            ret.append("\n");
+
+            // String next =
+            // SessionManager.getDateTimeFormat().format(nextTime);
+
+            ret.append(getDateDiff(nextTime));
+
+            // ret.append(" ( " + entity.getId() + " )");
             return ret.toString();
+        }
+
+        private String getDateDiff(Date ref) {
+            Date now = new Date();
+
+            long diff = (ref.getTime() - now.getTime()) / 1000;
+
+            // if(diff < 0) {
+            // return String.valueOf(0);
+            // }
+            //
+            // long numHrs = diff / (60 * 60);
+            //
+            // if(numHrs == 0) {
+            // long mins = diff / (60);
+            // return String.format("Due in %s minutes", mins + ":" + diff);
+            // }
+            // return String.format("Due in %s hours", numHrs + ":" + diff);
+
+            long hours = diff / 3600;
+            long remainder = diff % 3600;
+            long minutes = remainder / 60;
+            long seconds = remainder % 60;
+
+            return "\n" 
+                    + ((hours < 10 ? "0" : "") + hours + " hours, "
+                    + (minutes < 10 ? "0" : "") + minutes + " minutes");
+
         }
     }
 }
