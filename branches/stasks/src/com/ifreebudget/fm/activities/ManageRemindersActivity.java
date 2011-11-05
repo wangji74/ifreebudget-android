@@ -61,8 +61,7 @@ public class ManageRemindersActivity extends ListActivity {
                 ListEntry[] arr = new ListEntry[list.size()];
                 list.toArray(arr);
                 this.setListAdapter(new ArrayAdapter<ListEntry>(this,
-                        R.layout.budget_list_row,
-                        arr));
+                        R.layout.budget_list_row, arr));
             }
         }
         catch (DBException e) {
@@ -162,15 +161,23 @@ public class ManageRemindersActivity extends ListActivity {
 
             long diff = (ref.getTime() - now.getTime()) / 1000;
 
-            long hours = diff / 3600;
-            long remainder = diff % 3600;
-            long minutes = remainder / 60;
-            long seconds = remainder % 60;
+            return calcHMS(diff);
+        }
+
+        private String calcHMS(long timeInSeconds) {
+            long hours, minutes, seconds;
+            hours = timeInSeconds / 3600;
+            timeInSeconds = timeInSeconds - (hours * 3600);
+            minutes = timeInSeconds / 60;
+            timeInSeconds = timeInSeconds - (minutes * 60);
+            seconds = timeInSeconds;
 
             StringBuilder ret = new StringBuilder("\n");
             ret.append(hours > 0 ? hours + " hours, " : "");
             ret.append(minutes > 0 ? minutes + " minutes" : "");
-            
+            if (hours == 0 && minutes == 0) {
+                ret.append(seconds > 0 ? seconds + " seconds" : "");
+            }
             return ret.toString();
         }
     }
