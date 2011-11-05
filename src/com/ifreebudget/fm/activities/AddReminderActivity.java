@@ -325,7 +325,7 @@ public class AddReminderActivity extends Activity {
         Date dt = fmt.parse(dateSt + " " + timeSt);
         Calendar cal = Calendar.getInstance();
         cal.setTime(dt);
-        // cal.add(Calendar.MINUTE, 2);
+        cal.set(Calendar.SECOND, 0);
         return cal.getTime();
     }
 
@@ -334,7 +334,11 @@ public class AddReminderActivity extends Activity {
         String timeSt = endTimeBtn.getText().toString();
 
         SimpleDateFormat fmt = SessionManager.getDateTimeFormat();
-        return fmt.parse(dateSt + " " + timeSt);
+        Date dt = fmt.parse(dateSt + " " + timeSt);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dt);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTime();
     }
 
     private Task createTask() throws Exception {
@@ -377,6 +381,15 @@ public class AddReminderActivity extends Activity {
     }
 
     private boolean validateDates(Date s, Date e) {
+        Date now = new Date();
+        if (s.before(now)) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    tr("Cannot create task - Start time is past"),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+            return false;
+        }
+        
         if (e.before(s)) {
             Toast toast = Toast.makeText(getApplicationContext(),
                     tr("Cannot create task - End date is before start date"),
@@ -416,16 +429,11 @@ public class AddReminderActivity extends Activity {
 
         BasicSchedule s = new BasicSchedule(st, en);
 
-        int step = 1;
-        if (val != null) {
-            try {
-                step = Integer.parseInt(val);
-            }
-            catch (NumberFormatException e) {
-                Log.e(TAG, "Unparseable step value for daily schedule: " + val);
-            }
+        int step = validateStepValue(val);
+        if(step < 1) {
+            return null;
         }
-        s.setRepeatType(RepeatType.MINUTE, step);
+        s.setRepeatType(RepeatType.DATE, step);
 
         return s;
     }
@@ -434,16 +442,11 @@ public class AddReminderActivity extends Activity {
         EditText repInfo = (EditText) findViewById(R.id.weekly_repeat_unit_tf);
         String val = repInfo.getText().toString();
 
-        int step = 1;
-        if (val != null) {
-            try {
-                step = Integer.parseInt(val);
-            }
-            catch (NumberFormatException e) {
-                Log.e(TAG, "Unparseable step value for daily schedule: " + val);
-            }
+        int step = validateStepValue(val);
+        if(step < 1) {
+            return null;
         }
-
+        
         WeekSchedule s = new WeekSchedule(st, en);
 
         WeekConstraint co = new WeekConstraint();
@@ -482,6 +485,36 @@ public class AddReminderActivity extends Activity {
 
         return s;
     }
+    
+    private int validateStepValue(String val) {
+        int step = 1;
+        if (val != null) {
+            try {
+                step = Integer.parseInt(val);
+            }
+            catch (NumberFormatException e) {
+                Log.e(TAG, "Unparseable step value for daily schedule: " + val);
+                Toast toast = Toast
+                        .makeText(
+                                getApplicationContext(),
+                                tr("Invalid value for repeat interval"),
+                                Toast.LENGTH_SHORT);
+                toast.show();
+                return -1;
+            }
+        }
+        if (step < 1) {
+            Toast toast = Toast
+                    .makeText(
+                            getApplicationContext(),
+                            tr("Invalid value for repeat interval, can not be less than 1"),
+                            Toast.LENGTH_SHORT);
+            toast.show();
+            return -1;
+        }
+        
+        return step;
+    }
 
     public static void reRegisterAlarm(String debugTag, AlarmManager manager,
             Context context) throws Exception {
@@ -508,6 +541,11 @@ public class AddReminderActivity extends Activity {
             timeToSchedule = next;
             break;
         }
+
+        if (timeToSchedule == null) {
+            return;
+        }
+
         Intent intent = new Intent(context, STaskAlarmReceiver.class);
         intent.putExtra(TASK_ALARM_ID, timeToSchedule.getTime());
 
@@ -518,15 +556,4 @@ public class AddReminderActivity extends Activity {
                 "Scheduled event to fire at: " + timeToSchedule.toString());
         manager.set(AlarmManager.RTC_WAKEUP, timeToSchedule.getTime(), sender);
     }
-
-//    public static void cancelEvent(String debugTag, AlarmManager manager,
-//            Context context, Long dbId) throws Exception {
-//        Intent intent = new Intent(context, STaskAlarmReceiver.class);
-//        intent.putExtra(TASK_ALARM_ID, dbId);
-//        PendingIntent sender = PendingIntent.getBroadcast(context,
-//                Short.MAX_VALUE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//        Log.i(debugTag, "Cancelled event for id: " + dbId);
-//        manager.cancel(sender);
-//    }
 }
