@@ -1,9 +1,6 @@
 package com.ifreebudget.fm.scheduler.task;
 
-import static com.ifreebudget.fm.utils.Messages.tr;
-
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +10,6 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.ifreebudget.fm.activities.AddReminderActivity;
 import com.ifreebudget.fm.entity.DBException;
@@ -122,10 +118,7 @@ public class TaskRestarterService extends IntentService {
                         se.setNextRunTime(next.getTime());
 
                         em.updateEntity(se);
-
                     }
-
-                    reSchedule(context, te.getId(), next);
                 }
                 catch (Exception e1) {
                     Log.e(TAG, MiscUtils.stackTrace2String(e1));
@@ -135,21 +128,15 @@ public class TaskRestarterService extends IntentService {
         catch (DBException e) {
             Log.e(TAG, e.getMessage());
         }
-    }
-
-    private static void reSchedule(Context context, Long taskDbId,
-            Date nextRunTime) {
-        try {
+        finally {
             AlarmManager am = (AlarmManager) context
                     .getSystemService(Context.ALARM_SERVICE);
-            AddReminderActivity.scheduleEvent(TAG, am, context, taskDbId,
-                    nextRunTime);
-        }
-        catch (Exception e) {
-            Log.e(TAG, MiscUtils.stackTrace2String(e));
-            Toast toast = Toast.makeText(context, tr("Task schedule failed - "
-                    + e.getMessage()), Toast.LENGTH_SHORT);
-            toast.show();
+            try {
+                AddReminderActivity.reRegisterAlarm(TAG, am, context);
+            }
+            catch (Exception e) {
+                Log.e(TAG, MiscUtils.stackTrace2String(e));
+            }
         }
     }
 }

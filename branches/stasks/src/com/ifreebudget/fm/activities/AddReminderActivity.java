@@ -5,6 +5,7 @@ import static com.ifreebudget.fm.utils.Messages.tr;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import android.app.Activity;
@@ -36,6 +37,10 @@ import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.ActionResponse;
 import com.ifreebudget.fm.actions.AddReminderAction;
 import com.ifreebudget.fm.actions.GetBudgetSummaryAction;
+import com.ifreebudget.fm.entity.FManEntityManager;
+import com.ifreebudget.fm.entity.beans.FManEntity;
+import com.ifreebudget.fm.entity.beans.ScheduleEntity;
+import com.ifreebudget.fm.entity.beans.TaskEntity;
 import com.ifreebudget.fm.scheduler.task.BasicSchedule;
 import com.ifreebudget.fm.scheduler.task.STaskAlarmReceiver;
 import com.ifreebudget.fm.scheduler.task.Schedule;
@@ -298,10 +303,8 @@ public class AddReminderActivity extends Activity {
             req.setProperty("TASKTYPE", "Reminder");
             ActionResponse resp = new AddReminderAction().execute(req);
             if (resp.getErrorCode() == ActionResponse.NOERROR) {
-                Long dbId = (Long) resp.getResult("TASKID");
                 AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-                scheduleEvent(TAG, am, getApplicationContext(), dbId, task
-                        .getSchedule().getNextRunTime());
+                reRegisterAlarm(TAG, am, getApplicationContext());
                 super.finish();
             }
         }
@@ -422,7 +425,7 @@ public class AddReminderActivity extends Activity {
                 Log.e(TAG, "Unparseable step value for daily schedule: " + val);
             }
         }
-        s.setRepeatType(RepeatType.DATE, step);
+        s.setRepeatType(RepeatType.MINUTE, step);
 
         return s;
     }
@@ -480,31 +483,50 @@ public class AddReminderActivity extends Activity {
         return s;
     }
 
-    public static void scheduleEvent(String debugTag, AlarmManager manager,
-            Context context, Long dbId, Date nextRunTime) throws Exception {
-        if (nextRunTime.before(new Date())) {
-            throw new RuntimeException(
-                    "Next run time for task is before current time, taskid: "
-                            + dbId);
+    public static void reRegisterAlarm(String debugTag, AlarmManager manager,
+            Context context) throws Exception {
+
+        FManEntityManager em = FManEntityManager.getInstance(context);
+
+        List<FManEntity> schList = em.getList(ScheduleEntity.class,
+                " order by nextrt ");
+
+        Date now = new Date();
+        Date timeToSchedule = null;
+        for (FManEntity e : schList) {
+            ScheduleEntity se = (ScheduleEntity) e;
+            TaskEntity te = em.getTask(se.getScheduledTaskId());
+            Date end = new Date(te.getEndTime());
+            Date next = new Date(se.getNextRunTime());
+
+            if (end.before(now)) {
+                continue;
+            }
+            else if (next.before(now)) {
+                continue;
+            }
+            timeToSchedule = next;
+            break;
         }
         Intent intent = new Intent(context, STaskAlarmReceiver.class);
-        intent.putExtra(TASK_ALARM_ID, dbId);
+        intent.putExtra(TASK_ALARM_ID, timeToSchedule.getTime());
+
         PendingIntent sender = PendingIntent.getBroadcast(context,
                 Short.MAX_VALUE, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        Log.i(debugTag, "Scheduled event for: " + nextRunTime.toString());
-        manager.set(AlarmManager.RTC_WAKEUP, nextRunTime.getTime(), sender);
+        Log.i(debugTag,
+                "Scheduled event to fire at: " + timeToSchedule.toString());
+        manager.set(AlarmManager.RTC_WAKEUP, timeToSchedule.getTime(), sender);
     }
 
-    public static void cancelEvent(String debugTag, AlarmManager manager,
-            Context context, Long dbId) throws Exception {
-        Intent intent = new Intent(context, STaskAlarmReceiver.class);
-        intent.putExtra(TASK_ALARM_ID, dbId);
-        PendingIntent sender = PendingIntent.getBroadcast(context,
-                Short.MAX_VALUE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Log.i(debugTag, "Cancelled event for id: " + dbId);
-        manager.cancel(sender);
-    }
-
+//    public static void cancelEvent(String debugTag, AlarmManager manager,
+//            Context context, Long dbId) throws Exception {
+//        Intent intent = new Intent(context, STaskAlarmReceiver.class);
+//        intent.putExtra(TASK_ALARM_ID, dbId);
+//        PendingIntent sender = PendingIntent.getBroadcast(context,
+//                Short.MAX_VALUE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//        Log.i(debugTag, "Cancelled event for id: " + dbId);
+//        manager.cancel(sender);
+//    }
 }
