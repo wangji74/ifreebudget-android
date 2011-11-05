@@ -3,6 +3,7 @@ package com.ifreebudget.fm.scheduler.task;
 import static com.ifreebudget.fm.utils.Messages.tr;
 
 import java.util.Date;
+import java.util.List;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -21,6 +22,7 @@ import com.ifreebudget.fm.activities.AddTransactionActivity;
 import com.ifreebudget.fm.activities.ManageTaskNotificationActivity;
 import com.ifreebudget.fm.entity.FManEntityManager;
 import com.ifreebudget.fm.entity.beans.ConstraintEntity;
+import com.ifreebudget.fm.entity.beans.FManEntity;
 import com.ifreebudget.fm.entity.beans.ScheduleEntity;
 import com.ifreebudget.fm.entity.beans.TaskEntity;
 import com.ifreebudget.fm.entity.beans.TaskNotification;
@@ -42,57 +44,68 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
         }
         try {
             FManEntityManager em = FManEntityManager.getInstance(context);
-            TaskEntity taskEntity = em.getTask(id);
+            String filter = String.format(" WHERE NEXTRT = %d", id);
 
-            TaskUtils.createNotificationEntity(TAG, context, taskEntity.getId(),
-                    System.currentTimeMillis());
+            List<FManEntity> schList = em.getList(ScheduleEntity.class, filter);
+            if (schList == null || schList.size() == 0) {
+                Log.e(TAG, "Alarm received for next run time " + new Date(id)
+                        + " which doesnot exist");
+                context.startService(new Intent(context,
+                        TaskRestarterService.class));
+                return;
+            }
 
-            ScheduleEntity scheduleEntity = em.getScheduleByTaskId(taskEntity
-                    .getId());
-
-            ConstraintEntity constraintEntity = em
-                    .getConstraintByScheduleId(scheduleEntity.getId());
-
-            ScheduledTx t = new ScheduledTx(taskEntity.getName(),
-                    taskEntity.getBusinessObjectId());
-
-            Schedule sch = TaskUtils.rebuildSchedule(
-                    new Date(scheduleEntity.getNextRunTime()), new Date(
-                            taskEntity.getEndTime()), scheduleEntity,
-                    constraintEntity);
-
-            t.setSchedule(sch);
-
-            scheduleEntity.setLastRunTime(new Date().getTime());
-            scheduleEntity.setNextRunTime(sch.getNextRunTime().getTime());
-
-            reSchedule(context, taskEntity.getId(), t);
-
-            em.updateEntity(scheduleEntity);
-
-            String tickerText = taskEntity.getName() + " reminder";
-            sendNotification(context, ManageTaskNotificationActivity.class,
-                    tickerText, "iFreeBudget", tickerText, 1, true, false);
+            for (FManEntity e : schList) {
+                ScheduleEntity se = (ScheduleEntity) e;
+                updateTaskAndNotify(context, em, se.getScheduledTaskId());
+            }
         }
         catch (Exception e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
+        }
+        finally {
+            AlarmManager am = (AlarmManager) context
+                    .getSystemService(Context.ALARM_SERVICE);
+            try {
+                AddReminderActivity.reRegisterAlarm(TAG, am, context);
+            }
+            catch (Exception e) {
+                Log.e(TAG, MiscUtils.stackTrace2String(e));
+            }
         }
     }
 
-    private void reSchedule(Context context, Long taskDbId, ScheduledTx task) {
-        try {
-            AlarmManager am = (AlarmManager) context
-                    .getSystemService(Context.ALARM_SERVICE);
-            Date nextRunTime = task.getSchedule().getNextRunTime();
-            AddReminderActivity.scheduleEvent(TAG, am, context, taskDbId,
-                    nextRunTime);
-        }
-        catch (Exception e) {
-            Log.e(TAG, MiscUtils.stackTrace2String(e));
-            Toast toast = Toast.makeText(context, tr("Task schedule failed - "
-                    + e.getMessage()), Toast.LENGTH_SHORT);
-            toast.show();
-        }
+    private void updateTaskAndNotify(Context context, FManEntityManager em,
+            Long id) throws Exception {
+        TaskEntity taskEntity = em.getTask(id);
+
+        TaskUtils.createNotificationEntity(TAG, context, taskEntity.getId(),
+                System.currentTimeMillis());
+
+        ScheduleEntity scheduleEntity = em.getScheduleByTaskId(taskEntity
+                .getId());
+
+        ConstraintEntity constraintEntity = em
+                .getConstraintByScheduleId(scheduleEntity.getId());
+
+        ScheduledTx t = new ScheduledTx(taskEntity.getName(),
+                taskEntity.getBusinessObjectId());
+
+        Schedule sch = TaskUtils.rebuildSchedule(
+                new Date(scheduleEntity.getNextRunTime()),
+                new Date(taskEntity.getEndTime()), scheduleEntity,
+                constraintEntity);
+
+        t.setSchedule(sch);
+
+        scheduleEntity.setLastRunTime(new Date().getTime());
+        scheduleEntity.setNextRunTime(sch.getNextRunTime().getTime());
+
+        em.updateEntity(scheduleEntity);
+
+        String tickerText = taskEntity.getName() + " reminder";
+        sendNotification(context, ManageTaskNotificationActivity.class,
+                tickerText, "iFreeBudget", tickerText, 1, true, false);
     }
 
     public static void sendNotification(Context caller,

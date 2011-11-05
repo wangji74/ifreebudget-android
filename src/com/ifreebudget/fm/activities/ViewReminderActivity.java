@@ -26,6 +26,7 @@ import com.ifreebudget.fm.entity.beans.ConstraintEntity;
 import com.ifreebudget.fm.entity.beans.ScheduleEntity;
 import com.ifreebudget.fm.entity.beans.TaskEntity;
 import com.ifreebudget.fm.entity.beans.Transaction;
+import com.ifreebudget.fm.scheduler.task.TaskRestarterService;
 import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
 
@@ -123,9 +124,10 @@ public class ViewReminderActivity extends Activity {
             ActionResponse resp = new DeleteReminderAction()
                     .executeAction(req);
             if (resp.getErrorCode() == ActionResponse.NOERROR) {
-                AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-                AddReminderActivity.cancelEvent(TAG, am,
-                        getApplicationContext(), reminderId);
+                startService(new Intent(this, TaskRestarterService.class));
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        tr("Refreshing tasks..."), Toast.LENGTH_SHORT);
+                toast.show();                
                 super.finish();
             }
             else {

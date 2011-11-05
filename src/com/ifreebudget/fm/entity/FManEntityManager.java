@@ -468,18 +468,22 @@ public class FManEntityManager {
         }
     }
 
-    public List<FManEntity> getList(Class<?> type, String filter)
+    public List<FManEntity> getList(Class<?> type, String filter, int offset, int limit)
             throws DBException {
         try {
             TableMapper mapper = mappers.get(type);
             if (mapper != null) {
-                return mapper.getList(database, filter, 0, 0);
+                return mapper.getList(database, filter, offset, limit);
             }
             return null;
         }
         catch (SQLException e) {
             throw new DBException(e);
         }
+    }
+    
+    public List<FManEntity> getList(Class<?> type, String filter) throws DBException {
+        return getList(type, filter, 0, 0);
     }
 
     public List<FManEntity> getList(Class<?> type) throws DBException {
