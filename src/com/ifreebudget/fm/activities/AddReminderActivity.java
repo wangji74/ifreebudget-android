@@ -396,7 +396,7 @@ public class AddReminderActivity extends Activity {
             toast.show();
             return false;
         }
-        
+
         if (e.before(s)) {
             Toast toast = Toast.makeText(getApplicationContext(),
                     tr("Cannot create task - End date is before start date"),
@@ -437,7 +437,7 @@ public class AddReminderActivity extends Activity {
         BasicSchedule s = new BasicSchedule(st, en);
 
         int step = validateStepValue(val);
-        if(step < 1) {
+        if (step < 1) {
             return null;
         }
         s.setRepeatType(RepeatType.DATE, step);
@@ -450,10 +450,10 @@ public class AddReminderActivity extends Activity {
         String val = repInfo.getText().toString();
 
         int step = validateStepValue(val);
-        if(step < 1) {
+        if (step < 1) {
             return null;
         }
-        
+
         WeekSchedule s = new WeekSchedule(st, en);
 
         WeekConstraint co = new WeekConstraint();
@@ -492,7 +492,7 @@ public class AddReminderActivity extends Activity {
 
         return s;
     }
-    
+
     private int validateStepValue(String val) {
         int step = 1;
         if (val != null) {
@@ -501,11 +501,9 @@ public class AddReminderActivity extends Activity {
             }
             catch (NumberFormatException e) {
                 Log.e(TAG, "Unparseable step value for daily schedule: " + val);
-                Toast toast = Toast
-                        .makeText(
-                                getApplicationContext(),
-                                tr("Invalid value for repeat interval"),
-                                Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        tr("Invalid value for repeat interval"),
+                        Toast.LENGTH_SHORT);
                 toast.show();
                 return -1;
             }
@@ -519,7 +517,7 @@ public class AddReminderActivity extends Activity {
             toast.show();
             return -1;
         }
-        
+
         return step;
     }
 
@@ -550,6 +548,8 @@ public class AddReminderActivity extends Activity {
         }
 
         if (timeToSchedule == null) {
+            Log.e(debugTag, "Unable to get timeToSchedule, num tasks:"
+                    + schList.size());
             return;
         }
 
