@@ -377,6 +377,13 @@ public class AddReminderActivity extends Activity {
             toast.show();
             return false;
         }
+        if (s.length() > 30) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    tr("Name too long, max allowed 30 characters"),
+                    Toast.LENGTH_SHORT);
+            toast.show();
+            return false;
+        }
         return true;
     }
 
