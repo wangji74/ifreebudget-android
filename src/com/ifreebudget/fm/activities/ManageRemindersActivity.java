@@ -151,8 +151,15 @@ public class ManageRemindersActivity extends ListActivity {
         public String toString() {
             StringBuilder ret = new StringBuilder(entity.getName());
 
-            ret.append(getDateDiff(nextTime));
-
+            Date now = new Date();
+            if (nextTime.before(now)) {
+                ret.append("\n\n\tTask ended");
+            }
+            else {
+                String disp = SessionManager.getDateTimeFormat().format(nextTime);
+                ret.append("\n\n" + disp + "\n\tdue in "
+                        + getDateDiff(nextTime));
+            }
             return ret.toString();
         }
 
@@ -172,7 +179,7 @@ public class ManageRemindersActivity extends ListActivity {
             timeInSeconds = timeInSeconds - (minutes * 60);
             seconds = timeInSeconds;
 
-            StringBuilder ret = new StringBuilder("\n");
+            StringBuilder ret = new StringBuilder();
             ret.append(hours > 0 ? hours + " hours, " : "");
             ret.append(minutes > 0 ? minutes + " minutes" : "");
             if (hours == 0 && minutes == 0) {
