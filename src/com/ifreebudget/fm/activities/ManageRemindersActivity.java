@@ -55,9 +55,9 @@ public class ManageRemindersActivity extends ListActivity {
                     }
                 }
 
-                Comparator<ListEntry> c = Collections
-                        .reverseOrder(new ListEntryComparator());
-                Collections.sort(list, c);
+//                Comparator<ListEntry> c = Collections
+//                        .reverseOrder(new ListEntryComparator());
+                Collections.sort(list, new ListEntryComparator());
                 ListEntry[] arr = new ListEntry[list.size()];
                 list.toArray(arr);
                 this.setListAdapter(new ArrayAdapter<ListEntry>(this,
