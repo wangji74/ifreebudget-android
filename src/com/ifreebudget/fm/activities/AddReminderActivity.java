@@ -42,6 +42,7 @@ import com.ifreebudget.fm.entity.beans.FManEntity;
 import com.ifreebudget.fm.entity.beans.ScheduleEntity;
 import com.ifreebudget.fm.entity.beans.TaskEntity;
 import com.ifreebudget.fm.scheduler.task.BasicSchedule;
+import com.ifreebudget.fm.scheduler.task.MonthSchedule;
 import com.ifreebudget.fm.scheduler.task.STaskAlarmReceiver;
 import com.ifreebudget.fm.scheduler.task.Schedule;
 import com.ifreebudget.fm.scheduler.task.Schedule.DayOfWeek;
@@ -49,6 +50,8 @@ import com.ifreebudget.fm.scheduler.task.Schedule.RepeatType;
 import com.ifreebudget.fm.scheduler.task.ScheduledTx;
 import com.ifreebudget.fm.scheduler.task.Task;
 import com.ifreebudget.fm.scheduler.task.WeekSchedule;
+import com.ifreebudget.fm.scheduler.task.constraints.Constraint;
+import com.ifreebudget.fm.scheduler.task.constraints.MonthConstraint;
 import com.ifreebudget.fm.scheduler.task.constraints.WeekConstraint;
 import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
@@ -167,7 +170,7 @@ public class AddReminderActivity extends Activity {
             @Override
             public void onClick(View v) {
                 taskType = TASK_TYPE_ENUM.monthly;
-                setRepeatsView(v, R.layout.weekly_repeat_layout);
+                setRepeatsView(v, R.layout.monthly_repeat_layout);
             }
         });
 
@@ -427,6 +430,9 @@ public class AddReminderActivity extends Activity {
         else if (taskType == TASK_TYPE_ENUM.weekly) {
             return getWeeklySchedule(s, e);
         }
+        else if (taskType == TASK_TYPE_ENUM.monthly) {
+            return getMonthlySchedule(s, e);
+        }
         return null;
     }
 
@@ -493,6 +499,54 @@ public class AddReminderActivity extends Activity {
         return s;
     }
 
+    private Schedule getMonthlySchedule(Date st, Date en) throws Exception {
+        EditText domInfo = (EditText) findViewById(R.id.monthly_repeat_dom_tf);
+
+        int[] domRange = { 1, 31 };
+        int dayOfMonth = -1;
+        try {
+            dayOfMonth = validateIntValue(domInfo.getText().toString(),
+                    domRange);
+        }
+        catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            Toast toast = Toast
+                    .makeText(
+                            getApplicationContext(),
+                            e.getMessage(),
+                            Toast.LENGTH_SHORT);
+            toast.show();
+            return null;
+        }
+
+        EditText repInfo = (EditText) findViewById(R.id.monthly_repeat_unit);
+
+        int[] repeatRange = { 1, 12 };
+        int repeatVal = -1;
+        try {
+            repeatVal = validateIntValue(repInfo.getText().toString(),
+                repeatRange);
+        }
+        catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            Toast toast = Toast
+                    .makeText(
+                            getApplicationContext(),
+                            e.getMessage(),
+                            Toast.LENGTH_SHORT);
+            toast.show();
+            return null;
+        }
+        
+
+        MonthSchedule s = new MonthSchedule(st, en);
+        Constraint co = new MonthConstraint(dayOfMonth);
+
+        s.setRepeatType(RepeatType.MONTH, repeatVal);
+        s.setConstraint(co);
+        return s;
+    }
+
     private int validateStepValue(String val) {
         int step = 1;
         if (val != null) {
@@ -519,6 +573,27 @@ public class AddReminderActivity extends Activity {
         }
 
         return step;
+    }
+
+    private int validateIntValue(String val, int... range) throws Exception {
+        int ret = -1;
+        ret = Integer.parseInt(val);
+        if (range != null) {
+            if (range.length == 2) {
+                int min = Math.min(range[0], range[1]);
+                int max = Math.max(range[0], range[1]);
+
+                if (ret >= min && ret <= max) {
+                    return ret;
+                }
+                String s = String.format(
+                        "Value %d outside valid range %d : %d", ret, range[0],
+                        range[1]);
+                throw new RuntimeException(s);
+            }
+            throw new RuntimeException("Invalid range");
+        }
+        return ret;
     }
 
     public static void reRegisterAlarm(String debugTag, AlarmManager manager,
@@ -557,7 +632,7 @@ public class AddReminderActivity extends Activity {
         intent.putExtra(TASK_ALARM_ID, timeToSchedule.getTime());
 
         PendingIntent sender = PendingIntent.getBroadcast(context,
-                Short.MAX_VALUE, intent, PendingIntent.FLAG_ONE_SHOT);
+                Short.MAX_VALUE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Log.i(debugTag,
                 "Scheduled event to fire at: " + timeToSchedule.toString());

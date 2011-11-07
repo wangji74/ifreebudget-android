@@ -37,7 +37,7 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Long id = intent.getLongExtra(AddReminderActivity.TASK_ALARM_ID, -1);
-        Log.d(TAG, "Alarm received: " + id + ":" + intent.getAction());
+        Log.d(TAG, "Alarm received: " + new Date(id) + ":" + intent.getAction());
         if (id == -1) {
             Log.e(TAG, "Invalid alarm received: " + id);
             return;
@@ -84,6 +84,11 @@ public class STaskAlarmReceiver extends BroadcastReceiver {
 
         ScheduleEntity scheduleEntity = em.getScheduleByTaskId(taskEntity
                 .getId());
+
+        Log.i(TAG,
+                "Creating notification for taskId: " + id + ", name: "
+                        + taskEntity.getName() + ", rt: "
+                        + new Date(scheduleEntity.getNextRunTime()));
 
         ConstraintEntity constraintEntity = em
                 .getConstraintByScheduleId(scheduleEntity.getId());
