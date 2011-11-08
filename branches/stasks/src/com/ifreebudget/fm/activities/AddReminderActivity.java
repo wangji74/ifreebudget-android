@@ -300,6 +300,9 @@ public class AddReminderActivity extends Activity {
     public void saveReminder(View view) {
         try {
             Task task = createTask();
+            if (task == null) {
+                return;
+            }
             ActionRequest req = new ActionRequest();
             req.setActionName("addReminderAction");
             req.setProperty("TASK", task);
@@ -464,35 +467,53 @@ public class AddReminderActivity extends Activity {
 
         WeekConstraint co = new WeekConstraint();
 
+        boolean daySelected = false;
+
         CheckBox cbox = (CheckBox) findViewById(R.id.cbSun);
         if (cbox.isChecked()) {
             co.addDay(DayOfWeek.Sunday);
+            daySelected = true;
         }
         cbox = (CheckBox) findViewById(R.id.cbMon);
         if (cbox.isChecked()) {
             co.addDay(DayOfWeek.Monday);
+            daySelected = true;
         }
         cbox = (CheckBox) findViewById(R.id.cbTue);
         if (cbox.isChecked()) {
             co.addDay(DayOfWeek.Tuesday);
+            daySelected = true;
         }
         cbox = (CheckBox) findViewById(R.id.cbWed);
         if (cbox.isChecked()) {
             co.addDay(DayOfWeek.Wednesday);
+            daySelected = true;
         }
         cbox = (CheckBox) findViewById(R.id.cbThu);
         if (cbox.isChecked()) {
             co.addDay(DayOfWeek.Thursday);
+            daySelected = true;
         }
         cbox = (CheckBox) findViewById(R.id.cbFri);
         if (cbox.isChecked()) {
             co.addDay(DayOfWeek.Friday);
+            daySelected = true;
         }
         cbox = (CheckBox) findViewById(R.id.cbSat);
         if (cbox.isChecked()) {
             co.addDay(DayOfWeek.Saturday);
+            daySelected = true;
         }
 
+        if (!daySelected) {
+            Toast toast = Toast
+                    .makeText(
+                            getApplicationContext(),
+                            "Can not create task - One or more day of week must be selected.",
+                            Toast.LENGTH_SHORT);
+            toast.show();
+            return null;
+        }
         s.setRepeatType(RepeatType.WEEK, step);
         s.setConstraint(co);
 
@@ -510,11 +531,8 @@ public class AddReminderActivity extends Activity {
         }
         catch (Exception e) {
             Log.e(TAG, e.getMessage());
-            Toast toast = Toast
-                    .makeText(
-                            getApplicationContext(),
-                            e.getMessage(),
-                            Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    e.getMessage(), Toast.LENGTH_SHORT);
             toast.show();
             return null;
         }
@@ -525,19 +543,15 @@ public class AddReminderActivity extends Activity {
         int repeatVal = -1;
         try {
             repeatVal = validateIntValue(repInfo.getText().toString(),
-                repeatRange);
+                    repeatRange);
         }
         catch (Exception e) {
             Log.e(TAG, e.getMessage());
-            Toast toast = Toast
-                    .makeText(
-                            getApplicationContext(),
-                            e.getMessage(),
-                            Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    e.getMessage(), Toast.LENGTH_SHORT);
             toast.show();
             return null;
         }
-        
 
         MonthSchedule s = new MonthSchedule(st, en);
         Constraint co = new MonthConstraint(dayOfMonth);

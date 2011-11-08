@@ -33,6 +33,7 @@ public class ManageRemindersActivity extends ListActivity {
     private static final String TAG = "ManageRemindersActivity";
     public static final String REMINDERIDKEY = "REMINDERIDKEY";
 
+    public static final long NUM_SECONDS_IN_DAY = 24 * 60 * 60;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -157,8 +158,8 @@ public class ManageRemindersActivity extends ListActivity {
             }
             else {
                 String disp = SessionManager.getDateTimeFormat().format(nextTime);
-                ret.append("\n\n" + disp + "\n\tdue in "
-                        + getDateDiff(nextTime));
+                ret.append("\n\n" + disp + "\n( "
+                        + getDateDiff(nextTime) + " )");
             }
             return ret.toString();
         }
@@ -168,9 +169,17 @@ public class ManageRemindersActivity extends ListActivity {
 
             long diff = (ref.getTime() - now.getTime()) / 1000;
 
-            return calcHMS(diff);
+            return calcDiff(diff);
         }
 
+        private String calcDiff(long timeInSeconds) {
+            long days = timeInSeconds / NUM_SECONDS_IN_DAY;
+            String ret = (days > 0 ? days + " days , ": "");
+            ret += calcHMS(timeInSeconds % NUM_SECONDS_IN_DAY);
+            
+            return ret;
+        }
+        
         private String calcHMS(long timeInSeconds) {
             long hours, minutes, seconds;
             hours = timeInSeconds / 3600;
@@ -180,7 +189,7 @@ public class ManageRemindersActivity extends ListActivity {
             seconds = timeInSeconds;
 
             StringBuilder ret = new StringBuilder();
-            ret.append(hours > 0 ? hours + " hours, " : "");
+            ret.append(hours > 0 ? hours + " hours , " : "");
             ret.append(minutes > 0 ? minutes + " minutes" : "");
             if (hours == 0 && minutes == 0) {
                 ret.append(seconds > 0 ? seconds + " seconds" : "");
