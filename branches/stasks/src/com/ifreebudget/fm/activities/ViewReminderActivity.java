@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -76,8 +77,8 @@ public class ViewReminderActivity extends Activity {
                 Account f = em.getAccount(tx.getFromAccountId());
                 Account t = em.getAccount(tx.getToAccountId());
 
-                NumberFormat nf = NumberFormat.getCurrencyInstance(SessionManager
-                        .getCurrencyLocale());
+                NumberFormat nf = NumberFormat
+                        .getCurrencyInstance(SessionManager.getCurrencyLocale());
 
                 StringBuilder notes = new StringBuilder();
                 notes.append("Scheduled transaction\n\n\t\t")
@@ -85,7 +86,7 @@ public class ViewReminderActivity extends Activity {
                         .append(t.getAccountName());
                 notes.append("\n\n\t\tAmount ");
                 notes.append(nf.format(tx.getTxAmount()));
-                
+
                 TextView remNotesTf = (TextView) findViewById(R.id.rem_notes_tf);
                 remNotesTf.setText(notes.toString());
             }
@@ -121,14 +122,14 @@ public class ViewReminderActivity extends Activity {
             req.setActionName("deleteReminderAction");
             req.setProperty("ID", reminderId);
 
-            ActionResponse resp = new DeleteReminderAction()
-                    .executeAction(req);
+            ActionResponse resp = new DeleteReminderAction().executeAction(req);
             if (resp.getErrorCode() == ActionResponse.NOERROR) {
-                startService(new Intent(this, TaskRestarterService.class));
+                Intent intent = new Intent(this, TaskRestarterService.class);
+                intent.putExtra("resultreceiver", resultreceiver);
+                startService(intent);
                 Toast toast = Toast.makeText(getApplicationContext(),
-                        tr("Refreshing tasks..."), Toast.LENGTH_SHORT);
-                toast.show();                
-                super.finish();
+                        tr("Deleting reminder..."), Toast.LENGTH_SHORT);
+                toast.show();
             }
             else {
                 Toast toast = Toast.makeText(getApplicationContext(),
@@ -148,4 +149,24 @@ public class ViewReminderActivity extends Activity {
     public void doCancelAction(View view) {
         super.finish();
     }
+
+    private ResultReceiver resultreceiver = new ResultReceiver(null) {
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            Log.i(TAG, "Tasks refreshed... reloading list");
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    try {
+                        ViewReminderActivity.this.finish();
+                        Intent intent = new Intent(ViewReminderActivity.this,
+                                ManageRemindersActivity.class);
+                        startActivity(intent);
+                    }
+                    catch (Exception e) {
+                        Log.e(TAG, MiscUtils.stackTrace2String(e));
+                    }
+                }
+            });
+        }
+    };
 }
