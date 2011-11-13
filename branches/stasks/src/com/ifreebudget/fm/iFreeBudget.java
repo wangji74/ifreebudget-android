@@ -145,13 +145,13 @@ public class iFreeBudget extends Activity {
         case 3:
             gotoReports();
             return;
-        case 6:
+        case 5:
             manageBackups(view);
             return;
+//        case 4:
+//            addTransaction(view);
+//            return;
         case 4:
-            addTransaction(view);
-            return;
-        case 5:
             manageReminders(view);
             return;
         default:
@@ -343,9 +343,13 @@ public class iFreeBudget extends Activity {
         private String[] mTextIds = getResources().getStringArray(
                 R.array.grid_items);
 
-        private Integer[] mThumbIds = { R.drawable.gitem_accounts,
-                R.drawable.gitem_transactions, R.drawable.gitem_budgets,
-                R.drawable.gitem_reports, R.drawable.gitem_newtx, 
-                R.drawable.reminder, R.drawable.gitem_backups };
+        private Integer[] mThumbIds = { 
+                R.drawable.gitem_accounts,
+                R.drawable.gitem_transactions, 
+                R.drawable.gitem_budgets,
+                R.drawable.gitem_reports, 
+//                R.drawable.gitem_newtx, 
+                R.drawable.reminder, 
+                R.drawable.gitem_backups };
     }
 }
