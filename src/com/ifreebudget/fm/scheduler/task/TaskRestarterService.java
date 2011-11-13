@@ -9,6 +9,8 @@ import android.app.AlarmManager;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.ifreebudget.fm.activities.AddReminderActivity;
@@ -30,10 +32,15 @@ public class TaskRestarterService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         reRegisterTasks(getApplicationContext());
+        ResultReceiver rr = (ResultReceiver) intent
+                .getParcelableExtra("resultreceiver");
+        if (rr != null) {
+            rr.send(0, new Bundle());
+        }
     }
 
     public void reRegisterTasks(Context context) {
-        FManEntityManager em = FManEntityManager.getInstance();
+        FManEntityManager em = FManEntityManager.getInstance(context);
         try {
             List<FManEntity> list = em.getList(TaskEntity.class);
             for (FManEntity e : list) {

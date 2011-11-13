@@ -1,5 +1,7 @@
 package com.ifreebudget.fm.activities;
 
+import static com.ifreebudget.fm.utils.Messages.tr;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.ifreebudget.fm.R;
 import com.ifreebudget.fm.iFreeBudget;
@@ -27,6 +30,8 @@ public class ManageTaskNotificationActivity extends ListActivity {
 
     public static final String NOTIFIDKEY = "NOTIFIDKEY";
     
+    private static final String EMPTY_LIST_MSG = "No pending notifications...";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,15 +42,15 @@ public class ManageTaskNotificationActivity extends ListActivity {
     public void onResume() {
         super.onResume();
         FManEntityManager em = FManEntityManager.getInstance();
-        if(em == null) {
+        if (em == null) {
             Log.w(TAG, "Null FManEntityManager, re-initializing");
             em = FManEntityManager.getInstance(getApplicationContext());
         }
-        
+
         try {
             List<FManEntity> notifs = em.getList(TaskNotification.class);
 
-            if (notifs != null) {
+            if (notifs != null && notifs.size() > 0) {
                 List<ListEntry> list = new ArrayList<ListEntry>();
 
                 for (FManEntity fe : notifs) {
@@ -54,14 +59,22 @@ public class ManageTaskNotificationActivity extends ListActivity {
                         list.add(le);
                     }
                 }
+
+                if (list.size() == 0) {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            tr(EMPTY_LIST_MSG), Toast.LENGTH_LONG);
+                    toast.show();
+                }
                 ListEntry[] arr = new ListEntry[list.size()];
                 list.toArray(arr);
                 this.setListAdapter(new ArrayAdapter<ListEntry>(this,
-                        R.layout.budget_list_row,
-                        // android.R.layout.simple_list_item_1,
-                        arr));
+                        R.layout.budget_list_row, arr));
             }
-
+            else {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        tr(EMPTY_LIST_MSG), Toast.LENGTH_LONG);
+                toast.show();
+            }
         }
         catch (DBException e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
@@ -75,7 +88,7 @@ public class ManageTaskNotificationActivity extends ListActivity {
         Intent intent = new Intent(this, iFreeBudget.class);
         startActivity(intent);
     }
-    
+
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
@@ -86,12 +99,11 @@ public class ManageTaskNotificationActivity extends ListActivity {
 
         Intent intent = new Intent(this, QuickAddTransactionActivity.class);
 
-        intent.putExtra(NOTIFIDKEY,
-                e.notif.getId());
+        intent.putExtra(NOTIFIDKEY, e.notif.getId());
 
         intent.putExtra(QuickAddTransactionActivity.TXIDKEY,
                 e.taskEntity.getBusinessObjectId());
-        
+
         startActivity(intent);
     }
 
@@ -108,6 +120,10 @@ public class ManageTaskNotificationActivity extends ListActivity {
             try {
                 taskEntity = em.getTask(notif.getTaskId());
                 if (taskEntity == null) {
+                    Log.e(TAG,
+                            "Orphan notification found...deleting "
+                                    + notif.getId());
+                    em.deleteEntity(notif);
                     valid = false;
                     return;
                 }

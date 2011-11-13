@@ -11,6 +11,7 @@ import java.util.List;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +35,9 @@ public class ManageRemindersActivity extends ListActivity {
     public static final String REMINDERIDKEY = "REMINDERIDKEY";
 
     public static final long NUM_SECONDS_IN_DAY = 24 * 60 * 60;
+
+    private ArrayAdapter<ListEntry> adapter = null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,33 +47,46 @@ public class ManageRemindersActivity extends ListActivity {
     @Override
     public void onResume() {
         super.onResume();
-        FManEntityManager em = FManEntityManager.getInstance();
         try {
-            List<FManEntity> tasks = em.getList(TaskEntity.class);
-            if (tasks != null) {
-                List<ListEntry> list = new ArrayList<ListEntry>();
-
-                for (FManEntity fe : tasks) {
-                    ListEntry le = new ListEntry((TaskEntity) fe);
-                    if (le.valid) {
-                        list.add(le);
-                    }
-                }
-
-//                Comparator<ListEntry> c = Collections
-//                        .reverseOrder(new ListEntryComparator());
-                Collections.sort(list, new ListEntryComparator());
-                ListEntry[] arr = new ListEntry[list.size()];
-                list.toArray(arr);
-                this.setListAdapter(new ArrayAdapter<ListEntry>(this,
-                        R.layout.budget_list_row, arr));
-            }
-        }
-        catch (DBException e) {
-            Log.e(TAG, MiscUtils.stackTrace2String(e));
+            loadTasks();
         }
         catch (Exception e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
+        }
+    }
+
+    private void loadTasks() throws Exception {
+        FManEntityManager em = FManEntityManager.getInstance();
+        List<FManEntity> tasks = em.getList(TaskEntity.class);
+
+        if (tasks != null && tasks.size() > 0) {
+            List<ListEntry> list = new ArrayList<ListEntry>();
+
+            for (FManEntity fe : tasks) {
+                ListEntry le = new ListEntry((TaskEntity) fe);
+                if (le.valid) {
+                    list.add(le);
+                }
+            }
+
+            Collections.sort(list, new ListEntryComparator());
+
+            if (adapter != null) {
+                adapter.clear();
+                for (ListEntry entry : list) {
+                    adapter.add(entry);
+                }
+            }
+            else {
+                adapter = new ArrayAdapter<ListEntry>(this,
+                        R.layout.budget_list_row, list);
+                this.setListAdapter(adapter);
+            }
+        }
+        else {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    tr("No reminders..."), Toast.LENGTH_LONG);
+            toast.show();
         }
     }
 
@@ -92,11 +109,30 @@ public class ManageRemindersActivity extends ListActivity {
     }
 
     public void Refresh(View view) {
-        startService(new Intent(this, TaskRestarterService.class));
+        Intent intent = new Intent(this, TaskRestarterService.class);
+        intent.putExtra("resultreceiver", resultreceiver);
+        startService(intent);
         Toast toast = Toast.makeText(getApplicationContext(),
                 tr("Refreshing tasks..."), Toast.LENGTH_SHORT);
         toast.show();
     }
+
+    private ResultReceiver resultreceiver = new ResultReceiver(null) {
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            Log.i(TAG, "Tasks refreshed... reloading list");
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    try {
+                        loadTasks();
+                    }
+                    catch (Exception e) {
+                        Log.e(TAG, MiscUtils.stackTrace2String(e));
+                    }
+                }
+            });
+        }
+    };
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -157,9 +193,10 @@ public class ManageRemindersActivity extends ListActivity {
                 ret.append("\n\n\tTask ended");
             }
             else {
-                String disp = SessionManager.getDateTimeFormat().format(nextTime);
-                ret.append("\n\n" + disp + "\n( "
-                        + getDateDiff(nextTime) + " )");
+                String disp = SessionManager.getDateTimeFormat().format(
+                        nextTime);
+                ret.append("\n\n" + disp + "\n( " + getDateDiff(nextTime)
+                        + " )");
             }
             return ret.toString();
         }
@@ -174,12 +211,12 @@ public class ManageRemindersActivity extends ListActivity {
 
         private String calcDiff(long timeInSeconds) {
             long days = timeInSeconds / NUM_SECONDS_IN_DAY;
-            String ret = (days > 0 ? days + " days , ": "");
+            String ret = (days > 0 ? days + " days , " : "");
             ret += calcHMS(timeInSeconds % NUM_SECONDS_IN_DAY);
-            
+
             return ret;
         }
-        
+
         private String calcHMS(long timeInSeconds) {
             long hours, minutes, seconds;
             hours = timeInSeconds / 3600;

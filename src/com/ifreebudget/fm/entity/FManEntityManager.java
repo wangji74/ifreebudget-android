@@ -468,8 +468,8 @@ public class FManEntityManager {
         }
     }
 
-    public List<FManEntity> getList(Class<?> type, String filter, int offset, int limit)
-            throws DBException {
+    public List<FManEntity> getList(Class<?> type, String filter, int offset,
+            int limit) throws DBException {
         try {
             TableMapper mapper = mappers.get(type);
             if (mapper != null) {
@@ -481,8 +481,9 @@ public class FManEntityManager {
             throw new DBException(e);
         }
     }
-    
-    public List<FManEntity> getList(Class<?> type, String filter) throws DBException {
+
+    public List<FManEntity> getList(Class<?> type, String filter)
+            throws DBException {
         return getList(type, filter, 0, 0);
     }
 
@@ -528,7 +529,7 @@ public class FManEntityManager {
             throw new DBException(e);
         }
     }
-    
+
     public TaskEntity getTask(Long id) throws DBException {
         try {
             TaskEntityMapper mapper = (TaskEntityMapper) mappers
@@ -538,7 +539,10 @@ public class FManEntityManager {
             String filter = String.format(" WHERE %s = %d", pk.getDbName(), id);
             List<FManEntity> list = mapper.getList(database, filter, 0, 0);
             if (list != null) {
-                if (list.size() != 1) {
+                if (list.size() == 0) {
+                    return null;
+                }
+                else if (list.size() > 1) {
                     throw new DBException("Non unique taskId:" + id);
                 }
                 return (TaskEntity) list.get(0);
@@ -830,9 +834,9 @@ public class FManEntityManager {
                 Log.i(TAG, "Created Schedule table...Success");
                 db.execSQL(new ConstraintEntityMapper().getCreateSql());
                 Log.i(TAG, "Created Constraint table...Success");
-                db.execSQL(new TaskNotificationMapper().getCreateSql());                               
+                db.execSQL(new TaskNotificationMapper().getCreateSql());
                 Log.i(TAG, "Created TaskNotification table...Success");
-                
+
                 Log.i(TAG, "Creating initial accounts");
 
                 ActionRequest req = new ActionRequest();

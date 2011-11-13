@@ -15,6 +15,8 @@
  ******************************************************************************/
 package com.ifreebudget.fm.activities;
 
+import static com.ifreebudget.fm.utils.Messages.tr;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -46,6 +48,7 @@ import android.widget.Toast;
 import com.ifreebudget.fm.R;
 import com.ifreebudget.fm.iFreeBudget;
 import com.ifreebudget.fm.entity.FManEntityManager;
+import com.ifreebudget.fm.scheduler.task.TaskRestarterService;
 import com.ifreebudget.fm.utils.MiscUtils;
 
 public class ManageDBActivity extends Activity {
@@ -179,11 +182,18 @@ public class ManageDBActivity extends Activity {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
         }
         finally {
-            // 5. re-start main activity, it will re-initialize db after copy
+            // 5. re-load alarms from the database
+            refreshTasks();
+            // 6. re-start main activity, it will re-initialize db after copy
             startHomeActivity();
         }
     }
 
+    private void refreshTasks() {
+        Intent intent = new Intent(this, TaskRestarterService.class);
+        startService(intent);
+    }
+    
     private void deleteBackup(String obj) {
         try {
             String backupDBPath = getBackupDBName(obj);
