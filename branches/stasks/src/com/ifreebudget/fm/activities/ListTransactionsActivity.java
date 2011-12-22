@@ -29,8 +29,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.SearchRecentSuggestions;
@@ -38,19 +36,18 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.Gravity;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Gallery;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -98,8 +95,10 @@ public class ListTransactionsActivity extends ListActivity {
     private Button filterButton = null;
 
     private View lastEditCtrlPanel = null;
-    
+
     private TxHolder lastSelectedTx = null;
+
+    private int lastPosition = -1;
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -108,11 +107,22 @@ public class ListTransactionsActivity extends ListActivity {
         Object obj = this.getListAdapter().getItem(position);
         if (obj instanceof TxHolder) {
             if (lastEditCtrlPanel != null) {
-                lastEditCtrlPanel.setVisibility(View.GONE);
+                TranslateAnimation slide = new TranslateAnimation(0, 0, 0, 100);
+                slide.setDuration(300);
+                slide.setFillAfter(true);
+                slide.setInterpolator(new AccelerateInterpolator());
+                lastEditCtrlPanel.startAnimation(slide);
+                lastEditCtrlPanel.setVisibility(View.INVISIBLE);
             }
-            lastEditCtrlPanel = (View) v.findViewById(R.id.edit_tx_ctrl_panel);
-            lastEditCtrlPanel.setVisibility(View.VISIBLE);
             lastSelectedTx = (TxHolder) obj;
+            lastEditCtrlPanel = (View) v.findViewById(R.id.edit_tx_ctrl_panel);
+
+            TranslateAnimation slide = new TranslateAnimation(0, 0, 100, 0);
+            slide.setDuration(300);
+            slide.setFillAfter(true);
+            slide.setInterpolator(new AccelerateInterpolator());
+            lastEditCtrlPanel.startAnimation(slide);
+            lastEditCtrlPanel.setVisibility(View.VISIBLE);
         }
     }
 
@@ -124,12 +134,11 @@ public class ListTransactionsActivity extends ListActivity {
 
         /* Initialize state variables */
         if (lastEditCtrlPanel != null) {
-            Log.i(TAG, "Last edit ctrl panel not null");
             lastEditCtrlPanel.setVisibility(View.GONE);
         }
         lastSelectedTx = null;
         /* End Initialize state variables */
-        
+
         txListAdapter = new MyArrayAdapter(this, R.layout.tx_list_layout);
         this.setListAdapter(txListAdapter);
 
@@ -690,15 +699,15 @@ public class ListTransactionsActivity extends ListActivity {
 
     /* Button click handlers */
     public void editTransaction(View view) {
-        if(lastSelectedTx == null) {
+        if (lastSelectedTx == null) {
             return;
         }
-        doEditAction(lastSelectedTx);        
+        doEditAction(lastSelectedTx);
     }
-    
+
     public void deleteTransaction(View view) {
         try {
-            if(lastSelectedTx == null) {
+            if (lastSelectedTx == null) {
                 return;
             }
             Long txId = lastSelectedTx.t.getTxId();
@@ -732,9 +741,9 @@ public class ListTransactionsActivity extends ListActivity {
             setTotalValue(calculateTotalAmount());
         }
     }
-    
+
     public void addReminder(View view) {
-        
+
     }
     /* End Button click handlers */
 }
