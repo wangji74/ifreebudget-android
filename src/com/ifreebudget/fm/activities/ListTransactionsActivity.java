@@ -35,6 +35,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.SearchRecentSuggestions;
 import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -96,19 +97,22 @@ public class ListTransactionsActivity extends ListActivity {
 
     private Button filterButton = null;
 
+    private View lastEditCtrlPanel = null;
+    
+    private TxHolder lastSelectedTx = null;
+
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
         Object obj = this.getListAdapter().getItem(position);
         if (obj instanceof TxHolder) {
-            TxHolder o = (TxHolder) obj;
-
-            Intent intent = new Intent(this, ViewTransactionActivity.class);
-
-            intent.putExtra(ViewTransactionActivity.TXIDKEY, o.t.getTxId());
-
-            startActivity(intent);
+            if (lastEditCtrlPanel != null) {
+                lastEditCtrlPanel.setVisibility(View.GONE);
+            }
+            lastEditCtrlPanel = (View) v.findViewById(R.id.edit_tx_ctrl_panel);
+            lastEditCtrlPanel.setVisibility(View.VISIBLE);
+            lastSelectedTx = (TxHolder) obj;
         }
     }
 
@@ -118,6 +122,13 @@ public class ListTransactionsActivity extends ListActivity {
         super.setContentView(R.layout.tx_list_layout);
         super.registerForContextMenu(getListView());
 
+        /* Initialize state variables */
+        if (lastEditCtrlPanel != null) {
+            lastEditCtrlPanel.setVisibility(View.GONE);
+        }
+        lastSelectedTx = null;
+        /* End Initialize state variables */
+        
         txListAdapter = new MyArrayAdapter(this, R.layout.tx_list_layout);
         this.setListAdapter(txListAdapter);
 
@@ -179,7 +190,7 @@ public class ListTransactionsActivity extends ListActivity {
         intent.putExtra(UpdateTransactionActivity.TXID, a.getTxId());
         startActivity(intent);
     }
-    
+
     private void doDeleteAction(TxHolder entity) {
         Transaction a = entity.t;
         try {
@@ -494,7 +505,7 @@ public class ListTransactionsActivity extends ListActivity {
     public void gotoHomeScreen(View view) {
         gotoHomeScreen();
     }
-    
+
     public void addTransaction(View view) {
         addTransaction();
     }
@@ -644,51 +655,81 @@ public class ListTransactionsActivity extends ListActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             TxHolder item = super.getItem(position);
-            TxItemView view = new TxItemView(getContext(), item);
-            view.setPadding(2, 5, 2, 5);
-            return view;
+            // TxItemView view = new TxItemView(getContext(), item);
+            View v = getLayoutInflater().inflate(R.layout.tx_item_view, null);
+            initializeTxItemLayout(item, v);
+            return v;
         }
     }
 
-    class TxItemView extends LinearLayout {
-        private TxHolder item;
+    private void initializeTxItemLayout(TxHolder item, View v) {
+        if (item.iconResource != 0) {
+            ImageView iv = (ImageView) v.findViewById(R.id.tx_icon);
+            iv.setImageResource(item.iconResource);
+            iv.setAdjustViewBounds(true);
+        }
+        Spanned txDetails = Html.fromHtml(item.toString());
 
-        public TxItemView(Context context, TxHolder txItem) {
-            super(context);
-            super.setOrientation(LinearLayout.HORIZONTAL);
-            this.item = txItem;
+        TextView txDetailsView = (TextView) v.findViewById(R.id.tx_details_lbl);
+        txDetailsView.setText(txDetails);
 
-            int topPadding = 2;
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        String txAmt = nf.format(item.t.getTxAmount());
+        TextView txAmtView = (TextView) v.findViewById(R.id.tx_amt_lbl);
+        txAmtView.setText(txAmt);
+    }
 
-            //
-            ImageView i = new ImageView(ListTransactionsActivity.this);
-            i.setImageResource(item.iconResource);
-            i.setAdjustViewBounds(true);
-            i.setLayoutParams(new Gallery.LayoutParams(
-                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-            i.setPadding(5, topPadding, 2, 0);
-            addView(i);
+    private BigDecimal calculateTotalAmount() {
+        int sz = txListAdapter.getCount();
+        BigDecimal ret = new BigDecimal(0d);
+        for (int i = 0; i < sz; i++) {
+            ret = ret.add(txListAdapter.getItem(i).t.getTxAmount());
+        }
+        return ret;
+    }
 
-            TextView tx_details_view = new TextView(context);
-            tx_details_view.setPadding(10, topPadding, 10, 0);
-            tx_details_view.setTextSize(15f);
-            tx_details_view.setTextColor(Color.BLACK);
-            tx_details_view.setText(Html.fromHtml(item.toString()));
-            addView(tx_details_view, params);
+    /* Button click handlers */
+    public void editTransaction(View view) {
+        if(lastSelectedTx == null) {
+            return;
+        }
+        doEditAction(lastSelectedTx);        
+    }
+    
+    public void deleteTransaction(View view) {
+        try {
+            if(lastSelectedTx == null) {
+                return;
+            }
+            Long txId = lastSelectedTx.t.getTxId();
 
-            LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
-                    LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-            TextView tx_amt_view = new TextView(context);
-            tx_amt_view.setText(nf.format(item.t.getTxAmount()));
-            tx_amt_view.setTextSize(13f);
-            tx_amt_view.setTextColor(Color.BLACK);
-            tx_amt_view.setGravity(Gravity.RIGHT);
-            Typeface tf = tx_amt_view.getTypeface();
-            tx_amt_view.setTypeface(Typeface.create(tf, Typeface.BOLD));
-            tx_amt_view.setPadding(10, topPadding, 10, 0);
-            addView(tx_amt_view, params1);
+            ActionRequest req = new ActionRequest();
+            req.setActionName("deleteTransactionAction");
+            req.setProperty("TXID", txId);
+
+            ActionResponse resp = new DeleteTransactionAction()
+                    .executeAction(req);
+            if (resp.getErrorCode() == ActionResponse.NOERROR) {
+                txListAdapter.remove(lastSelectedTx);
+            }
+            else {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        resp.getErrorMessage(), Toast.LENGTH_SHORT);
+                toast.show();
+                return;
+            }
+        }
+        catch (Exception e) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "Unable to delete transaction", Toast.LENGTH_SHORT);
+            Log.e(TAG, MiscUtils.stackTrace2String(e));
+            toast.show();
+            return;
+        }
+        finally {
+            lastEditCtrlPanel = null;
+            lastSelectedTx = null;
+            setTotalValue(calculateTotalAmount());
         }
     }
+    /* End Button click handlers */
 }
