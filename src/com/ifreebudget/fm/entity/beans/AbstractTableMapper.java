@@ -76,7 +76,7 @@ public abstract class AbstractTableMapper implements TableMapper {
                 m.invoke(entity, val);
             }
             catch (Exception e) {
-                Log.e(TAG, "1Method not found " + fieldName + " on object : "
+                Log.d(TAG, "1Method not found " + fieldName + " on object : "
                         + primitive);
                 setFieldFallback0(entity, fieldName, val);
             }
