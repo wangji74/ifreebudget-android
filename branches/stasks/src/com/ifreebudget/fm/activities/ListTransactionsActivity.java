@@ -124,6 +124,7 @@ public class ListTransactionsActivity extends ListActivity {
 
         /* Initialize state variables */
         if (lastEditCtrlPanel != null) {
+            Log.i(TAG, "Last edit ctrl panel not null");
             lastEditCtrlPanel.setVisibility(View.GONE);
         }
         lastSelectedTx = null;
@@ -730,6 +731,10 @@ public class ListTransactionsActivity extends ListActivity {
             lastSelectedTx = null;
             setTotalValue(calculateTotalAmount());
         }
+    }
+    
+    public void addReminder(View view) {
+        
     }
     /* End Button click handlers */
 }

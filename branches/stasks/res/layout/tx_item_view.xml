@@ -14,10 +14,10 @@
             android:id="@+id/tx_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dip"
-            android:paddingTop="5dip"
-            android:paddingRight="2dip"
             android:paddingBottom="0dip"
+            android:paddingLeft="5dip"
+            android:paddingRight="2dip"
+            android:paddingTop="5dip"
             android:tint="#55ff0000" />
 
         <TextView
@@ -33,33 +33,43 @@
             android:id="@+id/tx_amt_lbl"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="right"
             android:paddingRight="5dip"
             android:paddingTop="5dip"
             android:textColor="#000000"
-            android:textStyle="bold"
-            android:gravity="right"
-            android:layout_gravity="right"
-            android:textSize="15dip" />
+            android:textSize="15dip"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/edit_tx_ctrl_panel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff"
-        android:orientation="horizontal" 
-        android:gravity="right"
         android:layout_gravity="right"
-        android:visibility="gone">
+        android:background="#ffffff"
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:visibility="gone" >
 
+        <ImageButton
+            android:id="@+id/reminder_tx_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@drawable/reminder_selector"
+            android:gravity="center"
+            android:onClick="@string/add_rem_action"
+            android:paddingLeft="5dip" />
+        
         <ImageButton
             android:id="@+id/edit_tx_btn"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:background="@drawable/edit_selector"
             android:gravity="center"
-            android:onClick="@string/edit_tx_action" />
-
+            android:onClick="@string/edit_tx_action"
+            android:paddingLeft="5dip" />
+        
         <ImageButton
             android:id="@+id/del_tx_btn"
             android:layout_width="wrap_content"
@@ -68,6 +78,7 @@
             android:gravity="center"
             android:onClick="@string/delete_tx_action"
             android:paddingLeft="5dip" />
+
     </LinearLayout>
 
 </LinearLayout>
