@@ -154,39 +154,6 @@ public class ListTransactionsActivity extends ListActivity {
         setFilterButtonText();
     }
 
-    /* Menu handler functions */
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-            ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.tx_ctxt_menu, menu);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info;
-        try {
-            info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        }
-        catch (ClassCastException e) {
-            Log.e(TAG, "bad menuInfo", e);
-            return true;
-        }
-
-        TxHolder obj = (TxHolder) getListAdapter().getItem(info.position);
-        if (item.getItemId() == R.id.edit_item) {
-            doEditAction(obj);
-        }
-        else if (item.getItemId() == R.id.delete_item) {
-            doDeleteAction(obj);
-        }
-        else if (item.getItemId() == R.id.reminder_item) {
-            doReminderAction(obj);
-        }
-        return true;
-    }
-
     private void doEditAction(TxHolder entity) {
         Transaction a = entity.t;
         Intent intent = new Intent(this, UpdateTransactionActivity.class);
@@ -629,11 +596,11 @@ public class ListTransactionsActivity extends ListActivity {
                     fromAcct.getAccountType(), toAcct.getAccountType());
 
             StringBuilder ret = new StringBuilder();
-            ret.append("<b><i>");
+            ret.append("<b>");
 
             if (type == TransactionType.Income) {
                 ret.append(fromAcct.getAccountName());
-                ret.append("</i></b>");
+                ret.append("</b>");
                 ret.append("<br>");
                 ret.append(toAcct.getAccountName());
             }
@@ -743,7 +710,10 @@ public class ListTransactionsActivity extends ListActivity {
     }
 
     public void addReminder(View view) {
-
+        if (lastSelectedTx == null) {
+            return;
+        }
+        doReminderAction(lastSelectedTx);
     }
     /* End Button click handlers */
 }
