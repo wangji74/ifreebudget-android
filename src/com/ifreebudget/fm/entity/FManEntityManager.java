@@ -76,6 +76,7 @@ public class FManEntityManager {
         if (em == null) {
             em = new FManEntityManager();
             em.initialize(context);
+            Log.i(TAG, "DBHelper created.");
         }
         return em;
     }
