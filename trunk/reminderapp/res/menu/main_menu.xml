@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- item
+        android:id="@+id/mItemReports"
+        android:title="Reports"
+        android:icon="@drawable/reports"
+        android:titleCondensed="Reports" /-->
+
+    <item
+        android:id="@+id/mItemNotifs"
+        android:title="Notifications"
+        android:icon="@drawable/reminder_notif"
+        android:titleCondensed="Notifications"/>
+</menu>

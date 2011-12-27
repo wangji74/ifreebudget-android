@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, ReminderAppActivity!</string>
+    <string name="app_name">ReminderApp</string>
+    <string name="goto_home">gotoHomeScreen</string>
+    <string name="reminder_title_lbl">What</string>
+    <string name="reminder_start_lbl">When</string>
+    <string name="reminder_end_lbl">Ends</string>
+    <string name="repeats_lbl">Repeats</string>
+    <string name="repeat_daily">Daily</string>
+    <string name="repeat_weekly">Weekly</string>
+    <string name="repeat_monthly">Monthly</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="delete">Delete</string>
+        <string-array name="repeats_types">
+        <item>@string/repeat_daily</item>
+        <item>@string/repeat_weekly</item>
+        <item>@string/repeat_monthly</item>
+    </string-array>
+</resources>

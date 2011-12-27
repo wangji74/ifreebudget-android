@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff" >
+
+    <LinearLayout
+        android:id="@+id/info_panel"
+        android:layout_width="fill_parent"
+        android:layout_height="60dip"
+        android:background="@android:drawable/title_bar"
+        android:orientation="vertical"
+        android:paddingBottom="5dip"
+        android:paddingRight="5dip"
+        android:paddingTop="5dip" >
+
+        <RelativeLayout
+            android:id="@+id/title_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dip"
+                android:src="@drawable/reminder_icon" />
+
+            <TextView
+                android:id="@+id/title_lbl"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_toRightOf="@+id/logo"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:onClick="@string/goto_home"
+                android:paddingLeft="5dip"
+                android:text="@string/app_name"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <ListView
+        android:id="@android:id/android:list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/info_panel"
+        android:cacheColorHint="#ffffff" />
+
+</RelativeLayout>
