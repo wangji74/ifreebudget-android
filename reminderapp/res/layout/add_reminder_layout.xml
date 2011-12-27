@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright 2011 ifreebudget@gmail.com Licensed under the Apache License, 
+	Version 2.0 (the "License"); you may not use this file except in compliance 
+	with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true" >
+
+    <RelativeLayout
+        android:id="@+id/add_reminder_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="60dip"
+        android:background="#ffffff" >
+
+        <LinearLayout
+            android:id="@+id/info_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="60dip"
+            android:background="@android:drawable/title_bar"
+            android:orientation="vertical"
+            android:paddingBottom="5dip"
+            android:paddingRight="5dip"
+            android:paddingTop="5dip" >
+
+            <RelativeLayout
+                android:id="@+id/title_panel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dip"
+                    android:src="@drawable/reminder_icon" />
+
+                <TextView
+                    android:id="@+id/title_lbl"
+                    android:layout_toRightOf="@+id/logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:onClick="@string/goto_home"
+                    android:paddingLeft="5dip"
+                    android:text="@string/app_name"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/button_panel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:gravity="fill_vertical"
+                    android:orientation="horizontal" >
+
+                    <ImageButton
+                        android:id="@+id/add_tx_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/document_save_selector"
+                        android:gravity="center"
+                        android:onClick="saveReminder" />
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/name_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/info_panel"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dip"
+                android:text="@string/reminder_title_lbl"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/rem_title_tf"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="0.5"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/reminder_dates_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name_panel"
+            android:orientation="vertical"
+            android:paddingBottom="5dip" >
+
+            <TableLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="1" >
+
+                <TableRow >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal|center"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:paddingLeft="5dip"
+                        android:text="@string/reminder_start_lbl"
+                        android:textColor="#000000" />
+
+                    <Button
+                        android:id="@+id/start_date_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:gravity="center_vertical|right" />
+
+                    <Button
+                        android:id="@+id/start_time_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:gravity="center_vertical|right" />
+                </TableRow>
+
+                <TableRow >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="5dip"
+                        android:text="@string/reminder_end_lbl"
+                        android:textColor="#000000" />
+
+                    <Button
+                        android:id="@+id/end_date_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:gravity="center_vertical|right" />
+
+                    <Button
+                        android:id="@+id/end_time_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:gravity="center_vertical|right" />
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/spacer"
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_below="@id/reminder_dates_panel"
+            android:background="#000000" />
+
+        <LinearLayout
+            android:id="@+id/repeat_type_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/spacer"
+            android:orientation="vertical"
+            android:paddingTop="5dip" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:paddingLeft="5dip"
+                android:text="@string/repeats_lbl"
+                android:textColor="#000000" />
+
+            <RadioGroup
+                android:id="@+id/sch_type_group"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/daily_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/repeat_daily"
+                    android:textColor="#000000" />
+
+                <RadioButton
+                    android:id="@+id/weekly_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/repeat_weekly"
+                    android:textColor="#000000" />
+
+                <RadioButton
+                    android:id="@+id/monthly_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/repeat_monthly"
+                    android:textColor="#000000" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/repeat_info_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/repeat_type_panel"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </RelativeLayout>
+
+</ScrollView>

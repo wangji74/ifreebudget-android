@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ifreebudget.rmapp"
+    android:versionCode="3"
+    android:versionName="1.2" >
+
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	<uses-permission android:name="android.permission.VIBRATE" />
+	
+	<uses-sdk
+		android:minSdkVersion="8"
+		android:targetSdkVersion="10">
+	</uses-sdk>
+    
+    <application
+        android:icon="@drawable/reminder_icon"
+        android:label="@string/app_name"
+		android:theme="@android:style/Theme.NoTitleBar" android:debuggable="false">
+        <activity
+            android:label="@string/app_name"
+            android:name=".ReminderAppActivity" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+		<activity
+			android:name=".activities.AddReminderActivity"
+			android:label="@string/app_name"></activity>
+            
+		<activity
+			android:name=".activities.ManageTaskNotifsActivity"
+			android:label="@string/app_name"></activity>
+		    		    
+		<receiver android:name=".task.STaskAlarmReceiver" />
+		<receiver android:name=".task.SystemEventReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+				<action android:name="android.intent.action.PACKAGE_CHANGED" />
+				<action android:name="android.intent.action.PACKAGE_RESTARTED" />
+			</intent-filter>
+		</receiver>
+		<service android:name=".task.TaskRestarterService" />            
+    </application>
+
+</manifest>
