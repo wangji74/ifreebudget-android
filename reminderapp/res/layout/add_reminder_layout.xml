@@ -43,9 +43,9 @@
 
                 <TextView
                     android:id="@+id/title_lbl"
-                    android:layout_toRightOf="@+id/logo"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
+                    android:layout_toRightOf="@+id/logo"
                     android:clickable="true"
                     android:gravity="center_vertical"
                     android:onClick="@string/goto_home"
@@ -105,63 +105,79 @@
             android:orientation="vertical"
             android:paddingBottom="5dip" >
 
-            <TableLayout
+            <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:stretchColumns="1" >
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dip"
+                android:text="@string/reminder_start_lbl"
+                android:textColor="#000000" />
 
-                <TableRow >
+            <LinearLayout
+                android:id="@+id/start_date_panel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="5dip" >
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|center_horizontal|center"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:paddingLeft="5dip"
-                        android:text="@string/reminder_start_lbl"
-                        android:textColor="#000000" />
+                <TableLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
 
-                    <Button
-                        android:id="@+id/start_date_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:gravity="center_vertical|right" />
+                    <TableRow >
 
-                    <Button
-                        android:id="@+id/start_time_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:gravity="center_vertical|right" />
-                </TableRow>
+                        <Button
+                            android:id="@+id/start_date_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.7" />
 
-                <TableRow >
+                        <Button
+                            android:id="@+id/start_time_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3" />
+                    </TableRow>
+                </TableLayout>
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="5dip"
-                        android:text="@string/reminder_end_lbl"
-                        android:textColor="#000000" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dip"
+                android:text="@string/reminder_end_lbl"
+                android:textColor="#000000" />
 
-                    <Button
-                        android:id="@+id/end_date_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:gravity="center_vertical|right" />
+            <LinearLayout
+                android:id="@+id/end_date_panel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="5dip" >
 
-                    <Button
-                        android:id="@+id/end_time_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:gravity="center_vertical|right" />
-                </TableRow>
-            </TableLayout>
+                <TableLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TableRow >
+
+                        <Button
+                            android:id="@+id/end_date_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.7" />
+
+                        <Button
+                            android:id="@+id/end_time_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3" />
+                    </TableRow>
+                </TableLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <View
@@ -169,7 +185,7 @@
             android:layout_width="fill_parent"
             android:layout_height="2dip"
             android:layout_below="@id/reminder_dates_panel"
-            android:background="#000000" />
+            android:background="#c0c0c0" />
 
         <LinearLayout
             android:id="@+id/repeat_type_panel"
