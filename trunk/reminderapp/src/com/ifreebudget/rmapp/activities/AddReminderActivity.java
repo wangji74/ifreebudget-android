@@ -20,6 +20,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -27,6 +30,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -59,10 +63,10 @@ public class AddReminderActivity extends Activity {
     private static final String TAG = "RMApp.AddReminderActivity";
     public static final String TASK_ALARM_ID = "rmapp-st-id";
     public static final String TASKID = "TASKID";
-    
+
     private Button startDtBtn, endDtBtn, startTimeBtn, endTimeBtn;
-    private RadioButton dailyBtn, weeklyBtn, monthlyBtn;
     private EditText rem_title_tf;
+    private Spinner repeatTypeSpinner;
 
     private static final int ST_TIME_DIALOG = 0;
     private static final int EN_TIME_DIALOG = 1;
@@ -72,11 +76,11 @@ public class AddReminderActivity extends Activity {
     private static final String TIME_FORMAT = "hh:mm a";
 
     private boolean editMode = false;
-    
+
     private Long taskToEdit = null;
-    
+
     private enum TASK_TYPE_ENUM {
-        daily, weekly, monthly
+        once, hourly, daily, weekly, monthly
     };
 
     private TASK_TYPE_ENUM taskType;
@@ -96,9 +100,9 @@ public class AddReminderActivity extends Activity {
         }
         initializeFields();
     }
-    
+
     private void initializeFields() {
-        
+
         startDtBtn = (Button) findViewById(R.id.start_date_btn);
         startDtBtn.setOnClickListener(new OnClickListener() {
             @Override
@@ -151,33 +155,50 @@ public class AddReminderActivity extends Activity {
         startTimeBtn.setText(startTime);
         endTimeBtn.setText(endTime);
 
-        dailyBtn = (RadioButton) findViewById(R.id.daily_btn);
-        dailyBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                taskType = TASK_TYPE_ENUM.daily;
-                setRepeatsView(v, R.layout.daily_repeat_layout);
-            }
-        });
+        repeatTypeSpinner = (Spinner) findViewById(R.id.sch_type_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.repeats_types,
+                android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        repeatTypeSpinner.setAdapter(adapter);
+        repeatTypeSpinner
+                .setOnItemSelectedListener(new OnItemSelectedListener() {
 
-        weeklyBtn = (RadioButton) findViewById(R.id.weekly_btn);
-        weeklyBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                taskType = TASK_TYPE_ENUM.weekly;
-                setRepeatsView(v, R.layout.weekly_repeat_layout);
-            }
-        });
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent,
+                            View view, int pos, long id) {
 
-        monthlyBtn = (RadioButton) findViewById(R.id.monthly_btn);
-        monthlyBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                taskType = TASK_TYPE_ENUM.monthly;
-                setRepeatsView(v, R.layout.monthly_repeat_layout);
-            }
-        });
+                        int layoutId = -1;
+                        switch (pos) {
+                        case 0:
+                            taskType = TASK_TYPE_ENUM.once;
+                            break;
+                        case 1:
+                            taskType = TASK_TYPE_ENUM.hourly;
+                            layoutId = R.layout.hourly_repeat_layout;
+                            break;
+                        case 2:
+                            taskType = TASK_TYPE_ENUM.daily;
+                            layoutId = R.layout.daily_repeat_layout;
+                            break;
+                        case 3:
+                            taskType = TASK_TYPE_ENUM.weekly;
+                            layoutId = R.layout.weekly_repeat_layout;
+                            break;
+                        case 4:
+                            taskType = TASK_TYPE_ENUM.monthly;
+                            layoutId = R.layout.monthly_repeat_layout;
+                            break;
+                        }
+                        if (layoutId != -1) {
+                            setRepeatsView(view, layoutId);
+                        }
+                    }
 
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
     }
 
     @Override
@@ -398,25 +419,9 @@ public class AddReminderActivity extends Activity {
     }
 
     private boolean validateDates(Date s, Date e) {
-        Date now = new Date();
-        if (s.before(now)) {
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "Cannot create task - Start time is past",
-                    Toast.LENGTH_SHORT);
-            toast.show();
-            return false;
-        }
-
         if (e.before(s)) {
             Toast toast = Toast.makeText(getApplicationContext(),
                     "Cannot create task - End date is before start date",
-                    Toast.LENGTH_SHORT);
-            toast.show();
-            return false;
-        }
-        else if (e.equals(s)) {
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "Cannot create task - Start and end dates are same",
                     Toast.LENGTH_SHORT);
             toast.show();
             return false;
@@ -431,7 +436,13 @@ public class AddReminderActivity extends Activity {
         if (!validateDates(s, e)) {
             return null;
         }
-        if (taskType == TASK_TYPE_ENUM.daily) {
+        if (taskType == TASK_TYPE_ENUM.once) {
+            return getOnceSchedule(s);
+        }        
+        if (taskType == TASK_TYPE_ENUM.hourly) {
+            return getHourlySchedule(s, e);
+        }        
+        else if (taskType == TASK_TYPE_ENUM.daily) {
             return getDailySchedule(s, e);
         }
         else if (taskType == TASK_TYPE_ENUM.weekly) {
@@ -441,6 +452,29 @@ public class AddReminderActivity extends Activity {
             return getMonthlySchedule(s, e);
         }
         return null;
+    }
+
+    private Schedule getOnceSchedule(Date st) throws Exception {
+        BasicSchedule s = new BasicSchedule(st, st);
+
+        s.setRepeatType(RepeatType.HOUR, 1);
+
+        return s;
+    }
+    
+    private Schedule getHourlySchedule(Date st, Date en) throws Exception {
+        EditText repInfo = (EditText) findViewById(R.id.hourly_repeat_unit_tf);
+        String val = repInfo.getText().toString();
+
+        BasicSchedule s = new BasicSchedule(st, en);
+
+        int step = validateStepValue(val);
+        if (step < 1) {
+            return null;
+        }
+        s.setRepeatType(RepeatType.HOUR, step);
+
+        return s;
     }
 
     private Schedule getDailySchedule(Date st, Date en) throws Exception {
@@ -573,9 +607,10 @@ public class AddReminderActivity extends Activity {
             }
             catch (NumberFormatException e) {
                 Log.e(TAG, "Unparseable step value for daily schedule: " + val);
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        "Invalid value for repeat interval",
-                        Toast.LENGTH_SHORT);
+                Toast toast = Toast
+                        .makeText(getApplicationContext(),
+                                "Invalid value for repeat interval",
+                                Toast.LENGTH_SHORT);
                 toast.show();
                 return -1;
             }
@@ -652,13 +687,13 @@ public class AddReminderActivity extends Activity {
         PendingIntent sender = PendingIntent.getBroadcast(context,
                 Short.MAX_VALUE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Log.i(debugTag,
+        Log.d(debugTag,
                 "Scheduled event to fire at: " + timeToSchedule.toString());
         manager.set(AlarmManager.RTC_WAKEUP, timeToSchedule.getTime(), sender);
     }
-    
+
     public void gotoHomeScreen(View view) {
         Intent intent = new Intent(this, ReminderAppActivity.class);
-        startActivity(intent);        
+        startActivity(intent);
     }
 }
