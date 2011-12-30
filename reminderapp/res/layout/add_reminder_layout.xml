@@ -180,65 +180,41 @@
             </LinearLayout>
         </LinearLayout>
 
-        <View
-            android:id="@+id/spacer"
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_below="@id/reminder_dates_panel"
-            android:background="#c0c0c0" />
-
         <LinearLayout
             android:id="@+id/repeat_type_panel"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/spacer"
+            android:layout_below="@id/reminder_dates_panel"
             android:orientation="vertical"
             android:paddingTop="5dip" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
                 android:paddingLeft="5dip"
                 android:text="@string/repeats_lbl"
                 android:textColor="#000000" />
 
-            <RadioGroup
-                android:id="@+id/sch_type_group"
+            <Spinner
+                android:id="@+id/sch_type_spinner"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal" >
-
-                <RadioButton
-                    android:id="@+id/daily_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/repeat_daily"
-                    android:textColor="#000000" />
-
-                <RadioButton
-                    android:id="@+id/weekly_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/repeat_weekly"
-                    android:textColor="#000000" />
-
-                <RadioButton
-                    android:id="@+id/monthly_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/repeat_monthly"
-                    android:textColor="#000000" />
-            </RadioGroup>
+                android:prompt="@string/sch_type_prompt" />
         </LinearLayout>
+
+        <View
+            android:id="@+id/spacer"
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_below="@id/repeat_type_panel"
+            android:background="#c0c0c0" />
 
         <LinearLayout
             android:id="@+id/repeat_info_panel"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/repeat_type_panel"
+            android:paddingTop="10dip"
             android:orientation="vertical" >
         </LinearLayout>
     </RelativeLayout>
