@@ -9,6 +9,7 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -36,6 +37,7 @@ import com.ifreebudget.rmapp.activities.ManageTaskNotifsActivity;
 import com.ifreebudget.rmapp.activities.utils.ReminderListEntry;
 import com.ifreebudget.rmapp.activities.utils.ReminderListEntryComparator;
 import com.ifreebudget.rmapp.entity.RMAppEntityManager;
+import com.ifreebudget.rmapp.task.TaskRestarterService;
 
 public class ReminderAppActivity extends ListActivity {
 
@@ -125,6 +127,16 @@ public class ReminderAppActivity extends ListActivity {
     /* End menu item handlers*/
     
     /* Button click handlers */
+
+    public void doRefresh(View view) {
+        Intent intent = new Intent(this, TaskRestarterService.class);
+        intent.putExtra("resultreceiver", resultreceiver);
+        startService(intent);
+        Toast toast = Toast.makeText(getApplicationContext(),
+                ("Refreshing tasks..."), Toast.LENGTH_SHORT);
+        toast.show();        
+    }
+    
     public void doAddReminder(View view) {
         Intent txIntent = new Intent(this, AddReminderActivity.class);
         startActivity(txIntent);
@@ -206,6 +218,23 @@ public class ReminderAppActivity extends ListActivity {
         }
     }
 
+    private ResultReceiver resultreceiver = new ResultReceiver(null) {
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            Log.i(TAG, "Tasks refreshed... reloading list");
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    try {
+                        loadTasks();
+                    }
+                    catch (Exception e) {
+                        Log.e(TAG, MiscUtils.stackTrace2String(e));
+                    }
+                }
+            });
+        }
+    };
+    
     class MyArrayAdapter extends ArrayAdapter<ReminderListEntry> {
 
         public MyArrayAdapter(Context context, int textViewResourceId) {
