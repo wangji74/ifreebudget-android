@@ -43,13 +43,16 @@ import com.ifreebudget.fm.entity.beans.TaskEntity;
 import com.ifreebudget.fm.scheduler.task.BasicSchedule;
 import com.ifreebudget.fm.scheduler.task.BasicTask;
 import com.ifreebudget.fm.scheduler.task.MonthSchedule;
+import com.ifreebudget.fm.scheduler.task.MonthScheduleDayBased;
 import com.ifreebudget.fm.scheduler.task.Schedule;
 import com.ifreebudget.fm.scheduler.task.Schedule.DayOfWeek;
 import com.ifreebudget.fm.scheduler.task.Schedule.RepeatType;
+import com.ifreebudget.fm.scheduler.task.Schedule.WeekOfMonth;
 import com.ifreebudget.fm.scheduler.task.Task;
 import com.ifreebudget.fm.scheduler.task.WeekSchedule;
 import com.ifreebudget.fm.scheduler.task.constraints.Constraint;
 import com.ifreebudget.fm.scheduler.task.constraints.MonthConstraint;
+import com.ifreebudget.fm.scheduler.task.constraints.MonthConstraintDayBased;
 import com.ifreebudget.fm.scheduler.task.constraints.WeekConstraint;
 import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
@@ -168,30 +171,29 @@ public class AddReminderActivity extends Activity {
                     public void onItemSelected(AdapterView<?> parent,
                             View view, int pos, long id) {
 
-                        int layoutId = -1;
+                        if(view == null) {
+                            return;
+                        }
                         switch (pos) {
                         case 0:
                             taskType = TASK_TYPE_ENUM.once;
                             break;
                         case 1:
                             taskType = TASK_TYPE_ENUM.hourly;
-                            layoutId = R.layout.hourly_repeat_layout;
+                            setRepeatsView(view, R.layout.hourly_repeat_layout);
                             break;
                         case 2:
                             taskType = TASK_TYPE_ENUM.daily;
-                            layoutId = R.layout.daily_repeat_layout;
+                            setRepeatsView(view, R.layout.daily_repeat_layout);
                             break;
                         case 3:
                             taskType = TASK_TYPE_ENUM.weekly;
-                            layoutId = R.layout.weekly_repeat_layout;
+                            setRepeatsView(view, R.layout.weekly_repeat_layout);
                             break;
                         case 4:
                             taskType = TASK_TYPE_ENUM.monthly;
-                            layoutId = R.layout.monthly_repeat_layout;
+                            setRepeatsView(view, R.layout.monthly_repeat_layout);
                             break;
-                        }
-                        if (layoutId != -1) {
-                            setRepeatsView(view, layoutId);
                         }
                     }
 
@@ -311,6 +313,8 @@ public class AddReminderActivity extends Activity {
         LinearLayout ll = (LinearLayout) findViewById(R.id.repeat_info_panel);
 
         View vv = li.inflate(layoutId, null);
+        initRepeatsLayout(vv, layoutId);
+
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.FILL_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -320,6 +324,76 @@ public class AddReminderActivity extends Activity {
         ll.removeAllViews();
 
         ll.addView(vv, params);
+    }
+
+    private void initRepeatsLayout(View v, int layoutId) {
+        if (layoutId == R.layout.monthly_repeat_layout) {
+            Calendar today = Calendar.getInstance();
+
+            Spinner weekNumSpinner = (Spinner) v
+                    .findViewById(R.id.week_num_spinner);
+
+            ArrayAdapter<CharSequence> weekNumAdapter = ArrayAdapter
+                    .createFromResource(this, R.array.week_num,
+                            android.R.layout.simple_spinner_item);
+
+            weekNumAdapter
+                    .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            weekNumSpinner.setAdapter(weekNumAdapter);
+
+            int weekNum = today.get(Calendar.WEEK_OF_MONTH) - 1;
+            if (weekNum < weekNumAdapter.getCount()) {
+                weekNumSpinner.setSelection(weekNum);
+            }
+
+            Spinner dowSpinner = (Spinner) v.findViewById(R.id.dow_spinner);
+
+            ArrayAdapter<CharSequence> dowAdapter = ArrayAdapter
+                    .createFromResource(this, R.array.days_of_week,
+                            android.R.layout.simple_spinner_item);
+            dowAdapter
+                    .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            dowSpinner.setAdapter(dowAdapter);
+
+            int dow = today.get(Calendar.DAY_OF_WEEK) - 1;
+            if (dow < dowAdapter.getCount()) {
+                dowSpinner.setSelection(dow);
+            }
+
+            int dayInMonth = today.get(Calendar.DAY_OF_MONTH);
+            EditText dayOfMonthField = (EditText) v
+                    .findViewById(R.id.monthly_repeat_dom_tf);
+            dayOfMonthField.setText(String.valueOf(dayInMonth));
+
+            final CheckBox dayBased = (CheckBox) v
+                    .findViewById(R.id.day_based_cb);
+            final CheckBox dateBased = (CheckBox) v
+                    .findViewById(R.id.date_based_cb);
+
+            dayBased.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (dayBased.isChecked()) {
+                        dateBased.setChecked(false);
+                    }
+                    else {
+                        dateBased.setChecked(true);
+                    }
+                }
+            });
+
+            dateBased.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (dateBased.isChecked()) {
+                        dayBased.setChecked(false);
+                    }
+                    else {
+                        dayBased.setChecked(true);
+                    }
+                }
+            });
+        }
     }
 
     public void saveReminder(View view) {
@@ -438,10 +512,10 @@ public class AddReminderActivity extends Activity {
         }
         if (taskType == TASK_TYPE_ENUM.once) {
             return getOnceSchedule(s);
-        }        
+        }
         if (taskType == TASK_TYPE_ENUM.hourly) {
             return getHourlySchedule(s, e);
-        }        
+        }
         else if (taskType == TASK_TYPE_ENUM.daily) {
             return getDailySchedule(s, e);
         }
@@ -461,7 +535,7 @@ public class AddReminderActivity extends Activity {
 
         return s;
     }
-    
+
     private Schedule getHourlySchedule(Date st, Date en) throws Exception {
         EditText repInfo = (EditText) findViewById(R.id.hourly_repeat_unit_tf);
         String val = repInfo.getText().toString();
@@ -559,6 +633,58 @@ public class AddReminderActivity extends Activity {
     }
 
     private Schedule getMonthlySchedule(Date st, Date en) throws Exception {
+        final CheckBox dayBased = (CheckBox) findViewById(R.id.day_based_cb);
+        final CheckBox dateBased = (CheckBox) findViewById(R.id.date_based_cb);
+        if (dayBased.isChecked()) {
+            return getDaybasedMonthlySchedule(st, en);
+        }
+        else if (dateBased.isChecked()) {
+            return getDatebasedMonthlySchedule(st, en);
+        }
+        return null;
+    }
+
+    private Schedule getDaybasedMonthlySchedule(Date st, Date en)
+            throws Exception {
+        EditText repInfo = (EditText) findViewById(R.id.monthly_repeat_unit);
+
+        int[] repeatRange = { 1, 12 };
+        int repeatVal = -1;
+        try {
+            repeatVal = validateIntValue(repInfo.getText().toString(),
+                    repeatRange);
+        }
+        catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "Invalid value for repeat interval", Toast.LENGTH_SHORT);
+            toast.show();
+            return null;
+        }
+
+        Spinner weekNumSpinner = (Spinner) findViewById(R.id.week_num_spinner);
+        Spinner dowSpinner = (Spinner) findViewById(R.id.dow_spinner);
+
+        String weekNum = (String) weekNumSpinner.getSelectedItem();
+        String dowVal = (String) dowSpinner.getSelectedItem();
+
+        MonthScheduleDayBased s = new MonthScheduleDayBased(st, en);
+
+        WeekOfMonth wom = WeekOfMonth.valueOf(weekNum);
+
+        DayOfWeek dow = DayOfWeek.valueOf(dowVal);
+
+        Constraint co = new MonthConstraintDayBased(wom, dow);
+
+        s.setRepeatType(RepeatType.MONTH, repeatVal);
+
+        s.setConstraint(co);
+
+        return s;
+    }
+
+    private Schedule getDatebasedMonthlySchedule(Date st, Date en)
+            throws Exception {
         EditText domInfo = (EditText) findViewById(R.id.monthly_repeat_dom_tf);
 
         int[] domRange = { 1, 31 };
@@ -570,7 +696,7 @@ public class AddReminderActivity extends Activity {
         catch (Exception e) {
             Log.e(TAG, e.getMessage());
             Toast toast = Toast.makeText(getApplicationContext(),
-                    e.getMessage(), Toast.LENGTH_SHORT);
+                    "Invalid value for repeat interval", Toast.LENGTH_SHORT);
             toast.show();
             return null;
         }

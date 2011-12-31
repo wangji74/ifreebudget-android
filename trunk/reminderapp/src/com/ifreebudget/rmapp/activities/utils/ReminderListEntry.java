@@ -75,8 +75,11 @@ public class ReminderListEntry {
         ret.append("</b>");
 
         Date now = new Date();
-        if (nextTime.before(now)) {
-            ret.append("<br><i>Task complete</i>");
+        
+        Date endDate = new Date(entity.getEndTime());
+        
+        if (nextTime.after(endDate)) {
+            ret.append("<br><i>Task complete</i>");            
         }
         else if(now.after(new Date(entity.getEndTime()))) {
             ret.append("<br><i>Task complete</i>");

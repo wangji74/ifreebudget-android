@@ -15,6 +15,7 @@
     <string name="repeat_monthly">Monthly</string>
     <string name="dismiss">Dismiss</string>
     <string name="delete">Delete</string>
+
     <string-array name="repeats_types">
         <item>@string/repeat_none</item>
         <item>@string/repeat_hourly</item>
@@ -24,5 +25,20 @@
     </string-array>
 
     <string name="sch_type_prompt">Repeats...</string>
+    <string name="week_num_prompt">Select week</string>
+    <string name="dow_prompt">Select day</string>
+    <string name="first">First</string>
+    <string name="second">Second</string>
+    <string name="third">Third</string>
+    <string name="fourth">Fourth</string>
+    <string name="last">Last</string>
+
+    <string-array name="week_num">
+        <item>@string/first</item>
+        <item>@string/second</item>
+        <item>@string/third</item>
+        <item>@string/fourth</item>
+        <item>@string/last</item>
+    </string-array>
 
 </resources>
