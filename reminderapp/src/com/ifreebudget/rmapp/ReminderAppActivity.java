@@ -8,6 +8,7 @@ import android.app.AlarmManager;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.text.Html;
@@ -50,6 +51,9 @@ public class ReminderAppActivity extends ListActivity {
     private View lastEditCtrlPanel = null;
 
     private ReminderListEntry lastSelected = null;
+    
+    private String MARKET_URI = "market://details?id=com.ifreebudget.rmapp";
+    
 
     /** Called when the activity is first created. */
     @Override
@@ -109,6 +113,9 @@ public class ReminderAppActivity extends ListActivity {
         case R.id.mItemNotifs:
             manageNotifications();
             return true;
+        case R.id.mItemRate:
+            gotoMarket();
+            return true;            
         default:
             return super.onOptionsItemSelected(item);
 
@@ -118,6 +125,11 @@ public class ReminderAppActivity extends ListActivity {
     /* End platform overrides */
 
     /* Menu item handlers*/
+    private void gotoMarket() {
+        Intent goToMarket = null;
+        goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse(MARKET_URI));
+        startActivity(goToMarket);
+    }
     
     public void manageNotifications() {
         Intent txIntent = new Intent(this, ManageTaskNotifsActivity.class);

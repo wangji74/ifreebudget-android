@@ -12,4 +12,10 @@
         android:title="Notifications"
         android:icon="@drawable/reminder_notif"
         android:titleCondensed="Notifications"/>
+        
+    <item
+        android:id="@+id/mItemRate"
+        android:title="Rate me"
+        android:icon="@drawable/rateme"
+        android:titleCondensed="Rate me"></item>        
 </menu>

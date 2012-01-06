@@ -40,5 +40,7 @@
         <item>@string/fourth</item>
         <item>@string/last</item>
     </string-array>
+    <string name="set_reminder">Set reminder</string>
+    <string name="notifications">Notifications</string>
 
 </resources>
