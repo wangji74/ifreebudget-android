@@ -40,6 +40,22 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/button_panel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="fill_vertical"
+                android:orientation="horizontal" >
+
+                <ImageButton
+                    android:id="@+id/sort_notif_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:onClick="sortNotifs" />
+            </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
 
