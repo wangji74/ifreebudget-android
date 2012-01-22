@@ -6,7 +6,11 @@ import java.util.List;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -15,6 +19,8 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +35,11 @@ import com.ifreebudget.rmapp.activities.utils.NotificationListEntry;
 import com.ifreebudget.rmapp.entity.RMAppEntityManager;
 
 public class ManageTaskNotifsActivity extends ListActivity {
+    private static final String NOTIF_SORT_KEY = "Notifs.Sort";
+    
+    private static final int SORT_ASC = 1;
+    private static final int SORT_DESC = 2;
+
     private static final String EMPTY_LIST_MSG = "No pending notifications...";
 
     private static final String TAG = "RMApp.ManageTaskNotifsActivity";
@@ -41,15 +52,27 @@ public class ManageTaskNotifsActivity extends ListActivity {
 
     private NotificationListEntry lastSelected = null;
 
+    private ImageButton sortNotifBtn;
+
+    private SharedPreferences preferences;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.manage_task_notifs_layout);
+        sortNotifBtn = (ImageButton) findViewById(R.id.sort_notif_btn);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);        
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        int sort = preferences.getInt(NOTIF_SORT_KEY, SORT_DESC);
+        setSortButton(sort);
+        loadEntries(sort);
+    }
+    
+    private void loadEntries(int sort) {
         RMAppEntityManager em = RMAppEntityManager.getInstance();
         if (em == null) {
             Log.w(TAG, "Null FManEntityManager, re-initializing");
@@ -57,7 +80,8 @@ public class ManageTaskNotifsActivity extends ListActivity {
         }
 
         try {
-            List<FManEntity> notifs = em.getList(TaskNotification.class);
+            String sortFilter = getSortFilter(sort);
+            List<FManEntity> notifs = em.getList(TaskNotification.class, sortFilter);
 
             if (notifs != null && notifs.size() > 0) {
                 List<NotificationListEntry> list = new ArrayList<NotificationListEntry>();
@@ -178,5 +202,44 @@ public class ManageTaskNotifsActivity extends ListActivity {
         catch (DBException e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
         }
+    }
+    
+    private String getSortFilter(int sort) {
+        String filter = null;
+        if (sort == SORT_DESC) {
+            filter = " order by NOTIFTIME desc";
+        }
+        else {
+            filter = " order by NOTIFTIME asc";
+        }
+        Log.i(TAG, "Sort filter: " + sort + " " + filter);
+        return filter;
+    }
+
+    private void setSortButton(int sort) {
+        Log.i(TAG, "Set Sort Button : " + sort);
+        if (sort == SORT_DESC) {
+            Drawable r = getResources().getDrawable(R.drawable.sort_desc);
+            sortNotifBtn.setBackgroundDrawable(r);
+        }
+        else {
+            Drawable r = getResources().getDrawable(R.drawable.sort_asc);
+            sortNotifBtn.setBackgroundDrawable(r);
+        }        
+    }
+    
+    public void sortNotifs(View view) {
+        int currSort = preferences.getInt(NOTIF_SORT_KEY, SORT_DESC);
+        if(currSort == SORT_DESC) {
+            currSort = SORT_ASC;
+        }
+        else {
+            currSort = SORT_DESC;
+        }
+        Editor edit = preferences.edit();
+        edit.putInt(NOTIF_SORT_KEY, currSort);
+        edit.commit();
+        setSortButton(currSort);
+        loadEntries(currSort);
     }
 }
