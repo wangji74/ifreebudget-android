@@ -27,6 +27,7 @@
 			android:paddingLeft="5dip"
 			android:inputType="number"
 			android:minWidth="60dip"
+            android:text="1"			
 			android:layout_gravity="center_vertical|center_horizontal" />
 		<TextView
 			android:text=" day(s)"

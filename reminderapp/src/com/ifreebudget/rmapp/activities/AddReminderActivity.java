@@ -83,7 +83,7 @@ public class AddReminderActivity extends Activity {
     private Long taskToEdit = null;
 
     private enum TASK_TYPE_ENUM {
-        once, hourly, daily, weekly, monthly
+        once, hourly, daily, weekly, monthly, monthly_by_week
     };
 
     private TASK_TYPE_ENUM taskType;
@@ -171,12 +171,13 @@ public class AddReminderActivity extends Activity {
                     public void onItemSelected(AdapterView<?> parent,
                             View view, int pos, long id) {
 
-                        if(view == null) {
+                        if (view == null) {
                             return;
                         }
                         switch (pos) {
                         case 0:
                             taskType = TASK_TYPE_ENUM.once;
+                            setRepeatsView(view, -1);
                             break;
                         case 1:
                             taskType = TASK_TYPE_ENUM.hourly;
@@ -193,6 +194,11 @@ public class AddReminderActivity extends Activity {
                         case 4:
                             taskType = TASK_TYPE_ENUM.monthly;
                             setRepeatsView(view, R.layout.monthly_repeat_layout);
+                            break;
+                        case 5:
+                            taskType = TASK_TYPE_ENUM.monthly_by_week;
+                            setRepeatsView(view,
+                                    R.layout.monthly_by_week_repat_layout);
                             break;
                         }
                     }
@@ -312,22 +318,27 @@ public class AddReminderActivity extends Activity {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout ll = (LinearLayout) findViewById(R.id.repeat_info_panel);
 
-        View vv = li.inflate(layoutId, null);
-        initRepeatsLayout(vv, layoutId);
+        if (layoutId != -1) {
+            View vv = li.inflate(layoutId, null);
+            initRepeatsLayout(vv, layoutId);
 
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.FILL_PARENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.BELOW, R.id.repeat_type_panel);
-        params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.FILL_PARENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.BELOW, R.id.repeat_type_panel);
+            params.addRule(RelativeLayout.CENTER_HORIZONTAL);
 
-        ll.removeAllViews();
+            ll.removeAllViews();
 
-        ll.addView(vv, params);
+            ll.addView(vv, params);            
+        }
+        else {
+            ll.removeAllViews();
+        }
     }
 
     private void initRepeatsLayout(View v, int layoutId) {
-        if (layoutId == R.layout.monthly_repeat_layout) {
+        if (layoutId == R.layout.monthly_by_week_repat_layout) {
             Calendar today = Calendar.getInstance();
 
             Spinner weekNumSpinner = (Spinner) v
@@ -359,40 +370,14 @@ public class AddReminderActivity extends Activity {
             if (dow < dowAdapter.getCount()) {
                 dowSpinner.setSelection(dow);
             }
+        }
+        if (layoutId == R.layout.monthly_repeat_layout) {
+            Calendar today = Calendar.getInstance();
 
             int dayInMonth = today.get(Calendar.DAY_OF_MONTH);
             EditText dayOfMonthField = (EditText) v
                     .findViewById(R.id.monthly_repeat_dom_tf);
             dayOfMonthField.setText(String.valueOf(dayInMonth));
-
-            final CheckBox dayBased = (CheckBox) v
-                    .findViewById(R.id.day_based_cb);
-            final CheckBox dateBased = (CheckBox) v
-                    .findViewById(R.id.date_based_cb);
-
-            dayBased.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (dayBased.isChecked()) {
-                        dateBased.setChecked(false);
-                    }
-                    else {
-                        dateBased.setChecked(true);
-                    }
-                }
-            });
-
-            dateBased.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (dateBased.isChecked()) {
-                        dayBased.setChecked(false);
-                    }
-                    else {
-                        dayBased.setChecked(true);
-                    }
-                }
-            });
         }
     }
 
@@ -523,7 +508,10 @@ public class AddReminderActivity extends Activity {
             return getWeeklySchedule(s, e);
         }
         else if (taskType == TASK_TYPE_ENUM.monthly) {
-            return getMonthlySchedule(s, e);
+            return getDatebasedMonthlySchedule(s, e);
+        }
+        else if (taskType == TASK_TYPE_ENUM.monthly_by_week) {
+            return getDaybasedMonthlySchedule(s, e);
         }
         return null;
     }
@@ -630,18 +618,6 @@ public class AddReminderActivity extends Activity {
         s.setConstraint(co);
 
         return s;
-    }
-
-    private Schedule getMonthlySchedule(Date st, Date en) throws Exception {
-        final CheckBox dayBased = (CheckBox) findViewById(R.id.day_based_cb);
-        final CheckBox dateBased = (CheckBox) findViewById(R.id.date_based_cb);
-        if (dayBased.isChecked()) {
-            return getDaybasedMonthlySchedule(st, en);
-        }
-        else if (dateBased.isChecked()) {
-            return getDatebasedMonthlySchedule(st, en);
-        }
-        return null;
     }
 
     private Schedule getDaybasedMonthlySchedule(Date st, Date en)

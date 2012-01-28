@@ -13,6 +13,7 @@
     <string name="repeat_hourly">Hourly</string>
     <string name="repeat_weekly">Weekly</string>
     <string name="repeat_monthly">Monthly</string>
+    <string name="repeat_monthly_by_week">Monthly, by week number</string>
     <string name="dismiss">Dismiss</string>
     <string name="delete">Delete</string>
 
@@ -22,6 +23,7 @@
         <item>@string/repeat_daily</item>
         <item>@string/repeat_weekly</item>
         <item>@string/repeat_monthly</item>
+        <item>@string/repeat_monthly_by_week</item>
     </string-array>
 
     <string name="sch_type_prompt">Repeats...</string>
@@ -40,7 +42,8 @@
         <item>@string/fourth</item>
         <item>@string/last</item>
     </string-array>
-    <string name="set_reminder">Set reminder</string>
+    <string name="set_reminder">Add reminder</string>
     <string name="notifications">Notifications</string>
+    <color name="info_panel_bg">#336699</color>
 
 </resources>
