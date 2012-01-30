@@ -38,8 +38,8 @@
                     android:id="@+id/logo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="5dip"
                     android:onClick="@string/goto_home"
+                    android:paddingLeft="5dip"
                     android:src="@drawable/reminder_icon" />
 
                 <TextView
@@ -189,34 +189,63 @@
             android:orientation="vertical"
             android:paddingTop="5dip" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5dip"
-                android:text="@string/repeats_lbl"
-                android:textColor="#000000" />
-
-            <Spinner
-                android:id="@+id/sch_type_spinner"
+            <TableLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:prompt="@string/sch_type_prompt" />
+                android:layout_height="wrap_content">
+
+                <TableRow >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="5dip"
+                        android:text="@string/repeats_lbl"
+                        android:layout_weight="0.7"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:id="@+id/repeats_unit_lbl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="5dip"
+                        android:text="@string/every"
+                        android:layout_weight="0.3"
+                        android:textColor="#000000" />
+                </TableRow>
+
+                <TableRow >
+
+                    <Spinner
+                        android:id="@+id/sch_type_spinner"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
+                        android:prompt="@string/sch_type_prompt" />
+
+                    <Button
+                        android:id="@+id/repeat_unit_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="1" />
+                </TableRow>
+            </TableLayout>
         </LinearLayout>
 
-        <View
+        <!-- View
             android:id="@+id/spacer"
             android:layout_width="fill_parent"
             android:layout_height="2dip"
             android:layout_below="@id/repeat_type_panel"
-            android:background="#c0c0c0" />
+            android:background="#c0c0c0" /-->
 
         <LinearLayout
             android:id="@+id/repeat_info_panel"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/repeat_type_panel"
-            android:paddingTop="10dip"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:paddingTop="10dip" >
         </LinearLayout>
     </RelativeLayout>
 

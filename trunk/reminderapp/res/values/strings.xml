@@ -13,7 +13,7 @@
     <string name="repeat_hourly">Hourly</string>
     <string name="repeat_weekly">Weekly</string>
     <string name="repeat_monthly">Monthly</string>
-    <string name="repeat_monthly_by_week">Monthly, by week number</string>
+    <string name="repeat_monthly_by_week">Monthly*</string>
     <string name="dismiss">Dismiss</string>
     <string name="delete">Delete</string>
 
@@ -42,8 +42,11 @@
         <item>@string/fourth</item>
         <item>@string/last</item>
     </string-array>
+
     <string name="set_reminder">Add reminder</string>
     <string name="notifications">Notifications</string>
+    <string name="every">How often</string>
+
     <color name="info_panel_bg">#336699</color>
 
 </resources>

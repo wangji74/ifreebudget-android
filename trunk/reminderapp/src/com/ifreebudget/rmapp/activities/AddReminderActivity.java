@@ -8,14 +8,17 @@ import java.util.UUID;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -67,14 +71,18 @@ public class AddReminderActivity extends Activity {
     public static final String TASK_ALARM_ID = "rmapp-st-id";
     public static final String TASKID = "TASKID";
 
-    private Button startDtBtn, endDtBtn, startTimeBtn, endTimeBtn;
+    private Button startDtBtn, endDtBtn, startTimeBtn, endTimeBtn,
+            repeatUnitBtn;
     private EditText rem_title_tf;
+    private TextView repeatsLbl;
+
     private Spinner repeatTypeSpinner;
 
     private static final int ST_TIME_DIALOG = 0;
     private static final int EN_TIME_DIALOG = 1;
     private static final int ST_DATE_DIALOG = 2;
     private static final int EN_DATE_DIALOG = 3;
+    private static final int REP_UNIT_DIALOG = 4;
 
     private static final String TIME_FORMAT = "hh:mm a";
 
@@ -105,6 +113,8 @@ public class AddReminderActivity extends Activity {
     }
 
     private void initializeFields() {
+        repeatsLbl = (TextView) AddReminderActivity.this
+                .findViewById(R.id.repeats_unit_lbl);
 
         startDtBtn = (Button) findViewById(R.id.start_date_btn);
         startDtBtn.setOnClickListener(new OnClickListener() {
@@ -138,6 +148,14 @@ public class AddReminderActivity extends Activity {
             }
         });
 
+        repeatUnitBtn = (Button) findViewById(R.id.repeat_unit_btn);
+        repeatUnitBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog(REP_UNIT_DIALOG);
+            }
+        });
+
         rem_title_tf = (EditText) findViewById(R.id.rem_title_tf);
 
         Calendar s = Calendar.getInstance();
@@ -164,6 +182,7 @@ public class AddReminderActivity extends Activity {
                 android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         repeatTypeSpinner.setAdapter(adapter);
+        repeatTypeSpinner.setSelection(2);
         repeatTypeSpinner
                 .setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -173,6 +192,14 @@ public class AddReminderActivity extends Activity {
 
                         if (view == null) {
                             return;
+                        }
+                        if (pos == 0) {
+                            repeatsLbl.setVisibility(View.GONE);
+                            repeatUnitBtn.setVisibility(View.GONE);
+                        }
+                        else {
+                            repeatsLbl.setVisibility(View.VISIBLE);
+                            repeatUnitBtn.setVisibility(View.VISIBLE);
                         }
                         switch (pos) {
                         case 0:
@@ -225,11 +252,44 @@ public class AddReminderActivity extends Activity {
         case EN_TIME_DIALOG:
             txt = endTimeBtn.getText().toString();
             return getTimePickerDialog(enTimePickerListener, txt);
+        case REP_UNIT_DIALOG:
+            return getRepeatUnitDialog();
         }
         return null;
     }
 
-    public DatePickerDialog getDatePickerDialog(
+    private Dialog getRepeatUnitDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        // alert.setTitle("How often?");
+        alert.setMessage("Every");
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        alert.setView(input);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String value = input.getText().toString();
+                if (value == null || value.length() == 0) {
+                    repeatUnitBtn.setText("1");
+                }
+                else {
+                    repeatUnitBtn.setText(value);
+                }
+            }
+        });
+
+        // alert.setNegativeButton("Cancel",
+        // new DialogInterface.OnClickListener() {
+        // public void onClick(DialogInterface dialog, int whichButton) {
+        // // Canceled.
+        // }
+        // });
+        return alert.create();
+    }
+
+    private DatePickerDialog getDatePickerDialog(
             DatePickerDialog.OnDateSetListener listener, String txt) {
         SimpleDateFormat sdf = SessionManager.getDateFormat();
         int yr = 2011;
@@ -248,7 +308,7 @@ public class AddReminderActivity extends Activity {
         return new DatePickerDialog(this, listener, yr, mo, dt);
     }
 
-    public TimePickerDialog getTimePickerDialog(
+    private TimePickerDialog getTimePickerDialog(
             TimePickerDialog.OnTimeSetListener listener, String txt) {
         SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT);
         int hr = 12;
@@ -330,7 +390,7 @@ public class AddReminderActivity extends Activity {
 
             ll.removeAllViews();
 
-            ll.addView(vv, params);            
+            ll.addView(vv, params);
         }
         else {
             ll.removeAllViews();
@@ -431,6 +491,11 @@ public class AddReminderActivity extends Activity {
         return cal.getTime();
     }
 
+    private String getRepeatUnit() throws Exception {
+        String txt = repeatUnitBtn.getText().toString();
+        return txt;
+    }
+
     private Task createTask() throws Exception {
         if (!validate()) {
             return null;
@@ -498,20 +563,23 @@ public class AddReminderActivity extends Activity {
         if (taskType == TASK_TYPE_ENUM.once) {
             return getOnceSchedule(s);
         }
+
+        String repeatUnit = getRepeatUnit();
+
         if (taskType == TASK_TYPE_ENUM.hourly) {
-            return getHourlySchedule(s, e);
+            return getHourlySchedule(s, e, repeatUnit);
         }
         else if (taskType == TASK_TYPE_ENUM.daily) {
-            return getDailySchedule(s, e);
+            return getDailySchedule(s, e, repeatUnit);
         }
         else if (taskType == TASK_TYPE_ENUM.weekly) {
-            return getWeeklySchedule(s, e);
+            return getWeeklySchedule(s, e, repeatUnit);
         }
         else if (taskType == TASK_TYPE_ENUM.monthly) {
-            return getDatebasedMonthlySchedule(s, e);
+            return getDatebasedMonthlySchedule(s, e, repeatUnit);
         }
         else if (taskType == TASK_TYPE_ENUM.monthly_by_week) {
-            return getDaybasedMonthlySchedule(s, e);
+            return getDaybasedMonthlySchedule(s, e, repeatUnit);
         }
         return null;
     }
@@ -524,13 +592,11 @@ public class AddReminderActivity extends Activity {
         return s;
     }
 
-    private Schedule getHourlySchedule(Date st, Date en) throws Exception {
-        EditText repInfo = (EditText) findViewById(R.id.hourly_repeat_unit_tf);
-        String val = repInfo.getText().toString();
-
+    private Schedule getHourlySchedule(Date st, Date en, String repeatUnit)
+            throws Exception {
         BasicSchedule s = new BasicSchedule(st, en);
 
-        int step = validateStepValue(val);
+        int step = validateStepValue(repeatUnit);
         if (step < 1) {
             return null;
         }
@@ -539,13 +605,12 @@ public class AddReminderActivity extends Activity {
         return s;
     }
 
-    private Schedule getDailySchedule(Date st, Date en) throws Exception {
-        EditText repInfo = (EditText) findViewById(R.id.daily_repeat_unit_tf);
-        String val = repInfo.getText().toString();
+    private Schedule getDailySchedule(Date st, Date en, String repeatUnit)
+            throws Exception {
 
         BasicSchedule s = new BasicSchedule(st, en);
 
-        int step = validateStepValue(val);
+        int step = validateStepValue(repeatUnit);
         if (step < 1) {
             return null;
         }
@@ -554,11 +619,9 @@ public class AddReminderActivity extends Activity {
         return s;
     }
 
-    private Schedule getWeeklySchedule(Date st, Date en) throws Exception {
-        EditText repInfo = (EditText) findViewById(R.id.weekly_repeat_unit_tf);
-        String val = repInfo.getText().toString();
-
-        int step = validateStepValue(val);
+    private Schedule getWeeklySchedule(Date st, Date en, String repeatUnit)
+            throws Exception {
+        int step = validateStepValue(repeatUnit);
         if (step < 1) {
             return null;
         }
@@ -620,15 +683,12 @@ public class AddReminderActivity extends Activity {
         return s;
     }
 
-    private Schedule getDaybasedMonthlySchedule(Date st, Date en)
-            throws Exception {
-        EditText repInfo = (EditText) findViewById(R.id.monthly_repeat_unit);
-
+    private Schedule getDaybasedMonthlySchedule(Date st, Date en,
+            String repeatUnit) throws Exception {
         int[] repeatRange = { 1, 12 };
         int repeatVal = -1;
         try {
-            repeatVal = validateIntValue(repInfo.getText().toString(),
-                    repeatRange);
+            repeatVal = validateIntValue(repeatUnit, repeatRange);
         }
         catch (Exception e) {
             Log.e(TAG, e.getMessage());
@@ -659,8 +719,8 @@ public class AddReminderActivity extends Activity {
         return s;
     }
 
-    private Schedule getDatebasedMonthlySchedule(Date st, Date en)
-            throws Exception {
+    private Schedule getDatebasedMonthlySchedule(Date st, Date en,
+            String repeatUnit) throws Exception {
         EditText domInfo = (EditText) findViewById(R.id.monthly_repeat_dom_tf);
 
         int[] domRange = { 1, 31 };
@@ -677,13 +737,10 @@ public class AddReminderActivity extends Activity {
             return null;
         }
 
-        EditText repInfo = (EditText) findViewById(R.id.monthly_repeat_unit);
-
         int[] repeatRange = { 1, 12 };
         int repeatVal = -1;
         try {
-            repeatVal = validateIntValue(repInfo.getText().toString(),
-                    repeatRange);
+            repeatVal = validateIntValue(repeatUnit, repeatRange);
         }
         catch (Exception e) {
             Log.e(TAG, e.getMessage());

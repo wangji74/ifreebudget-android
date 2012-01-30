@@ -3,15 +3,16 @@
     android:id="@+id/daily_repeat_panel"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:layout_gravity="center_horizontal"
     android:gravity="center"
-    android:layout_gravity="center"
     android:orientation="vertical" >
 
     <LinearLayout
+        android:id="@+id/top_panel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:gravity="center"
-        android:layout_gravity="center"
         android:orientation="horizontal" >
 
         <TextView
@@ -19,39 +20,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
             android:paddingLeft="5dip"
-            android:text="Every "
-            android:textColor="#000000" />
-
-        <EditText
-            android:id="@+id/monthly_repeat_unit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:inputType="number"
-            android:minWidth="60dip"
-            android:paddingLeft="5dip"
-            android:singleLine="true"
-            android:text="1" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:paddingLeft="5dip"
-            android:text=" month(s) on"
+            android:text="On same date:"
             android:textColor="#000000" />
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5dip"
-                android:text="day "
-                android:textColor="#000000" />
 
             <EditText
                 android:id="@+id/monthly_repeat_dom_tf"
@@ -63,4 +38,5 @@
                 android:singleLine="true" />
         </LinearLayout>
     </LinearLayout>
+
 </LinearLayout>

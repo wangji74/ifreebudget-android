@@ -1,107 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:gravity="center"
-	android:layout_gravity="center">
-	<LinearLayout
-		android:id="@+id/top_panel"
-		android:orientation="horizontal"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center">
-		<TextView
-			android:text="Every "
-			android:paddingLeft="5dip"
-			android:textColor="#000000"
-			android:layout_gravity="center_vertical|center_horizontal"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
-		<EditText
-			android:id="@+id/weekly_repeat_unit_tf"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:singleLine="true"
-			android:paddingLeft="5dip"
-			android:inputType="number"
-			android:minWidth="60dip"
-            android:text="1"			
-			android:layout_gravity="center_vertical|center_horizontal" />
-		<TextView
-			android:text="week(s) on"
-			android:paddingLeft="5dip"
-			android:textColor="#000000"
-			android:layout_gravity="center_vertical|center_horizontal"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
-	</LinearLayout>
-	<TableLayout
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:stretchColumns="*">
-		<TableRow android:layout_weight="1">
-			<CheckBox
-				android:id="@+id/cbSun"
-				android:textColor="#000000"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="Sunday"
-				android:layout_weight="0.5"/>				
-			<CheckBox
-				android:id="@+id/cbMon"
-				android:textColor="#000000"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="Monday"
-				android:layout_gravity="left"
-				android:paddingRight="5dip"
-				android:layout_weight="0.5"/>
-		</TableRow>
-		<TableRow android:layout_weight="1">		    
-			<CheckBox
-				android:id="@+id/cbTue"
-				android:textColor="#000000"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="Tuesday"
-				android:layout_weight="0.5"/>
-			<CheckBox
-				android:id="@+id/cbWed"
-				android:textColor="#000000"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="Wednesday" 
-				android:layout_gravity="left"
-				android:paddingRight="5dip"
-				android:layout_weight="0.5"/>										
-		</TableRow>
-		<TableRow>		    
-			<CheckBox
-				android:id="@+id/cbThu"
-				android:textColor="#000000"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="Thursday" 
-				android:layout_weight="0.5"/>
-			<CheckBox
-				android:id="@+id/cbFri"
-				android:textColor="#000000"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="Friday"
-				android:layout_gravity="left"
-				android:paddingRight="5dip"
-				android:layout_weight="0.5"/>								
-		</TableRow>
-		<TableRow android:layout_weight="1">		    
-			<CheckBox
-				android:id="@+id/cbSat"
-				android:textColor="#000000"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="Saturday" />
-		</TableRow>
-	</TableLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <!-- LinearLayout
+        android:id="@+id/top_panel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal" >        
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:paddingLeft="5dip"
+            android:text="Every "
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/weekly_repeat_unit_tf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:inputType="number"
+            android:minWidth="60dip"
+            android:paddingLeft="5dip"
+            android:singleLine="true"
+            android:text="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:paddingLeft="5dip"
+            android:text="week(s) on"
+            android:textColor="#000000" />
+    </LinearLayout-->
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:stretchColumns="*" >
+
+        <TableRow >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/sun_lbl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="6dip"
+                    android:text="Sun"
+                    android:textColor="#000000" />
+
+                <CheckBox
+                    android:id="@+id/cbSun"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/sun_lbl" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingLeft="6dip"
+                    android:text="Mon"
+                    android:textColor="#000000" />
+
+                <CheckBox
+                    android:id="@+id/cbMon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="6dip"
+                    android:text="Tue"
+                    android:textColor="#000000" />
+
+                <CheckBox
+                    android:id="@+id/cbTue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="6dip"
+                    android:text="Wed"
+                    android:textColor="#000000" />
+
+                <CheckBox
+                    android:id="@+id/cbWed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="6dip"
+                    android:text="Thu"
+                    android:textColor="#000000" />
+
+                <CheckBox
+                    android:id="@+id/cbThu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="6dip"
+                    android:text="Fri"
+                    android:textColor="#000000" />
+
+                <CheckBox
+                    android:id="@+id/cbFri"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="6dip"
+                    android:text="Sat"
+                    android:textColor="#000000" />
+
+                <CheckBox
+                    android:id="@+id/cbSat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000" />
+            </LinearLayout>
+        </TableRow>
+    </TableLayout>
+
 </LinearLayout>
