@@ -51,7 +51,7 @@ public class ReminderListEntry {
         }
 
     }
-    
+
     public TaskEntity getEntity() {
         return entity;
     }
@@ -75,13 +75,13 @@ public class ReminderListEntry {
         ret.append("</b>");
 
         Date now = new Date();
-        
+
         Date endDate = new Date(entity.getEndTime());
-        
+
         if (nextTime.after(endDate)) {
-            ret.append("<br><i>Task complete</i>");            
+            ret.append("<br><i>Task complete</i>");
         }
-        else if(now.after(new Date(entity.getEndTime()))) {
+        else if (now.after(new Date(entity.getEndTime()))) {
             ret.append("<br><i>Task complete</i>");
         }
         else {
@@ -106,7 +106,7 @@ public class ReminderListEntry {
 
     private String calcDiff(long timeInSeconds) {
         long days = timeInSeconds / NUM_SECONDS_IN_DAY;
-        String ret = (days > 0 ? days + " days , " : "");
+        String ret = (days > 0 ? pluralize(days, "day") : "");
         ret += calcHMS(timeInSeconds % NUM_SECONDS_IN_DAY);
 
         return ret;
@@ -121,11 +121,31 @@ public class ReminderListEntry {
         seconds = timeInSeconds;
 
         StringBuilder ret = new StringBuilder();
-        ret.append(hours > 0 ? hours + " hours , " : "");
-        ret.append(minutes > 0 ? minutes + " minutes" : "");
-        if (hours == 0 && minutes == 0) {
-            ret.append(seconds > 0 ? seconds + " seconds" : "");
+        if(hours > 0) {
+            ret.append(" ");
+            ret.append(pluralize(hours, "hour"));
+        }
+        if(minutes > 0) {
+            if(hours > 0) {
+                ret.append(", ");
+            }
+            ret.append(pluralize(minutes, "minute"));
+        }
+        if (hours == 0 && minutes == 0 && seconds > 0) {
+            ret.append(pluralize(seconds, "second"));
         }
         return ret.toString();
-    }    
+    }
+
+    private String pluralize(long qty, String txt) {
+        StringBuilder ret = new StringBuilder();
+        ret.append(qty);
+        ret.append(" ");
+        ret.append(txt);
+        if (qty != 1) {
+            ret.append("s");
+        }
+        ret.append(" ");
+        return ret.toString();
+    }
 }
