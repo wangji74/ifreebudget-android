@@ -26,7 +26,7 @@
                 android:id="@+id/decrement_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/down" />
+                android:background="@drawable/down_selector" />
 
             <EditText
                 android:id="@+id/spinner_value_tf"
@@ -39,7 +39,7 @@
                 android:id="@+id/increment_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/up" />
+                android:background="@drawable/up_selector" />
 
             <TextView
                 android:id="@+id/post_lbl"

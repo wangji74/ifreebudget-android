@@ -115,6 +115,12 @@ public class AddReminderActivity extends Activity {
         initializeFields();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        repeatTypeSpinner.setSelection(2);
+    }
+
     private void initializeFields() {
         repeatsLbl = (TextView) AddReminderActivity.this
                 .findViewById(R.id.repeats_unit_lbl);
@@ -263,6 +269,9 @@ public class AddReminderActivity extends Activity {
 
     private Dialog getRepeatUnitDialog() {
         Log.i(TAG, "Task type: " + taskType);
+        if (taskType == null) {
+            return null;
+        }
         final SpinnerDialog d = new SpinnerDialog(this, 1, 60, taskType.val);
         d.setTitle("Repeats");
         return d;

@@ -7,7 +7,6 @@ import com.ifreebudget.fm.actions.ActionResponse;
 import com.ifreebudget.fm.entity.beans.ConstraintEntity;
 import com.ifreebudget.fm.entity.beans.ScheduleEntity;
 import com.ifreebudget.fm.entity.beans.TaskEntity;
-import com.ifreebudget.fm.scheduler.task.BasicTask;
 import com.ifreebudget.fm.scheduler.task.Schedule;
 import com.ifreebudget.fm.scheduler.task.Task;
 import com.ifreebudget.fm.scheduler.task.TaskUtils.SerializationHelper;
