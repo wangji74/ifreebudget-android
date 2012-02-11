@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -876,7 +877,8 @@ public class AddReminderActivity extends Activity {
         int curr;
         String postTitle;
 
-        Button incr, decr, ok;
+        Button ok;
+        ImageButton incr, decr;
         EditText txtField;
         TextView postTitleTf;
 
@@ -896,14 +898,14 @@ public class AddReminderActivity extends Activity {
             this.txtField = (EditText) this.findViewById(R.id.spinner_value_tf);
             this.postTitleTf = (TextView) this.findViewById(R.id.post_lbl);
 
-            this.incr = (Button) findViewById(R.id.increment_btn);
+            this.incr = (ImageButton) findViewById(R.id.increment_btn);
             incr.setOnClickListener(new android.view.View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     setSpinnerValue(++curr);
                 }
             });
-            this.decr = (Button) this.findViewById(R.id.decrement_btn);
+            this.decr = (ImageButton) this.findViewById(R.id.decrement_btn);
             decr.setOnClickListener(new android.view.View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
