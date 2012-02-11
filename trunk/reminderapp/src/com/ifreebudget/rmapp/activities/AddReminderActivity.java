@@ -4,21 +4,17 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +27,6 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -91,7 +86,14 @@ public class AddReminderActivity extends Activity {
     private Long taskToEdit = null;
 
     private enum TASK_TYPE_ENUM {
-        once, hourly, daily, weekly, monthly, monthly_by_week
+        once("once"), hourly("hours"), daily("days"), weekly("weeks"), monthly(
+                "months"), monthly_by_week("months");
+
+        String val;
+
+        private TASK_TYPE_ENUM(String val) {
+            this.val = val;
+        }
     };
 
     private TASK_TYPE_ENUM taskType;
@@ -259,34 +261,14 @@ public class AddReminderActivity extends Activity {
     }
 
     private Dialog getRepeatUnitDialog() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        Log.i(TAG, "Task type: " + taskType);
+        final SpinnerDialog d = new SpinnerDialog(this, 1, 60, taskType.val);
+        d.setTitle("Repeats");
+        return d;
+    }
 
-        // alert.setTitle("How often?");
-        alert.setMessage("Every");
-
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        alert.setView(input);
-
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String value = input.getText().toString();
-                if (value == null || value.length() == 0) {
-                    repeatUnitBtn.setText("1");
-                }
-                else {
-                    repeatUnitBtn.setText(value);
-                }
-            }
-        });
-
-        // alert.setNegativeButton("Cancel",
-        // new DialogInterface.OnClickListener() {
-        // public void onClick(DialogInterface dialog, int whichButton) {
-        // // Canceled.
-        // }
-        // });
-        return alert.create();
+    private void setRepeatDialogResult(int value) {
+        repeatUnitBtn.setText(String.valueOf(value));
     }
 
     private DatePickerDialog getDatePickerDialog(
@@ -431,13 +413,45 @@ public class AddReminderActivity extends Activity {
                 dowSpinner.setSelection(dow);
             }
         }
-        if (layoutId == R.layout.monthly_repeat_layout) {
+        else if (layoutId == R.layout.monthly_repeat_layout) {
             Calendar today = Calendar.getInstance();
 
             int dayInMonth = today.get(Calendar.DAY_OF_MONTH);
             EditText dayOfMonthField = (EditText) v
                     .findViewById(R.id.monthly_repeat_dom_tf);
             dayOfMonthField.setText(String.valueOf(dayInMonth));
+        }
+        else if (layoutId == R.layout.weekly_repeat_layout) {
+            Calendar today = Calendar.getInstance();
+            int dow = today.get(Calendar.DAY_OF_WEEK);
+            CheckBox cb = null;
+            switch (dow) {
+            case Calendar.SUNDAY:
+                cb = (CheckBox) v.findViewById(R.id.cbSun);
+                break;
+            case Calendar.MONDAY:
+                cb = (CheckBox) v.findViewById(R.id.cbMon);
+                break;
+            case Calendar.TUESDAY:
+                cb = (CheckBox) v.findViewById(R.id.cbTue);
+                break;
+            case Calendar.WEDNESDAY:
+                cb = (CheckBox) v.findViewById(R.id.cbWed);
+                break;
+            case Calendar.THURSDAY:
+                cb = (CheckBox) v.findViewById(R.id.cbThu);
+                break;
+            case Calendar.FRIDAY:
+                cb = (CheckBox) v.findViewById(R.id.cbFri);
+                break;
+            case Calendar.SATURDAY:
+                cb = (CheckBox) v.findViewById(R.id.cbSat);
+                break;
+            default:
+                cb = (CheckBox) v.findViewById(R.id.cbSun);
+                break;
+            }
+            cb.setChecked(true);
         }
     }
 
@@ -854,5 +868,90 @@ public class AddReminderActivity extends Activity {
     public void gotoHomeScreen(View view) {
         Intent intent = new Intent(this, ReminderAppActivity.class);
         startActivity(intent);
+    }
+
+    class SpinnerDialog extends Dialog {
+        int low;
+        int high;
+        int curr;
+        String postTitle;
+
+        Button incr, decr, ok;
+        EditText txtField;
+        TextView postTitleTf;
+
+        public SpinnerDialog(Context context, int low, int high,
+                String postTitle) {
+            super(context);
+            this.high = Math.max(low, high);
+            this.low = Math.min(low, high);
+            curr = low;
+            this.postTitle = postTitle;
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            Log.i(TAG, "Dialog onCreate");
+            setContentView(R.layout.spinner_layout);
+            this.txtField = (EditText) this.findViewById(R.id.spinner_value_tf);
+            this.postTitleTf = (TextView) this.findViewById(R.id.post_lbl);
+
+            this.incr = (Button) findViewById(R.id.increment_btn);
+            incr.setOnClickListener(new android.view.View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setSpinnerValue(++curr);
+                }
+            });
+            this.decr = (Button) this.findViewById(R.id.decrement_btn);
+            decr.setOnClickListener(new android.view.View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setSpinnerValue(--curr);
+                }
+            });
+
+            this.ok = (Button) this.findViewById(R.id.ok_btn);
+            ok.setOnClickListener(new android.view.View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    try {
+                        int tfValue = Integer.parseInt(txtField.getText()
+                                .toString());
+                        if (tfValue != curr) {
+                            setSpinnerValue(tfValue);
+                        }
+                    }
+                    catch (NumberFormatException e) {
+                        // ignore;
+                    }
+                    AddReminderActivity.this.setRepeatDialogResult(curr);
+                    SpinnerDialog.this.dismiss();
+                }
+            });
+
+            setSpinnerValue(curr);
+            this.postTitleTf.setText(postTitle);
+        }
+
+        @Override
+        public void show() {
+            super.show();
+            this.postTitleTf.setText(taskType.val);
+            this.curr = low;
+            setSpinnerValue(curr);
+        }
+
+        private void setSpinnerValue(int value) {
+            if (value < low) {
+                value = low;
+            }
+            else if (value > high) {
+                value = high;
+            }
+            txtField.setText(String.valueOf(value));
+            curr = value;
+        }
     }
 }
