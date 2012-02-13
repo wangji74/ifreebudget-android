@@ -19,6 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import android.util.TimeFormatException;
+
 /**
  * @author iFreeBudget ifreebudget@gmail.com
  * 
@@ -30,6 +32,7 @@ public class SessionManager {
     private static final String TAG = "SessionManager";
     private static final String dateFormat = "dd MMM yyyy";
     private static final String dateTimeFormat = "dd MMM yyyy hh:mm a";
+    private static final String timeFormat = "hh:mm a";
 
     private SessionManager() {
     }
@@ -74,4 +77,8 @@ public class SessionManager {
     public static SimpleDateFormat getDateTimeFormat() {
         return new SimpleDateFormat(dateTimeFormat);
     }
+
+    public static SimpleDateFormat getTimeFormat() {
+        return new SimpleDateFormat(timeFormat);
+    }    
 }
