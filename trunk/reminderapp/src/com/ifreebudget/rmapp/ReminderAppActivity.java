@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,10 +19,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,31 +33,34 @@ import com.ifreebudget.fm.utils.MiscUtils;
 import com.ifreebudget.rmapp.actions.DeleteReminderAction;
 import com.ifreebudget.rmapp.activities.AddReminderActivity;
 import com.ifreebudget.rmapp.activities.ManageTaskNotifsActivity;
+import com.ifreebudget.rmapp.activities.utils.MyExpandableListAdapter;
 import com.ifreebudget.rmapp.activities.utils.ReminderListEntry;
 import com.ifreebudget.rmapp.activities.utils.ReminderListEntryComparator;
 import com.ifreebudget.rmapp.entity.RMAppEntityManager;
 import com.ifreebudget.rmapp.task.TaskRestarterService;
 
-public class ReminderAppActivity extends ListActivity {
+public class ReminderAppActivity extends Activity {
 
     private static final String TAG = "RMApp.ReminderAppActivity";
 
     public static final long NUM_SECONDS_IN_DAY = 24 * 60 * 60;
 
-    private ArrayAdapter<ReminderListEntry> adapter = null;
+    private MyExpandableListAdapter listAdapter = null;
 
-    private View lastEditCtrlPanel = null;
-
-    private ReminderListEntry lastSelected = null;
-    
     private String MARKET_URI = "market://details?id=com.ifreebudget.rmapp";
-    
+
+    private ExpandableListView listView;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.manage_reminders_layout);
+
+        listView = (ExpandableListView) findViewById(R.id.reminder_list);
+        listAdapter = new MyExpandableListAdapter(this);
+
+        listView.setAdapter(listAdapter);
     }
 
     @Override
@@ -67,35 +68,13 @@ public class ReminderAppActivity extends ListActivity {
         super.onResume();
         try {
             loadTasks();
+            int count = listAdapter.getGroupCount();
+            if(count > 0) {
+                listView.expandGroup(0);
+            }
         }
         catch (Exception e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
-        }
-    }
-
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-
-        Object obj = this.getListAdapter().getItem(position);
-        if (obj instanceof ReminderListEntry) {
-            if (lastEditCtrlPanel != null) {
-                TranslateAnimation slide = new TranslateAnimation(0, 0, 0, 100);
-                slide.setDuration(300);
-                slide.setFillAfter(true);
-                slide.setInterpolator(new AccelerateInterpolator());
-                lastEditCtrlPanel.startAnimation(slide);
-                lastEditCtrlPanel.setVisibility(View.GONE);
-            }
-            lastSelected = (ReminderListEntry) obj;
-            lastEditCtrlPanel = (View) v.findViewById(R.id.edit_reminder_ctrl_panel);
-
-            TranslateAnimation slide = new TranslateAnimation(0, 0, 100, 0);
-            slide.setDuration(300);
-            slide.setFillAfter(true);
-            slide.setInterpolator(new AccelerateInterpolator());
-            lastEditCtrlPanel.startAnimation(slide);
-            lastEditCtrlPanel.setVisibility(View.VISIBLE);
         }
     }
 
@@ -115,29 +94,29 @@ public class ReminderAppActivity extends ListActivity {
             return true;
         case R.id.mItemRate:
             gotoMarket();
-            return true;            
+            return true;
         default:
             return super.onOptionsItemSelected(item);
 
         }
     }
-    
+
     /* End platform overrides */
 
-    /* Menu item handlers*/
+    /* Menu item handlers */
     private void gotoMarket() {
         Intent goToMarket = null;
         goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse(MARKET_URI));
         startActivity(goToMarket);
     }
-    
+
     public void manageNotifications() {
         Intent txIntent = new Intent(this, ManageTaskNotifsActivity.class);
         startActivity(txIntent);
-    }    
-    
-    /* End menu item handlers*/
-    
+    }
+
+    /* End menu item handlers */
+
     /* Button click handlers */
 
     public void doRefresh(View view) {
@@ -146,25 +125,16 @@ public class ReminderAppActivity extends ListActivity {
         startService(intent);
         Toast toast = Toast.makeText(getApplicationContext(),
                 ("Refreshing tasks..."), Toast.LENGTH_SHORT);
-        toast.show();        
+        toast.show();
     }
-    
+
     public void doAddReminder(View view) {
         Intent txIntent = new Intent(this, AddReminderActivity.class);
         startActivity(txIntent);
     }
 
-    public void editReminder(View view) {
-        if (lastSelected == null) {
-            return;
-        }
-        Long txId = lastSelected.getEntity().getId();
-        Intent txIntent = new Intent(this, AddReminderActivity.class);
-        txIntent.putExtra("TXID", txId);
-        startActivity(txIntent);        
-    }
-    
     public void deleteReminder(View view) {
+        ReminderListEntry lastSelected = listAdapter.getLastSelected();
         if (lastSelected == null) {
             return;
         }
@@ -175,7 +145,8 @@ public class ReminderAppActivity extends ListActivity {
             req.setProperty("TASKID", lastSelected.getEntity().getId());
             ActionResponse resp = new DeleteReminderAction().execute(req);
             if (resp.getErrorCode() == ActionResponse.NOERROR) {
-                adapter.remove(lastSelected);
+                // listAdapter.remove(lastSelected);
+                listAdapter.removeEntry(lastSelected);
                 AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
                 AddReminderActivity.reRegisterAlarm(TAG, am,
                         getApplicationContext());
@@ -210,23 +181,12 @@ public class ReminderAppActivity extends ListActivity {
 
             Collections.sort(list, new ReminderListEntryComparator());
 
-            if (adapter == null) {
-                adapter = new MyArrayAdapter(this, R.layout.reminder_list_row);
-                this.setListAdapter(adapter);
-            }
-            addItems(list);
+            listAdapter.setData(list);
         }
         else {
             Toast toast = Toast.makeText(getApplicationContext(),
                     "No reminders...", Toast.LENGTH_LONG);
             toast.show();
-        }
-    }
-
-    private void addItems(List<ReminderListEntry> list) {
-        adapter.clear();
-        for (ReminderListEntry entry : list) {
-            adapter.add(entry);
         }
     }
 
@@ -246,7 +206,7 @@ public class ReminderAppActivity extends ListActivity {
             });
         }
     };
-    
+
     class MyArrayAdapter extends ArrayAdapter<ReminderListEntry> {
 
         public MyArrayAdapter(Context context, int textViewResourceId) {

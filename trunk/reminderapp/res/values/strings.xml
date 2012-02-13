@@ -48,5 +48,5 @@
     <string name="every">How often</string>
 
     <color name="info_panel_bg">#336699</color>
-
+    <color name="reminder_grp_bg">#eaeaea</color>
 </resources>

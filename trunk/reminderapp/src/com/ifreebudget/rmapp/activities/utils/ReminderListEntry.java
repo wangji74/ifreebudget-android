@@ -1,6 +1,5 @@
 package com.ifreebudget.rmapp.activities.utils;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -86,7 +85,8 @@ public class ReminderListEntry {
         }
         else {
             ret.append("<br>");
-            String disp = SessionManager.getDateTimeFormat().format(nextTime);
+//            String disp = SessionManager.getDateTimeFormat().format(nextTime);
+            String disp = SessionManager.getTimeFormat().format(nextTime);
             ret.append(disp);
             ret.append("<br>");
             ret.append("<i>due in ");

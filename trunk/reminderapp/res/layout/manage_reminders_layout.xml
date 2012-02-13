@@ -23,13 +23,14 @@
                 android:id="@+id/logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/reminder_icon"
-                android:paddingLeft="5dip"/>
-            <TextView                
+                android:paddingLeft="5dip"
+                android:src="@drawable/reminder_icon" />
+
+            <TextView
                 android:id="@+id/title_lbl"
-                android:layout_toRightOf="@+id/logo"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
+                android:layout_toRightOf="@+id/logo"
                 android:clickable="true"
                 android:gravity="center_vertical"
                 android:paddingLeft="5dip"
@@ -65,11 +66,19 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <ListView
+    <ExpandableListView
+        android:id="@+id/reminder_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/info_panel"
+        android:cacheColorHint="#ffffff" />
+    <!--
+         ListView
         android:id="@android:id/android:list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/info_panel"
-        android:cacheColorHint="#ffffff"/>
+        android:cacheColorHint="#ffffff"/
+    -->
 
 </RelativeLayout>
