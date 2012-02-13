@@ -193,6 +193,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
         TextView txDetailsView = (TextView) v
                 .findViewById(R.id.reminder_details_lbl);
+
         txDetailsView.setText(details);
     }
 
@@ -257,7 +258,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
                     break;
                 }
             }
-            if(list.size() == 0) {
+            if (list.size() == 0) {
                 groups.remove(cal);
                 entries.remove(cal);
                 mod = true;
