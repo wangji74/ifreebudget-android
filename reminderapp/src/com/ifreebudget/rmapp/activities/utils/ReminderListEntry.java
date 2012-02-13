@@ -95,6 +95,11 @@ public class ReminderListEntry {
         }
         return ret.toString();
     }
+    
+    public String getDisplayTime() {
+        String disp = SessionManager.getTimeFormat().format(nextTime);
+        return disp;
+    }
 
     private String getDateDiff(Date ref) {
         Date now = new Date();
