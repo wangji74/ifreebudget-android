@@ -9,8 +9,7 @@
         android:id="@+id/center_panel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="15dip"
-        android:stretchColumns="2" >
+        android:padding="15dip">
 
         <TableRow >
 
