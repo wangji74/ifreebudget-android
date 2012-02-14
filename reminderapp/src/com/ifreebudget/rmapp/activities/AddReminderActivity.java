@@ -202,13 +202,20 @@ public class AddReminderActivity extends Activity {
                         if (view == null) {
                             return;
                         }
+                        View endDatePanel = findViewById(R.id.end_date_panel);
+                        View endDateLabel = findViewById(R.id.end_date_lbl);
                         if (pos == 0) {
                             repeatsLbl.setVisibility(View.GONE);
                             repeatUnitBtn.setVisibility(View.GONE);
+                            
+                            endDatePanel.setVisibility(View.GONE);
+                            endDateLabel.setVisibility(View.GONE);
                         }
                         else {
                             repeatsLbl.setVisibility(View.VISIBLE);
                             repeatUnitBtn.setVisibility(View.VISIBLE);
+                            endDatePanel.setVisibility(View.VISIBLE);
+                            endDatePanel.setVisibility(View.VISIBLE);
                         }
                         switch (pos) {
                         case 0:
@@ -581,11 +588,12 @@ public class AddReminderActivity extends Activity {
         Date s = getStartTime();
         Date e = getEndTime();
 
-        if (!validateDates(s, e)) {
-            return null;
-        }
         if (taskType == TASK_TYPE_ENUM.once) {
             return getOnceSchedule(s);
+        }
+
+        if (!validateDates(s, e)) {
+            return null;
         }
 
         String repeatUnit = getRepeatUnit();
