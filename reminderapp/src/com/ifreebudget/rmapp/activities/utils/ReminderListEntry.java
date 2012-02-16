@@ -3,6 +3,8 @@ package com.ifreebudget.rmapp.activities.utils;
 import java.util.Date;
 import java.util.List;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 
 import com.ifreebudget.fm.entity.DBException;
@@ -11,12 +13,17 @@ import com.ifreebudget.fm.entity.beans.ScheduleEntity;
 import com.ifreebudget.fm.entity.beans.TaskEntity;
 import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
+import com.ifreebudget.rmapp.R;
 import com.ifreebudget.rmapp.entity.RMAppEntityManager;
 
 public class ReminderListEntry {
     private TaskEntity entity;
     private ScheduleEntity schedule;
     private Date nextTime;
+    private boolean recurring;
+    private Context context;
+    private String recurranceString;
+    private String description;
 
     boolean valid = true;
 
@@ -24,8 +31,9 @@ public class ReminderListEntry {
 
     public static final long NUM_SECONDS_IN_DAY = 24 * 60 * 60;
 
-    public ReminderListEntry(TaskEntity entity) {
+    public ReminderListEntry(Context context, TaskEntity entity) {
         this.entity = entity;
+        this.context = context;
         RMAppEntityManager em = RMAppEntityManager.getInstance();
         try {
             List<FManEntity> list = em.getList(ScheduleEntity.class,
@@ -41,8 +49,10 @@ public class ReminderListEntry {
                 valid = false;
                 return;
             }
-            ScheduleEntity se = (ScheduleEntity) list.get(0);
-            nextTime = new Date(se.getNextRunTime());
+            schedule = (ScheduleEntity) list.get(0);
+            nextTime = new Date(schedule.getNextRunTime());
+            setRecurring();
+            setRecurranceAndDescription();
         }
         catch (DBException e) {
             valid = false;
@@ -67,6 +77,76 @@ public class ReminderListEntry {
         this.valid = valid;
     }
 
+    private void setRecurring() {
+        recurring = false;
+        if (schedule == null) {
+            return;
+        }
+        int type = schedule.getRepeatType();
+        switch (type) {
+        case 0:
+            recurring = false;
+            break;
+        case 3:
+            if (entity.getStartTime().equals(entity.getEndTime())) {
+                Log.i(TAG, "Once... i am here..." + entity.getName());
+                recurring = false;
+            }
+            else {
+                recurring = true;
+            }
+            break;
+        default:
+            recurring = true;
+            break;
+        }
+    }
+
+    private void setRecurranceAndDescription() {
+        if (isRecurring()) {
+            Date end = new Date(entity.getEndTime());
+            String disp = SessionManager.getDateFormat().format(end);
+            
+            StringBuilder descr = new StringBuilder("Ends on ");
+            descr.append(disp);
+            
+            this.description = descr.toString();
+            
+            int type = schedule.getRepeatType();
+            switch (type) {
+            case 3:
+                recurranceString = "hourly";
+                break;
+            case 4:
+                recurranceString = "daily";
+                break;
+            case 5:
+                recurranceString = "weekly";
+                break;
+            case 6:
+            case 7:
+                recurranceString = "monthly";
+                break;
+            default:
+                recurranceString = "";
+                break;
+            }
+            //description += " ( " + recurranceString + " )";
+        }
+        else {
+            Resources r = context.getResources();
+            recurranceString = r.getString(R.string.does_not_repeat);
+            description = recurranceString;
+        }
+    }
+
+    public boolean isRecurring() {
+        return recurring;
+    }
+
+    public String getDescription() {
+        return description;
+    }
     @Override
     public String toString() {
         StringBuilder ret = new StringBuilder("<b>");
@@ -85,7 +165,8 @@ public class ReminderListEntry {
         }
         else {
             ret.append("<br>");
-//            String disp = SessionManager.getDateTimeFormat().format(nextTime);
+            // String disp =
+            // SessionManager.getDateTimeFormat().format(nextTime);
             String disp = SessionManager.getTimeFormat().format(nextTime);
             ret.append(disp);
             ret.append("<br>");
@@ -95,7 +176,7 @@ public class ReminderListEntry {
         }
         return ret.toString();
     }
-    
+
     public String getDisplayTime() {
         String disp = SessionManager.getTimeFormat().format(nextTime);
         return disp;
@@ -126,12 +207,12 @@ public class ReminderListEntry {
         seconds = timeInSeconds;
 
         StringBuilder ret = new StringBuilder();
-        if(hours > 0) {
+        if (hours > 0) {
             ret.append(" ");
             ret.append(pluralize(hours, "hour"));
         }
-        if(minutes > 0) {
-            if(hours > 0) {
+        if (minutes > 0) {
+            if (hours > 0) {
                 ret.append(", ");
             }
             ret.append(pluralize(minutes, "minute"));
