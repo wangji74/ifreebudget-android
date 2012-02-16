@@ -46,7 +46,7 @@
     <string name="set_reminder">Add reminder</string>
     <string name="notifications">Notifications</string>
     <string name="every">How often</string>
-
+	<string name="does_not_repeat">Does not repeat</string>
     <color name="info_panel_bg">#336699</color>
     <color name="reminder_grp_bg">#eaeaea</color>
 </resources>

@@ -173,7 +173,7 @@ public class ReminderAppActivity extends Activity {
             List<ReminderListEntry> list = new ArrayList<ReminderListEntry>();
 
             for (FManEntity fe : tasks) {
-                ReminderListEntry le = new ReminderListEntry((TaskEntity) fe);
+                ReminderListEntry le = new ReminderListEntry(this, (TaskEntity) fe);
                 if (le.isValid()) {
                     list.add(le);
                 }

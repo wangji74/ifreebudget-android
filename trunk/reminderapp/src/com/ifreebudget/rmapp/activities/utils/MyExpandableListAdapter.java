@@ -85,6 +85,13 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         final ReminderListEntry item = (ReminderListEntry) getChild(
                 groupPosition, childPosition);
         View v = inflater.inflate(R.layout.reminder_list_row, null);
+        
+        View iv = v.findViewById(R.id.recur_icon);
+        if(!item.isRecurring()) {
+            iv.setVisibility(View.INVISIBLE);
+        }
+        TextView tv = (TextView) v.findViewById(R.id.repeat_info_descr);
+        tv.setText(item.getDescription());
         initializeListEntryLayout(item, v);
         v.setOnClickListener(new OnClickListener() {
 
