@@ -32,6 +32,7 @@ import android.util.Log;
 
 import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.CreateInitialAccounts;
+import com.ifreebudget.fm.entity.beans.AbstractTableMapper;
 import com.ifreebudget.fm.entity.beans.Account;
 import com.ifreebudget.fm.entity.beans.AccountCategory;
 import com.ifreebudget.fm.entity.beans.AccountCategoryMapper;
@@ -443,6 +444,21 @@ public class FManEntityManager {
         }
     }
 
+    public List<FManEntity> executeFilterQuery(String query, Class<?> type,
+            int offset, int limit) throws DBException {
+        StringBuilder q = new StringBuilder(query);
+        if (limit >= 0 && offset >= 0) {
+            q.append(AbstractTableMapper.SPACE);
+            q.append("LIMIT ");
+            q.append(limit);
+            q.append(AbstractTableMapper.SPACE);
+            q.append("OFFSET ");
+            q.append(offset);
+        }
+        Log.i(TAG, q.toString());
+        return executeFilterQuery(q.toString(), type);
+    }
+    
     public List<FManEntity> executeFilterQuery(String query, Class<?> type)
             throws DBException {
         Cursor cursor = null;

@@ -274,4 +274,6 @@
 	<string name="refresh">Refresh</string>
 	<string name="edit_tx_action">editTransaction</string>
 	<string name="add_rem_action">addReminder</string>
+	<color name="tx_grp_bg">#eaeaea</color>
+	<color name="info_panel_bg">#336699</color>
 </resources>

@@ -37,8 +37,8 @@
         android:icon="@drawable/rateme"
         android:titleCondensed="Rate me"></item>
     <item
-        android:titleCondensed="Clear all"
+        android:titleCondensed="Clear database"
         android:id="@+id/mItemClear"
         android:icon="@drawable/reset"
-        android:title="Clear all" />
+        android:title="Clear database" />
 </menu>

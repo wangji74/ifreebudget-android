@@ -12,7 +12,7 @@
 		android:layout_height="wrap_content"
 		android:textStyle="bold"
 		android:textColor="#FFFFFF"
-		android:background="@android:drawable/title_bar"
+		android:background="@color/info_panel_bg"
 		android:paddingTop="5dip"
 		android:paddingBottom="5dip" />
 	<TableLayout

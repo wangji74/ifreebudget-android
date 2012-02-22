@@ -105,7 +105,7 @@ public class Filter implements Filterable {
                     query.append(operators.get(i));
                     query.append(PredicateImpl.SPACE);
                 }
-                query.append("\n");
+//                query.append("\n");
             }
         }
 

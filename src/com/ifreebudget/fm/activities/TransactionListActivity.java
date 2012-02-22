@@ -21,38 +21,23 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.SearchRecentSuggestions;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.TranslateAnimation;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,8 +47,8 @@ import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.ActionResponse;
 import com.ifreebudget.fm.actions.DeleteTransactionAction;
 import com.ifreebudget.fm.actions.GetCategoryChildrenAction;
+import com.ifreebudget.fm.activities.utils.MyExpandableListAdapter;
 import com.ifreebudget.fm.constants.AccountTypes;
-import com.ifreebudget.fm.constants.AccountTypes.TransactionType;
 import com.ifreebudget.fm.entity.DBException;
 import com.ifreebudget.fm.entity.FManEntityManager;
 import com.ifreebudget.fm.entity.beans.Account;
@@ -77,18 +62,16 @@ import com.ifreebudget.fm.search.newfilter.Order;
 import com.ifreebudget.fm.services.SessionManager;
 import com.ifreebudget.fm.utils.MiscUtils;
 
-public class ListTransactionsActivity extends Activity {
+public class TransactionListActivity extends Activity {
 
-    private static final String TAG = "ListTransactionsActivity";
-
-    private static final int PAGE_SIZE = 25;
+    private static final String TAG = "TransactionListActivity";
 
     private final FManEntityManager dbHelper = FManEntityManager.getInstance();
 
-    private ListView listView;
-    
-    private ArrayAdapter<TxHolder> txListAdapter;
+    private ExpandableListView listView;
 
+    private MyExpandableListAdapter listAdapter;
+    
     private final Handler txListUpdateHandler = new Handler();
 
     final NumberFormat nf = NumberFormat.getCurrencyInstance(SessionManager
@@ -98,88 +81,19 @@ public class ListTransactionsActivity extends Activity {
 
     private TextView footerLbl = null;
 
+    private BigDecimal totalValue = null;
+
     private Button filterButton = null;
-
-    private View lastEditCtrlPanel = null;
-
-    private TxHolder lastSelectedTx = null;
-
-    private void toggleCtrlPanel(View v, TxHolder holder) {
-        if (lastEditCtrlPanel != null) {
-            TranslateAnimation slide = new TranslateAnimation(0, 0, 0, 100);
-            slide.setDuration(300);
-            slide.setFillAfter(true);
-            slide.setInterpolator(new AccelerateInterpolator());
-            lastEditCtrlPanel.startAnimation(slide);
-            lastEditCtrlPanel.setVisibility(View.INVISIBLE);
-        }
-        lastSelectedTx = holder;
-        lastEditCtrlPanel = (View) v.findViewById(R.id.edit_tx_ctrl_panel);
-
-        TranslateAnimation slide = new TranslateAnimation(0, 0, 100, 0);
-        slide.setDuration(300);
-        slide.setFillAfter(true);
-        slide.setInterpolator(new AccelerateInterpolator());
-        lastEditCtrlPanel.startAnimation(slide);
-        lastEditCtrlPanel.setVisibility(View.VISIBLE);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.setContentView(R.layout.tx_list_layout);
+        super.setContentView(R.layout.transaction_list_layout);
 
-        /* Initialize state variables */
-        if (lastEditCtrlPanel != null) {
-            lastEditCtrlPanel.setVisibility(View.GONE);
-        }
-        lastSelectedTx = null;
-        /* End Initialize state variables */
-
-        txListAdapter = new MyArrayAdapter(this, R.layout.tx_list_layout);
-
-        listView = (ListView) findViewById(R.id.list_panel);
-        registerForContextMenu(listView);
-
-        listView.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                    int position, long id) {
-
-                TxHolder holder = (TxHolder) parent.getAdapter().getItem(
-                        position);
-                toggleCtrlPanel(view, holder);
-            }
-        });
-
-        listView.setAdapter(txListAdapter);
-
-        listView.setOnScrollListener(new OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if(lastEditCtrlPanel != null) {
-                    lastEditCtrlPanel.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem,
-                    int visibleItemCount, int totalItemCount) {
-
-                if (visibleItemCount == 0) {
-                    return;
-                }
-                if (retrieveInProgress) {
-                    return;
-                }
-                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (loadMore) {
-                    retrieveTxList(buildFilter());
-                }
-            }
-        });
+        listView = (ExpandableListView) findViewById(R.id.tx_list);        
+        listAdapter = new MyExpandableListAdapter(this);
+        listView.setAdapter(listAdapter);
+        super.registerForContextMenu(listView);
 
         footerLbl = (TextView) findViewById(R.id.tx_footer_lbl);
         filterButton = (Button) findViewById(R.id.filter_button);
@@ -188,16 +102,9 @@ public class ListTransactionsActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
+        totalValue = new BigDecimal(0d);
+        retrieveTxList(1, 25, buildFilter());
         setFilterButtonText();
-        resetState();
-        retrieveTxList(buildFilter());        
-    }
-    
-    private void resetState() {
-        /* clear out the display */
-        txListAdapter.clear();
-        off.set(0);
-        end.set(false);
     }
 
     private void doEditAction(TxHolder entity) {
@@ -274,7 +181,8 @@ public class ListTransactionsActivity extends Activity {
     /* End Menu handler functions */
 
     private void addToUI(TxHolder tx) {
-        txListAdapter.add(tx);
+        listAdapter.addItem(tx);
+        setTotalValue(totalValue);
     }
 
     private Filter buildFilter() {
@@ -444,40 +352,65 @@ public class ListTransactionsActivity extends Activity {
         return null;
     }
 
-    private boolean retrieveInProgress = false;
-    private final AtomicInteger off = new AtomicInteger(0);
-    private final AtomicBoolean end = new AtomicBoolean(false);
-
-    private void retrieveTxList(final Filter query) {
+    private void retrieveTxList(int offset, int limit, final Filter query) {
         TextView filterView = (TextView) findViewById(R.id.tx_list_filter_lbl);
         filterView.setText(query.getName());
-        if(end.get()) {
-            return;
-        }
+
+        /* clear out the display */
+        listAdapter.clear();
+        totalValue = new BigDecimal(0);
+        setTotalValue(totalValue);
+
         Runnable r = new Runnable() {
             public void run() {
                 List<FManEntity> catgs;
-                retrieveInProgress = true;
                 try {
                     try {
-                        Log.i(TAG, "Retr tx list: " + off.get() + "," + end.get());
                         String q = query.getQueryObject(false);
                         catgs = dbHelper.executeFilterQuery(q,
-                                Transaction.class, off.get(), PAGE_SIZE);
-                        off.addAndGet(catgs.size());
-                        if (catgs.size() < PAGE_SIZE) {
-                            end.set(true);
-                        }
-                        Log.i(TAG,
-                                "Curr off: " + off.get() + ":" + catgs.size() + ":" + end.get());        
+                                Transaction.class);
                     }
                     catch (Exception e1) {
                         Log.e(TAG, MiscUtils.stackTrace2String(e1));
                         catgs = dbHelper.getTransactions(0, 0);
                     }
+
                     for (FManEntity e : catgs) {
                         Transaction t = (Transaction) e;
-                        final TxHolder tx = makeTxHolder(t);
+
+                        final TxHolder tx = new TxHolder(t);
+                        Account from = dbHelper
+                                .getAccount(t.getFromAccountId());
+                        Account to = dbHelper.getAccount(t.getToAccountId());
+
+                        int iconRes = 0;
+                        if (t.getTxStatus() == AccountTypes.TX_STATUS_PENDING) {
+                            iconRes = R.drawable.pending;
+                        }
+                        else {
+                            CategoryIconMap iconMap = dbHelper
+                                    .getCategoryIconMap(from.getCategoryId());
+                            if (iconMap == null) {
+                                iconMap = dbHelper.getCategoryIconMap(to
+                                        .getCategoryId());
+                            }
+
+                            if (iconMap != null) {
+                                iconRes = getResources().getIdentifier(
+                                        iconMap.getIconPath(), "drawable",
+                                        "com.ifreebudget.fm");
+                            }
+                            else {
+                                iconRes = R.drawable.blank;
+                            }
+                        }
+
+                        tx.fromAcct = from;
+                        tx.toAcct = to;
+                        tx.iconResource = iconRes;
+
+                        totalValue = totalValue.add(tx.t.getTxAmount());
+
                         txListUpdateHandler.post(new Runnable() {
                             public void run() {
                                 addToUI(tx);
@@ -485,48 +418,13 @@ public class ListTransactionsActivity extends Activity {
                         });
                     }
                 }
-                catch (Exception e) {
+                catch (DBException e) {
                     Log.e(TAG, MiscUtils.stackTrace2String(e));
-                }
-                finally {
-                    retrieveInProgress = false;
                 }
             }
         };
 
         new Thread(r).start();
-    }
-
-    private TxHolder makeTxHolder(Transaction t) throws Exception {
-        TxHolder tx = new TxHolder(t);
-        Account from = dbHelper.getAccount(t.getFromAccountId());
-        Account to = dbHelper.getAccount(t.getToAccountId());
-
-        int iconRes = 0;
-        if (t.getTxStatus() == AccountTypes.TX_STATUS_PENDING) {
-            iconRes = R.drawable.pending;
-        }
-        else {
-            CategoryIconMap iconMap = dbHelper.getCategoryIconMap(from
-                    .getCategoryId());
-            if (iconMap == null) {
-                iconMap = dbHelper.getCategoryIconMap(to.getCategoryId());
-            }
-
-            if (iconMap != null) {
-                iconRes = getResources().getIdentifier(iconMap.getIconPath(),
-                        "drawable", "com.ifreebudget.fm");
-            }
-            else {
-                iconRes = R.drawable.blank;
-            }
-        }
-
-        tx.fromAcct = from;
-        tx.toAcct = to;
-        tx.iconResource = iconRes;
-
-        return tx;
     }
 
     public void gotoHomeScreen() {
@@ -578,8 +476,7 @@ public class ListTransactionsActivity extends Activity {
                         }
 
                         filterButton.setText(items[item]);
-                        resetState();
-                        retrieveTxList(buildFilter());
+                        retrieveTxList(1, 25, buildFilter());
                         dialog.dismiss();
                     }
                 });
@@ -608,129 +505,24 @@ public class ListTransactionsActivity extends Activity {
         filterButton.setText(text);
     }
 
-    class TxHolder {
-        Transaction t;
-        int iconResource;
-        Account fromAcct;
-        Account toAcct;
-        String displayTxt = null;
-        String date = null;
-
-        TxHolder(Transaction t) {
-            this.t = t;
-            date = SessionManager.getDateFormat().format(
-                    new Date(t.getTxDate()));
-        }
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + Long.valueOf(t.getTxId()).hashCode();
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            TxHolder other = (TxHolder) obj;
-            return t.getTxId() == other.t.getTxId();
-        }
-
-        @Override
-        public String toString() {
-            if (displayTxt != null) {
-                return displayTxt;
-            }
-
-            TransactionType type = AccountTypes.getTransactionType(
-                    fromAcct.getAccountType(), toAcct.getAccountType());
-
-            StringBuilder ret = new StringBuilder();
-            ret.append("<b>");
-
-            if (type == TransactionType.Income) {
-                ret.append(fromAcct.getAccountName());
-                ret.append("</b>");
-                ret.append("<br>");
-                ret.append(toAcct.getAccountName());
-            }
-            else if (type == TransactionType.Expense) {
-                ret.append(toAcct.getAccountName());
-                ret.append("</i></b>");
-                ret.append("<br>");
-                ret.append(fromAcct.getAccountName());
-            }
-            else {
-                ret.append(fromAcct.getAccountName());
-                ret.append("</i></b>");
-                ret.append("<br>");
-                ret.append(toAcct.getAccountName());
-            }
-            ret.append("<br><i>");
-            ret.append(date);
-            ret.append("</i>");
-            return ret.toString();
-        }
-    }
-
-    class MyArrayAdapter extends ArrayAdapter<TxHolder> {
-
-        public MyArrayAdapter(Context context, int textViewResourceId) {
-            super(context, textViewResourceId);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            TxHolder item = super.getItem(position);
-            View v = convertView;
-            if (v == null) {
-                v = getLayoutInflater().inflate(R.layout.tx_item_view, null);
-            }
-            initializeTxItemLayout(item, v);
-            return v;
-        }
-    }
-
-    private void initializeTxItemLayout(TxHolder item, View v) {
-        if (item.iconResource != 0) {
-            ImageView iv = (ImageView) v.findViewById(R.id.tx_icon);
-            iv.setImageResource(item.iconResource);
-            iv.setAdjustViewBounds(true);
-        }
-        Spanned txDetails = Html.fromHtml(item.toString());
-
-        TextView txDetailsView = (TextView) v.findViewById(R.id.tx_details_lbl);
-        txDetailsView.setText(txDetails);
-
-        String txAmt = nf.format(item.t.getTxAmount());
-        TextView txAmtView = (TextView) v.findViewById(R.id.tx_amt_lbl);
-        txAmtView.setText(txAmt);
-    }
-
     private BigDecimal calculateTotalAmount() {
-        int sz = txListAdapter.getCount();
         BigDecimal ret = new BigDecimal(0d);
-        for (int i = 0; i < sz; i++) {
-            ret = ret.add(txListAdapter.getItem(i).t.getTxAmount());
-        }
+//        int sz = txListAdapter.getCount();
+//        for (int i = 0; i < sz; i++) {
+//            ret = ret.add(txListAdapter.getItem(i).t.getTxAmount());
+//        }
         return ret;
     }
 
     /* Button click handlers */
-    public void editTransaction(View view) {
+    public void editTransaction(TxHolder lastSelectedTx) {
         if (lastSelectedTx == null) {
             return;
         }
         doEditAction(lastSelectedTx);
     }
 
-    public void deleteTransaction(View view) {
+    public void deleteTransaction(TxHolder lastSelectedTx) {
         try {
             if (lastSelectedTx == null) {
                 return;
@@ -744,7 +536,7 @@ public class ListTransactionsActivity extends Activity {
             ActionResponse resp = new DeleteTransactionAction()
                     .executeAction(req);
             if (resp.getErrorCode() == ActionResponse.NOERROR) {
-                txListAdapter.remove(lastSelectedTx);
+                listAdapter.removeEntry(lastSelectedTx);
             }
             else {
                 Toast toast = Toast.makeText(getApplicationContext(),
@@ -761,13 +553,11 @@ public class ListTransactionsActivity extends Activity {
             return;
         }
         finally {
-            lastEditCtrlPanel = null;
-            lastSelectedTx = null;
             setTotalValue(calculateTotalAmount());
         }
     }
 
-    public void addReminder(View view) {
+    public void addReminder(TxHolder lastSelectedTx) {
         if (lastSelectedTx == null) {
             return;
         }
