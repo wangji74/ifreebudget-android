@@ -69,19 +69,21 @@
 			android:textColor="#000000"
 			android:textSize="12dip" />
 	</RelativeLayout>
-	<ListView
-	    android:id="@+id/list_panel"
-		android:layout_width="fill_parent"
+	<ExpandableListView
+	    android:id="@+id/tx_list"
 		android:layout_height="fill_parent"
+		android:layout_width="fill_parent"
 		android:layout_below="@id/north_panel"
+		android:layout_above="@+id/south_panel"
 		android:cacheColorHint="#ffffff" />
 	<LinearLayout
 		android:id="@+id/south_panel"
 		android:orientation="horizontal"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:layout_weight="0.1"
+		android:layout_span="2"
 		android:background="@color/sub_title_color"
-		android:paddingTop="2dp"
 		android:layout_alignParentBottom="true">
 		<Button
 			android:id="@+id/filter_button"
@@ -91,5 +93,24 @@
 			android:textSize="10dip"
 			android:textStyle="bold"
 			android:onClick="@string/show_filter_selector" />
+		<TextView
+			android:id="@+id/tx_footer_lbl"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:textStyle="bold"
+			android:textColor="#000000"
+			android:paddingTop="5dip"
+			android:paddingRight="5dip"
+			android:gravity="right"
+			android:paddingBottom="5dip" />
 	</LinearLayout>
+	<!-- LinearLayout android:id="@+id/south_panel" android:orientation="horizontal" 
+		android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="0.1" 
+		android:layout_span="2" android:layout_alignParentBottom="true"> <Button 
+		android:id="@+id/home_button" android:layout_height="wrap_content" android:layout_width="wrap_content" 
+		android:text="@string/home_lbl" android:layout_weight="0.5" android:width="80px" 
+		android:onClick="@string/goto_home" /> <Button android:id="@+id/transactions_button" 
+		android:layout_height="wrap_content" android:layout_width="wrap_content" 
+		android:text="@string/add_tx_lbl" android:layout_weight="0.5" android:width="80px" 
+		android:onClick="@string/add_tx_action" /> </LinearLayout -->
 </RelativeLayout>
