@@ -53,7 +53,6 @@ import com.ifreebudget.fm.activities.ManageBudgetsActivity;
 import com.ifreebudget.fm.activities.ManageDBActivity;
 import com.ifreebudget.fm.activities.ManageRemindersActivity;
 import com.ifreebudget.fm.activities.ManageTaskNotificationActivity;
-import com.ifreebudget.fm.activities.TransactionListActivity;
 import com.ifreebudget.fm.activities.ViewReportActivity;
 import com.ifreebudget.fm.entity.FManEntityManager;
 import com.ifreebudget.fm.services.SessionManager;
