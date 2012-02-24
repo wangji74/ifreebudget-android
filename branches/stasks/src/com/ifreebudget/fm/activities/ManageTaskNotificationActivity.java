@@ -47,9 +47,9 @@ public class ManageTaskNotificationActivity extends ListActivity {
             em = FManEntityManager.getInstance(getApplicationContext());
         }
 
+        ListEntry[] arr = null;
         try {
             List<FManEntity> notifs = em.getList(TaskNotification.class);
-
             if (notifs != null && notifs.size() > 0) {
                 List<ListEntry> list = new ArrayList<ListEntry>();
 
@@ -65,16 +65,17 @@ public class ManageTaskNotificationActivity extends ListActivity {
                             tr(EMPTY_LIST_MSG), Toast.LENGTH_LONG);
                     toast.show();
                 }
-                ListEntry[] arr = new ListEntry[list.size()];
+                arr = new ListEntry[list.size()];
                 list.toArray(arr);
-                this.setListAdapter(new ArrayAdapter<ListEntry>(this,
-                        R.layout.budget_list_row, arr));
             }
             else {
                 Toast toast = Toast.makeText(getApplicationContext(),
                         tr(EMPTY_LIST_MSG), Toast.LENGTH_LONG);
                 toast.show();
+                arr = new ListEntry[0];
             }
+            this.setListAdapter(new ArrayAdapter<ListEntry>(this,
+                    R.layout.budget_list_row, arr));
         }
         catch (DBException e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
