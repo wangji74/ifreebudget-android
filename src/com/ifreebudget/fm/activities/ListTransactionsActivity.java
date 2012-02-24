@@ -120,10 +120,7 @@ public class ListTransactionsActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
-                Log.i(TAG, "Item clicked at: " + position);
                 lastSelectedTx = txListAdapter.getItem(position);
-                Log.i(TAG, "Num: " + txListAdapter.getCount() + "," + ":"
-                        + lastSelectedTx.t.getTxId());
                 showDialog(VIEW_TX_DIALOG);
             }
         });
@@ -256,7 +253,6 @@ public class ListTransactionsActivity extends Activity {
 
     @Override
     public Dialog onCreateDialog(int id) {
-        Log.i(TAG, "On create dialog...");
         switch (id) {
         case VIEW_TX_DIALOG:
             return getViewTxDialog();
@@ -274,8 +270,6 @@ public class ListTransactionsActivity extends Activity {
     }
 
     private Dialog getViewTxDialog() {
-        int dummy = listView.getSelectedItemPosition();
-        Log.i(TAG, "Selected pos : " + dummy);
         Context c = ListTransactionsActivity.this;
         ViewTxDialog dialog = new ViewTxDialog(c, new DialogCallback() {
 
@@ -517,8 +511,8 @@ public class ListTransactionsActivity extends Activity {
                 retrieveInProgress = true;
                 try {
                     try {
-                        Log.i(TAG,
-                                "Retr tx list: " + off.get() + "," + end.get());
+//                        Log.i(TAG,
+//                                "Retr tx list: " + off.get() + "," + end.get());
                         String q = query.getQueryObject(false);
                         catgs = dbHelper.executeFilterQuery(q,
                                 Transaction.class, off.get(), PAGE_SIZE);
@@ -526,9 +520,6 @@ public class ListTransactionsActivity extends Activity {
                         if (catgs.size() < PAGE_SIZE) {
                             end.set(true);
                         }
-                        Log.i(TAG,
-                                "Curr off: " + off.get() + ":" + catgs.size()
-                                        + ":" + end.get());
                     }
                     catch (Exception e1) {
                         Log.e(TAG, MiscUtils.stackTrace2String(e1));

@@ -12,8 +12,10 @@ import com.ifreebudget.fm.activities.utils.DialogCallback;
 import com.ifreebudget.fm.entity.beans.Account;
 import com.ifreebudget.fm.services.SessionManager;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -61,9 +63,32 @@ public class ViewTxDialog extends Dialog {
 
             @Override
             public void onClick(View v) {
-                deleteTransaction(v);
+                nagAndDelete(v);
             }
         });
+    }
+
+    private boolean nagAndDelete(final View view) {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    deleteTransaction(view);
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    break;
+                }
+            }
+        };
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+        builder.setTitle("Delete transaction");
+        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+            .setNegativeButton("No", dialogClickListener).show();
+
+        return false;
     }
 
     public void initialize(TxHolder holder) {
@@ -106,30 +131,4 @@ public class ViewTxDialog extends Dialog {
         dismiss();
         callback.onDismiss(DELETE_TX, holder);
     }
-
-    // private void deleteTransaction(View view) {
-    // try {
-    // ActionRequest req = new ActionRequest();
-    // req.setActionName("deleteTransactionAction");
-    // req.setProperty("TXID", holder.t.getTxId());
-    //
-    // ActionResponse resp = new DeleteTransactionAction()
-    // .executeAction(req);
-    // if (resp.getErrorCode() == ActionResponse.NOERROR) {
-    // super.dismiss();
-    // }
-    // else {
-    // Toast toast = Toast.makeText(super.getContext(),
-    // resp.getErrorMessage(), Toast.LENGTH_SHORT);
-    // toast.show();
-    // return;
-    // }
-    // }
-    // catch (Exception e) {
-    // Toast toast = Toast.makeText(super.getContext(),
-    // "Unable to delete transaction", Toast.LENGTH_SHORT);
-    // toast.show();
-    // return;
-    // }
-    // }
 }
