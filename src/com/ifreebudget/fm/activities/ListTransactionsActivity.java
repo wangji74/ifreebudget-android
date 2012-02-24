@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ListActivity;
+import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -43,12 +43,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -62,6 +59,7 @@ import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.ActionResponse;
 import com.ifreebudget.fm.actions.DeleteTransactionAction;
 import com.ifreebudget.fm.actions.GetCategoryChildrenAction;
+import com.ifreebudget.fm.activities.utils.DialogCallback;
 import com.ifreebudget.fm.constants.AccountTypes;
 import com.ifreebudget.fm.constants.AccountTypes.TransactionType;
 import com.ifreebudget.fm.entity.DBException;
@@ -86,7 +84,7 @@ public class ListTransactionsActivity extends Activity {
     private final FManEntityManager dbHelper = FManEntityManager.getInstance();
 
     private ListView listView;
-    
+
     private ArrayAdapter<TxHolder> txListAdapter;
 
     private final Handler txListUpdateHandler = new Handler();
@@ -100,29 +98,7 @@ public class ListTransactionsActivity extends Activity {
 
     private Button filterButton = null;
 
-    private View lastEditCtrlPanel = null;
-
     private TxHolder lastSelectedTx = null;
-
-    private void toggleCtrlPanel(View v, TxHolder holder) {
-        if (lastEditCtrlPanel != null) {
-            TranslateAnimation slide = new TranslateAnimation(0, 0, 0, 100);
-            slide.setDuration(300);
-            slide.setFillAfter(true);
-            slide.setInterpolator(new AccelerateInterpolator());
-            lastEditCtrlPanel.startAnimation(slide);
-            lastEditCtrlPanel.setVisibility(View.INVISIBLE);
-        }
-        lastSelectedTx = holder;
-        lastEditCtrlPanel = (View) v.findViewById(R.id.edit_tx_ctrl_panel);
-
-        TranslateAnimation slide = new TranslateAnimation(0, 0, 100, 0);
-        slide.setDuration(300);
-        slide.setFillAfter(true);
-        slide.setInterpolator(new AccelerateInterpolator());
-        lastEditCtrlPanel.startAnimation(slide);
-        lastEditCtrlPanel.setVisibility(View.VISIBLE);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,38 +106,32 @@ public class ListTransactionsActivity extends Activity {
         super.setContentView(R.layout.tx_list_layout);
 
         /* Initialize state variables */
-        if (lastEditCtrlPanel != null) {
-            lastEditCtrlPanel.setVisibility(View.GONE);
-        }
         lastSelectedTx = null;
         /* End Initialize state variables */
 
         txListAdapter = new MyArrayAdapter(this, R.layout.tx_list_layout);
 
         listView = (ListView) findViewById(R.id.list_panel);
+        listView.setAdapter(txListAdapter);
         registerForContextMenu(listView);
 
-        listView.setOnItemClickListener(new OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
-
-                TxHolder holder = (TxHolder) parent.getAdapter().getItem(
-                        position);
-                toggleCtrlPanel(view, holder);
+                Log.i(TAG, "Item clicked at: " + position);
+                lastSelectedTx = txListAdapter.getItem(position);
+                Log.i(TAG, "Num: " + txListAdapter.getCount() + "," + ":"
+                        + lastSelectedTx.t.getTxId());
+                showDialog(VIEW_TX_DIALOG);
             }
         });
-
-        listView.setAdapter(txListAdapter);
 
         listView.setOnScrollListener(new OnScrollListener() {
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if(lastEditCtrlPanel != null) {
-                    lastEditCtrlPanel.setVisibility(View.INVISIBLE);
-                }
             }
 
             @Override
@@ -190,9 +160,9 @@ public class ListTransactionsActivity extends Activity {
         super.onResume();
         setFilterButtonText();
         resetState();
-        retrieveTxList(buildFilter());        
+        retrieveTxList(buildFilter());
     }
-    
+
     private void resetState() {
         /* clear out the display */
         txListAdapter.clear();
@@ -214,23 +184,21 @@ public class ListTransactionsActivity extends Activity {
         startActivity(intent);
     }
 
-    private void doDeleteAction(TxHolder entity) {
-        Transaction a = entity.t;
+    public void doDeleteTransaction(TxHolder holder) {
         try {
+            if (holder == null) {
+                return;
+            }
+            Long txId = holder.t.getTxId();
+
             ActionRequest req = new ActionRequest();
             req.setActionName("deleteTransactionAction");
-            req.setProperty("TXID", a.getTxId());
+            req.setProperty("TXID", txId);
 
             ActionResponse resp = new DeleteTransactionAction()
                     .executeAction(req);
             if (resp.getErrorCode() == ActionResponse.NOERROR) {
-                Intent intent = getIntent();
-                overridePendingTransition(0, 0);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                finish();
-
-                overridePendingTransition(0, 0);
-                startActivity(intent);
+                txListAdapter.remove(holder);
             }
             else {
                 Toast toast = Toast.makeText(getApplicationContext(),
@@ -242,9 +210,98 @@ public class ListTransactionsActivity extends Activity {
         catch (Exception e) {
             Toast toast = Toast.makeText(getApplicationContext(),
                     "Unable to delete transaction", Toast.LENGTH_SHORT);
+            Log.e(TAG, MiscUtils.stackTrace2String(e));
             toast.show();
             return;
         }
+        finally {
+            lastSelectedTx = null;
+        }
+    }
+
+    // private void doDeleteAction(TxHolder entity) {
+    // Transaction a = entity.t;
+    // try {
+    // ActionRequest req = new ActionRequest();
+    // req.setActionName("deleteTransactionAction");
+    // req.setProperty("TXID", a.getTxId());
+    //
+    // ActionResponse resp = new DeleteTransactionAction()
+    // .executeAction(req);
+    // if (resp.getErrorCode() == ActionResponse.NOERROR) {
+    // Intent intent = getIntent();
+    // overridePendingTransition(0, 0);
+    // intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+    // finish();
+    //
+    // overridePendingTransition(0, 0);
+    // startActivity(intent);
+    // }
+    // else {
+    // Toast toast = Toast.makeText(getApplicationContext(),
+    // resp.getErrorMessage(), Toast.LENGTH_SHORT);
+    // toast.show();
+    // return;
+    // }
+    // }
+    // catch (Exception e) {
+    // Toast toast = Toast.makeText(getApplicationContext(),
+    // "Unable to delete transaction", Toast.LENGTH_SHORT);
+    // toast.show();
+    // return;
+    // }
+    // }
+
+    private static final int VIEW_TX_DIALOG = 1;
+
+    @Override
+    public Dialog onCreateDialog(int id) {
+        Log.i(TAG, "On create dialog...");
+        switch (id) {
+        case VIEW_TX_DIALOG:
+            return getViewTxDialog();
+        }
+        return null;
+    }
+
+    @Override
+    public void onPrepareDialog(int id, Dialog dialog, Bundle args) {
+        switch (id) {
+        case VIEW_TX_DIALOG:
+            ViewTxDialog d = (ViewTxDialog) dialog;
+            d.initialize(lastSelectedTx);
+        }
+    }
+
+    private Dialog getViewTxDialog() {
+        int dummy = listView.getSelectedItemPosition();
+        Log.i(TAG, "Selected pos : " + dummy);
+        Context c = ListTransactionsActivity.this;
+        ViewTxDialog dialog = new ViewTxDialog(c, new DialogCallback() {
+
+            @Override
+            public void onReturn(int code, Object result) {
+            }
+
+            @Override
+            public void onDismiss(int code, Object context) {
+                TxHolder holder = (TxHolder) context;
+                switch (code) {
+                case ViewTxDialog.EDIT_TX:
+                    doEditAction(holder);
+                    break;
+                case ViewTxDialog.ADD_REMINDER:
+                    doReminderAction(holder);
+                    break;
+                case ViewTxDialog.DELETE_TX:
+                    doDeleteTransaction(holder);
+                    break;
+                }
+            }
+
+        });
+
+        return dialog;
     }
 
     @Override
@@ -451,7 +508,7 @@ public class ListTransactionsActivity extends Activity {
     private void retrieveTxList(final Filter query) {
         TextView filterView = (TextView) findViewById(R.id.tx_list_filter_lbl);
         filterView.setText(query.getName());
-        if(end.get()) {
+        if (end.get()) {
             return;
         }
         Runnable r = new Runnable() {
@@ -460,7 +517,8 @@ public class ListTransactionsActivity extends Activity {
                 retrieveInProgress = true;
                 try {
                     try {
-                        Log.i(TAG, "Retr tx list: " + off.get() + "," + end.get());
+                        Log.i(TAG,
+                                "Retr tx list: " + off.get() + "," + end.get());
                         String q = query.getQueryObject(false);
                         catgs = dbHelper.executeFilterQuery(q,
                                 Transaction.class, off.get(), PAGE_SIZE);
@@ -469,7 +527,8 @@ public class ListTransactionsActivity extends Activity {
                             end.set(true);
                         }
                         Log.i(TAG,
-                                "Curr off: " + off.get() + ":" + catgs.size() + ":" + end.get());        
+                                "Curr off: " + off.get() + ":" + catgs.size()
+                                        + ":" + end.get());
                     }
                     catch (Exception e1) {
                         Log.e(TAG, MiscUtils.stackTrace2String(e1));
@@ -712,66 +771,4 @@ public class ListTransactionsActivity extends Activity {
         TextView txAmtView = (TextView) v.findViewById(R.id.tx_amt_lbl);
         txAmtView.setText(txAmt);
     }
-
-    private BigDecimal calculateTotalAmount() {
-        int sz = txListAdapter.getCount();
-        BigDecimal ret = new BigDecimal(0d);
-        for (int i = 0; i < sz; i++) {
-            ret = ret.add(txListAdapter.getItem(i).t.getTxAmount());
-        }
-        return ret;
-    }
-
-    /* Button click handlers */
-    public void editTransaction(View view) {
-        if (lastSelectedTx == null) {
-            return;
-        }
-        doEditAction(lastSelectedTx);
-    }
-
-    public void deleteTransaction(View view) {
-        try {
-            if (lastSelectedTx == null) {
-                return;
-            }
-            Long txId = lastSelectedTx.t.getTxId();
-
-            ActionRequest req = new ActionRequest();
-            req.setActionName("deleteTransactionAction");
-            req.setProperty("TXID", txId);
-
-            ActionResponse resp = new DeleteTransactionAction()
-                    .executeAction(req);
-            if (resp.getErrorCode() == ActionResponse.NOERROR) {
-                txListAdapter.remove(lastSelectedTx);
-            }
-            else {
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        resp.getErrorMessage(), Toast.LENGTH_SHORT);
-                toast.show();
-                return;
-            }
-        }
-        catch (Exception e) {
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "Unable to delete transaction", Toast.LENGTH_SHORT);
-            Log.e(TAG, MiscUtils.stackTrace2String(e));
-            toast.show();
-            return;
-        }
-        finally {
-            lastEditCtrlPanel = null;
-            lastSelectedTx = null;
-            setTotalValue(calculateTotalAmount());
-        }
-    }
-
-    public void addReminder(View view) {
-        if (lastSelectedTx == null) {
-            return;
-        }
-        doReminderAction(lastSelectedTx);
-    }
-    /* End Button click handlers */
 }
