@@ -82,16 +82,20 @@ public class ViewTxDialog extends Dialog {
                 }
             }
         };
-        
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
         builder.setTitle("Delete transaction");
-        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-            .setNegativeButton("No", dialogClickListener).show();
+        builder.setMessage("Are you sure?")
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
 
         return false;
     }
 
     public void initialize(TxHolder holder) {
+        if (holder == null) {
+            return;
+        }
         this.holder = holder;
         Account from = holder.fromAcct;
         Account to = holder.toAcct;
