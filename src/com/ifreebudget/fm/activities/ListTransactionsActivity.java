@@ -262,7 +262,6 @@ public class ListTransactionsActivity extends Activity {
             }
 
         });
-
         return dialog;
     }
 
