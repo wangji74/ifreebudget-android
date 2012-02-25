@@ -216,39 +216,6 @@ public class ListTransactionsActivity extends Activity {
         }
     }
 
-    // private void doDeleteAction(TxHolder entity) {
-    // Transaction a = entity.t;
-    // try {
-    // ActionRequest req = new ActionRequest();
-    // req.setActionName("deleteTransactionAction");
-    // req.setProperty("TXID", a.getTxId());
-    //
-    // ActionResponse resp = new DeleteTransactionAction()
-    // .executeAction(req);
-    // if (resp.getErrorCode() == ActionResponse.NOERROR) {
-    // Intent intent = getIntent();
-    // overridePendingTransition(0, 0);
-    // intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-    // finish();
-    //
-    // overridePendingTransition(0, 0);
-    // startActivity(intent);
-    // }
-    // else {
-    // Toast toast = Toast.makeText(getApplicationContext(),
-    // resp.getErrorMessage(), Toast.LENGTH_SHORT);
-    // toast.show();
-    // return;
-    // }
-    // }
-    // catch (Exception e) {
-    // Toast toast = Toast.makeText(getApplicationContext(),
-    // "Unable to delete transaction", Toast.LENGTH_SHORT);
-    // toast.show();
-    // return;
-    // }
-    // }
-
     private static final int VIEW_TX_DIALOG = 1;
 
     @Override
@@ -262,6 +229,7 @@ public class ListTransactionsActivity extends Activity {
 
     @Override
     public void onPrepareDialog(int id, Dialog dialog, Bundle args) {
+        super.onPrepareDialog(id, dialog, args);
         switch (id) {
         case VIEW_TX_DIALOG:
             ViewTxDialog d = (ViewTxDialog) dialog;
