@@ -41,6 +41,10 @@
         </activity>
         <activity
             android:label="iFreeBudget"
+            android:name=".activities.AccountsActivity" >
+        </activity>
+            <activity
+            android:label="iFreeBudget"
             android:name=".activities.AddTransactionActivity" >
         </activity>
         <activity
