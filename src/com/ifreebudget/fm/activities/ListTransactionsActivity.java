@@ -625,7 +625,7 @@ public class ListTransactionsActivity extends Activity {
         filterButton.setText(text);
     }
 
-    class TxHolder {
+    static class TxHolder {
         Transaction t;
         int iconResource;
         Account fromAcct;

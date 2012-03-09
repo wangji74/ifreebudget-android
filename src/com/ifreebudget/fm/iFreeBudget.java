@@ -45,6 +45,7 @@ import android.widget.TextView;
 import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.ActionResponse;
 import com.ifreebudget.fm.actions.GetNetWorthAction;
+import com.ifreebudget.fm.activities.AccountsActivity;
 import com.ifreebudget.fm.activities.AddTransactionActivity;
 import com.ifreebudget.fm.activities.DocActivity;
 import com.ifreebudget.fm.activities.ListTransactionsActivity;
@@ -160,7 +161,8 @@ public class iFreeBudget extends Activity {
     }
 
     public void manageAccounts(View view) {
-        Intent intent = new Intent(this, ManageAccountsActivity.class);
+//        Intent intent = new Intent(this, ManageAccountsActivity.class);
+        Intent intent = new Intent(this, AccountsActivity.class);
         startActivity(intent);
     }
 
