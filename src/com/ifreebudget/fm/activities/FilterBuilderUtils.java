@@ -32,7 +32,7 @@ public class FilterBuilderUtils {
 
     private static final String TAG = "FilterBuilderUtils";
     
-    public static NewFilterUtils.DATE_RANGE dateRange = NewFilterUtils.DATE_RANGE.LastWeek;
+    private NewFilterUtils.DATE_RANGE dateRange = NewFilterUtils.DATE_RANGE.LastWeek;
     
     private Context context;
     public FilterBuilderUtils(Context context) {

@@ -82,11 +82,11 @@ public class AddCategoryActivity extends Activity {
         Intent intent = this.getIntent();
         if (catId != -1) {
             if (createCategory(catId)) {
-                intent = new Intent(this, ManageAccountsActivity.class);
-
-                intent.putExtra(iFreeBudget.PARENTCATEGORYIDKEY, catId);
-
-                startActivity(intent);
+//                intent = new Intent(this, ManageAccountsActivity.class);
+//
+//                intent.putExtra(iFreeBudget.PARENTCATEGORYIDKEY, catId);
+//
+//                startActivity(intent);
                 finish();
             }
         }

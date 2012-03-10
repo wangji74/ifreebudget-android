@@ -3,25 +3,37 @@ package com.ifreebudget.fm.activities;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
@@ -29,9 +41,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ifreebudget.fm.R;
+import com.ifreebudget.fm.iFreeBudget;
+import com.ifreebudget.fm.actions.ActionRequest;
+import com.ifreebudget.fm.actions.ActionResponse;
+import com.ifreebudget.fm.actions.DeleteTransactionAction;
 import com.ifreebudget.fm.activities.ListTransactionsActivity.TxHolder;
+import com.ifreebudget.fm.activities.utils.DialogCallback;
 import com.ifreebudget.fm.constants.AccountTypes;
 import com.ifreebudget.fm.entity.DBException;
 import com.ifreebudget.fm.entity.FManEntityManager;
@@ -63,17 +81,53 @@ public class AccountsActivity extends Activity {
 
     private TextView categoryPathTf = null;
 
-    private long lastCategoryId = Long.valueOf(AccountTypes.ACCT_TYPE_ROOT);
+    private Stack<Long> categoryIdStack = null;
+
+    private View categoryPathPanel = null;
+
+    private TxHolder lastSelectedTx = null;
 
     private static final int PAGE_SIZE = 25;
     private static final String TAG = "AccountsActivity";
 
-    /* State variables */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.accts_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+        case R.id.mItemHome:
+            gotoHomeScreen();
+            break;
+        case R.id.mItemAddAcct:
+            startAddAccountActivity();
+            break;
+        case R.id.mItemAddCatgr:
+            startAddCategoryActivity();
+            break;
+        default:
+            return true;
+        }
+
+        return true;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.accounts_layout);
+
+        /* Initialize state variables */
+        lastSelectedTx = null;
+        /* End Initialize state variables */
+
+        categoryIdStack = new Stack<Long>();
+        categoryIdStack.push(Long.valueOf(AccountTypes.ACCT_TYPE_ROOT));
 
         filterUtil = new FilterBuilderUtils(this);
 
@@ -89,8 +143,12 @@ public class AccountsActivity extends Activity {
                 if (obj != null) {
                     if (obj instanceof AccountCategory) {
                         AccountCategory ac = (AccountCategory) obj;
-                        lastCategoryId = ac.getParentCategoryId();
-                        loadCategory(ac.getCategoryId());
+                        categoryIdStack.push(ac.getCategoryId());
+                        loadCategory();
+                    }
+                    else if (obj instanceof Account) {
+                        loadTransactionsForAccount(((Account) obj)
+                                .getAccountId());
                     }
                 }
             }
@@ -100,14 +158,50 @@ public class AccountsActivity extends Activity {
         listView = (ListView) findViewById(R.id.list_panel);
         listView.setAdapter(txListAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                    int position, long id) {
+                lastSelectedTx = txListAdapter.getItem(position);
+                showDialog(VIEW_TX_DIALOG);
+            }
+        });
+
+        listView.setOnScrollListener(new OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                    int visibleItemCount, int totalItemCount) {
+
+                if (visibleItemCount == 0) {
+                    return;
+                }
+                if (retrieveInProgress) {
+                    return;
+                }
+                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
+                if (loadMore) {
+                    // retrieveTxList(buildFilter());
+                    retrieveTxList(filterUtil.buildFilter(getIntent()));
+                }
+            }
+        });
+
         upBtn = (ImageButton) findViewById(R.id.up_btn);
         upBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadCategory(lastCategoryId);
+                categoryIdStack.pop();
+                loadCategory();
             }
         });
 
+        categoryPathPanel = findViewById(R.id.category_path_panel);
         categoryPathTf = (TextView) findViewById(R.id.category_path_lbl);
         filterButton = (Button) findViewById(R.id.filter_button);
     }
@@ -115,37 +209,54 @@ public class AccountsActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        loadCategory(Long.valueOf(AccountTypes.ACCT_TYPE_ROOT));
+        loadCategory();
     }
 
-    private void loadCategory(long parentId) {
+    private void loadCategory() {
         try {
+            // Log.i(TAG, "**** " + categoryIdStack);
+            if (categoryIdStack.empty()) {
+                return;
+            }
+            long catId = categoryIdStack.peek();
             List<FManEntity> catgs = FManEntityManager.getInstance()
-                    .getChildren(parentId);
-            Log.i(TAG, "..." + parentId + ", " + catgs.size());
+                    .getChildren(catId);
             adapter.clear();
             for (FManEntity e : catgs) {
                 adapter.add(e);
             }
-            String categoryPath = getCategoryPath(parentId);
+            String categoryPath = getCategoryPath(catId);
             if (categoryPath != null && categoryPath.length() > 0) {
+                categoryPathPanel.setVisibility(View.VISIBLE);
                 upBtn.setVisibility(View.VISIBLE);
             }
             else {
                 upBtn.setVisibility(View.GONE);
             }
-            categoryPathTf.setText(getCategoryPath(parentId));
-            
-            getIntent().putExtra(NewFilterUtils.FILTERKEY,
-                    NewFilterUtils.CATEGORY_FILTER_TYPE);
-            getIntent().putExtra(NewFilterUtils.FILTERVALUE, parentId);
-            
-            resetState();
-            retrieveTxList(filterUtil.buildFilter(getIntent()));
+            categoryPathTf.setText(categoryPath);
+            loadTransactionsForCategory(catId);
         }
         catch (DBException e) {
             Log.i(TAG, MiscUtils.stackTrace2String(e));
         }
+    }
+
+    private void loadTransactionsForCategory(long catId) {
+        getIntent().putExtra(NewFilterUtils.FILTERKEY,
+                NewFilterUtils.CATEGORY_FILTER_TYPE);
+        getIntent().putExtra(NewFilterUtils.FILTERVALUE, catId);
+
+        resetState();
+        retrieveTxList(filterUtil.buildFilter(getIntent()));
+    }
+
+    private void loadTransactionsForAccount(long accountId) {
+        getIntent().putExtra(NewFilterUtils.FILTERKEY,
+                NewFilterUtils.ACCOUNT_FILTER_TYPE);
+        getIntent().putExtra(NewFilterUtils.FILTERVALUE, accountId);
+
+        resetState();
+        retrieveTxList(filterUtil.buildFilter(getIntent()));
     }
 
     private void resetState() {
@@ -216,12 +327,9 @@ public class AccountsActivity extends Activity {
                 retrieveInProgress = true;
                 try {
                     try {
-                        Log.i(TAG,
-                                "Retr tx list: " + off.get() + "," + end.get());
                         String q = query.getQueryObject(false);
                         catgs = dbHelper.executeFilterQuery(q,
                                 Transaction.class, off.get(), PAGE_SIZE);
-                        Log.i(TAG, "Retrieved " + catgs.size());
                         off.addAndGet(catgs.size());
                         if (catgs.size() < PAGE_SIZE) {
                             end.set(true);
@@ -255,6 +363,148 @@ public class AccountsActivity extends Activity {
 
     private void addToUI(TxHolder tx) {
         txListAdapter.add(tx);
+    }
+
+    public void gotoHomeScreen() {
+        Intent intent = new Intent(this, iFreeBudget.class);
+        startActivity(intent);
+    }
+
+    public void gotoHomeScreen(View view) {
+        gotoHomeScreen();
+    }
+
+    public void addTransaction(View view) {
+        addTransaction();
+    }
+
+    public void addTransaction() {
+        Intent txIntent = new Intent(this, AddTransactionActivity.class);
+        startActivity(txIntent);
+    }
+
+    private void doEditAction(TxHolder entity) {
+        Transaction a = entity.t;
+        Intent intent = new Intent(this, UpdateTransactionActivity.class);
+        intent.putExtra(UpdateTransactionActivity.TXID, a.getTxId());
+        startActivity(intent);
+    }
+
+    private void doReminderAction(TxHolder entity) {
+        Transaction a = entity.t;
+        Intent intent = new Intent(this, AddReminderActivity.class);
+        intent.putExtra(UpdateTransactionActivity.TXID, a.getTxId());
+        startActivity(intent);
+    }
+
+    private void startAddAccountActivity() {
+        if (categoryIdStack.empty()) {
+            return;
+        }
+        long catId = categoryIdStack.peek();
+
+        Intent intent = new Intent(this, AddAccountActivity.class);
+        intent.putExtra(ManageAccountsActivity.PARENTCATEGORYIDKEY, catId);
+        intent.putExtra(ManageAccountsActivity.PARENTCATEGORYIDPATH,
+                categoryPathTf.getText());
+        startActivity(intent);
+    }
+
+    private void startAddCategoryActivity() {
+        if (categoryIdStack.empty()) {
+            return;
+        }
+        long catId = categoryIdStack.peek();
+
+        Intent intent = new Intent(this, AddCategoryActivity.class);
+        intent.putExtra(ManageAccountsActivity.PARENTCATEGORYIDKEY, catId);
+        intent.putExtra(ManageAccountsActivity.PARENTCATEGORYIDPATH,
+                categoryPathTf.getText());
+        startActivity(intent);
+    }
+
+    public void doDeleteTransaction(TxHolder holder) {
+        try {
+            if (holder == null) {
+                return;
+            }
+            Long txId = holder.t.getTxId();
+
+            ActionRequest req = new ActionRequest();
+            req.setActionName("deleteTransactionAction");
+            req.setProperty("TXID", txId);
+
+            ActionResponse resp = new DeleteTransactionAction()
+                    .executeAction(req);
+            if (resp.getErrorCode() == ActionResponse.NOERROR) {
+                txListAdapter.remove(holder);
+            }
+            else {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        resp.getErrorMessage(), Toast.LENGTH_SHORT);
+                toast.show();
+                return;
+            }
+        }
+        catch (Exception e) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "Unable to delete transaction", Toast.LENGTH_SHORT);
+            Log.e(TAG, MiscUtils.stackTrace2String(e));
+            toast.show();
+            return;
+        }
+        finally {
+            lastSelectedTx = null;
+        }
+    }
+
+    private static final int VIEW_TX_DIALOG = 1;
+
+    @Override
+    public Dialog onCreateDialog(int id) {
+        switch (id) {
+        case VIEW_TX_DIALOG:
+            return getViewTxDialog();
+        }
+        return null;
+    }
+
+    @Override
+    public void onPrepareDialog(int id, Dialog dialog, Bundle args) {
+        super.onPrepareDialog(id, dialog, args);
+        switch (id) {
+        case VIEW_TX_DIALOG:
+            ViewTxDialog d = (ViewTxDialog) dialog;
+            d.initialize(lastSelectedTx);
+        }
+    }
+
+    private Dialog getViewTxDialog() {
+        Context c = AccountsActivity.this;
+        ViewTxDialog dialog = new ViewTxDialog(c, new DialogCallback() {
+
+            @Override
+            public void onReturn(int code, Object result) {
+            }
+
+            @Override
+            public void onDismiss(int code, Object context) {
+                TxHolder holder = (TxHolder) context;
+                switch (code) {
+                case ViewTxDialog.EDIT_TX:
+                    doEditAction(holder);
+                    break;
+                case ViewTxDialog.ADD_REMINDER:
+                    doReminderAction(holder);
+                    break;
+                case ViewTxDialog.DELETE_TX:
+                    doDeleteTransaction(holder);
+                    break;
+                }
+            }
+
+        });
+        return dialog;
     }
 
     private TxHolder makeTxHolder(Transaction t) throws Exception {
