@@ -882,6 +882,13 @@ public class FManEntityManager {
         public void onOpen(SQLiteDatabase db) {
             this.db = db;
             em.database = db;
+            try {
+                db.execSQL("update ACCOUNTCATEGORY set CATEGORYNAME='Cash & Investments' where CATEGORYNAME='Assets'");
+                db.execSQL("update ACCOUNTCATEGORY set CATEGORYNAME='Credit & Loans' where CATEGORYNAME='Liability'");
+            }
+            catch (Exception e) {
+                Log.e(TAG, MiscUtils.stackTrace2String(e));
+            }
         }
     }
 }

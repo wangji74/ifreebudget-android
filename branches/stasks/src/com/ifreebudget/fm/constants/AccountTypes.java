@@ -110,7 +110,7 @@ public class AccountTypes {
             ret = Messages.getString("Income"); //$NON-NLS-1$
             break;
         case ACCT_TYPE_CASH:
-            ret = Messages.getString("Assets"); //$NON-NLS-1$
+            ret = Messages.getString("Cash & Investments"); //$NON-NLS-1$
             break;
         case ACCT_TYPE_EXPENSE:
             ret = Messages.getString("Expense"); //$NON-NLS-1$
