@@ -16,10 +16,10 @@
 -->
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
+<!--     <item
         android:title="@string/list_tx_for_acct"
         android:id="@+id/list_tx_for_acct"></item>
-    <item
+ -->    <item
         android:title="@string/edit"
         android:id="@+id/edit_item"></item>
     <item
