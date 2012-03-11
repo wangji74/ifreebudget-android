@@ -463,12 +463,7 @@ public class AccountsActivity extends Activity {
         try {
             ActionResponse resp = action.executeAction(req);
             if (resp.getErrorCode() == ActionResponse.NOERROR) {
-                Intent intent = new Intent(this, ManageAccountsActivity.class);
-
-                intent.putExtra(ManageAccountsActivity.PARENTCATEGORYIDKEY,
-                        catId);
-
-                startActivity(intent);
+                adapter.remove(entity);
             }
             else {
                 Toast toast = Toast.makeText(getApplicationContext(),
@@ -483,11 +478,6 @@ public class AccountsActivity extends Activity {
     }
 
     private void deleteAccount(FManEntity entity) {
-        if (categoryIdStack.empty()) {
-            return;
-        }
-        long catId = categoryIdStack.peek();
-
         ActionRequest req = new ActionRequest();
         req.setProperty("ACCOUNTID", entity.getPK());
 
@@ -495,12 +485,7 @@ public class AccountsActivity extends Activity {
         try {
             ActionResponse resp = action.executeAction(req);
             if (resp.getErrorCode() == ActionResponse.NOERROR) {
-                Intent intent = new Intent(this, ManageAccountsActivity.class);
-
-                intent.putExtra(ManageAccountsActivity.PARENTCATEGORYIDKEY,
-                        catId);
-
-                startActivity(intent);
+                adapter.remove(entity);
             }
             else {
                 Toast toast = Toast.makeText(getApplicationContext(),

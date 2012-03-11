@@ -265,30 +265,6 @@ public class ListTransactionsActivity extends Activity {
         return dialog;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.tx_list_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-        case R.id.home_menu:
-            gotoHomeScreen();
-            break;
-        case R.id.add_tx_menu:
-            addTransaction();
-            break;
-        default:
-            return true;
-        }
-
-        return true;
-    }
-
     /* End Menu handler functions */
 
     private void addToUI(TxHolder tx) {

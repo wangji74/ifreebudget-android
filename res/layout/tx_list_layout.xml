@@ -1,95 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright 2011 ifreebudget@gmail.com Licensed under the Apache License, 
+<!--
+     Copyright 2011 ifreebudget@gmail.com Licensed under the Apache License, 
 	Version 2.0 (the "License"); you may not use this file except in compliance 
 	with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
 	Unless required by applicable law or agreed to in writing, software distributed 
 	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
 	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
-	the specific language governing permissions and limitations under the License. -->
-<RelativeLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:background="#ffffff">
-	<LinearLayout
-		android:id="@+id/info_panel"
-		android:orientation="vertical"
-		android:layout_width="fill_parent"
-		android:layout_height="60dip"
-		android:background="@color/info_panel_bg"
-		android:paddingRight="5dip"
-		android:paddingTop="5dip"
-		android:paddingBottom="5dip">
-		<RelativeLayout
-			android:id="@+id/title_panel"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-			<TextView
-				android:id="@+id/title_lbl"
-				android:text="@string/app_name"
-				android:layout_width="wrap_content"
-				android:layout_height="fill_parent"
-				android:textStyle="bold"
-				android:textSize="18sp"
-				android:gravity="center_vertical"
-				android:paddingLeft="5dip"
-				android:textColor="#FFFFFF"
-				android:clickable="true"
-				android:onClick="@string/goto_home" />
-			<LinearLayout
-				android:id="@+id/button_panel"
-				android:orientation="horizontal"
-				android:gravity="fill_vertical"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_alignParentRight="true">
-				<ImageButton
+	the specific language governing permissions and limitations under the License.
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff" >
+
+    <LinearLayout
+        android:id="@+id/info_panel"
+        android:layout_width="fill_parent"
+        android:layout_height="60dip"
+        android:background="@color/info_panel_bg"
+        android:orientation="vertical"
+        android:paddingBottom="5dip"
+        android:paddingRight="5dip"
+        android:paddingTop="5dip" >
+
+        <RelativeLayout
+            android:id="@+id/title_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/title_lbl"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:onClick="@string/goto_home"
+                android:paddingLeft="5dip"
+                android:text="@string/app_name"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/button_panel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="fill_vertical"
+                android:orientation="horizontal" >
+
+                <!--
+                     ImageButton
 					android:id="@+id/add_tx_btn"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:background="@drawable/list_add_selector"
 					android:gravity="center"
-					android:onClick="@string/add_tx_action"/>
-			</LinearLayout>
-		</RelativeLayout>
-	</LinearLayout>
-	<RelativeLayout
-		android:id="@+id/north_panel"
-		android:orientation="vertical"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:background="@color/sub_title_color"
-		android:layout_below="@id/info_panel">
-		<TextView
-			android:id="@+id/tx_list_filter_lbl"
-			android:gravity="left"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:padding="5dip"
-			android:textColor="#000000"
-			android:textSize="12dip" />
-	</RelativeLayout>
-	<ListView
-	    android:id="@+id/list_panel"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:layout_below="@id/north_panel"
-		android:cacheColorHint="#ffffff" />
-	<LinearLayout
-		android:id="@+id/south_panel"
-		android:orientation="horizontal"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:background="@color/sub_title_color"
-		android:paddingTop="2dp"
-		android:layout_alignParentBottom="true">
-		<Button
-			android:id="@+id/filter_button"
-			android:layout_height="32dip"
-			android:layout_width="wrap_content"
-			android:text="@string/last_week_filter"
-			android:textSize="10dip"
-			android:textStyle="bold"
-			android:onClick="@string/show_filter_selector" />
-	</LinearLayout>
+					android:onClick="@string/add_tx_action"/
+                -->
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/north_panel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/info_panel"
+        android:background="@color/sub_title_color"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tx_list_filter_lbl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:padding="5dip"
+            android:textColor="#000000"
+            android:textSize="12dip" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/list_panel"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/north_panel"
+        android:cacheColorHint="#ffffff" />
+
+    <RelativeLayout
+        android:id="@+id/south_panel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/sub_title_color"
+        android:orientation="horizontal"
+        android:paddingTop="2dp" 
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/filter_button"
+            android:layout_width="wrap_content"
+            android:layout_height="32dip"
+            android:layout_alignParentRight="true"            
+            android:onClick="@string/show_filter_selector"
+            android:text="@string/last_week_filter"
+            android:textSize="10dip"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
 </RelativeLayout>

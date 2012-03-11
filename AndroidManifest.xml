@@ -10,8 +10,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ifreebudget.fm"
-    android:versionCode="42"
-    android:versionName="5.1" >
+    android:versionCode="43"
+    android:versionName="5.2" >
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -67,13 +67,6 @@
             android:label="iFreeBudget"
             android:name=".activities.ListTransactionsActivity" 
             android:configChanges="keyboardHidden|orientation">
-            <intent-filter >
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
         </activity>
         <activity
             android:label="iFreeBudget"

@@ -63,7 +63,7 @@ public class FManEntityManager {
     private static final String TAG = "DBHelper";
 
     public static final String DATABASE_NAME = "com.ifreebudget.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     private static FManEntityManager em = null;
 
@@ -868,20 +868,14 @@ public class FManEntityManager {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL(new TaskEntityMapper().getCreateSql());
-            Log.i(TAG, "Created ScheduledTask table...Success");
-            db.execSQL(new ScheduleEntityMapper().getCreateSql());
-            Log.i(TAG, "Created Schedule table...Success");
-            db.execSQL(new ConstraintEntityMapper().getCreateSql());
-            Log.i(TAG, "Created Constraint table...Success");
-            db.execSQL(new TaskNotificationMapper().getCreateSql());
-            Log.i(TAG, "Created TaskNotification table...Success");
-        }
-
-        @Override
-        public void onOpen(SQLiteDatabase db) {
-            this.db = db;
-            em.database = db;
+//            db.execSQL(new TaskEntityMapper().getCreateSql());
+//            Log.i(TAG, "Created ScheduledTask table...Success");
+//            db.execSQL(new ScheduleEntityMapper().getCreateSql());
+//            Log.i(TAG, "Created Schedule table...Success");
+//            db.execSQL(new ConstraintEntityMapper().getCreateSql());
+//            Log.i(TAG, "Created Constraint table...Success");
+//            db.execSQL(new TaskNotificationMapper().getCreateSql());
+//            Log.i(TAG, "Created TaskNotification table...Success");
             try {
                 db.execSQL("update ACCOUNTCATEGORY set CATEGORYNAME='Cash & Investments' where CATEGORYNAME='Assets'");
                 db.execSQL("update ACCOUNTCATEGORY set CATEGORYNAME='Credit & Loans' where CATEGORYNAME='Liability'");
@@ -890,6 +884,12 @@ public class FManEntityManager {
             catch (Exception e) {
                 Log.e(TAG, MiscUtils.stackTrace2String(e));
             }
+        }
+
+        @Override
+        public void onOpen(SQLiteDatabase db) {
+            this.db = db;
+            em.database = db;
         }
     }
 }

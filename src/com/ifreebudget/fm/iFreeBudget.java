@@ -162,7 +162,6 @@ public class iFreeBudget extends Activity {
     }
 
     public void manageAccounts(View view) {
-//        Intent intent = new Intent(this, ManageAccountsActivity.class);
         Intent intent = new Intent(this, AccountsActivity.class);
         startActivity(intent);
     }
