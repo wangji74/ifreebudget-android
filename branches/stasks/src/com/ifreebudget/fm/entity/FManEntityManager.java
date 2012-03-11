@@ -885,6 +885,7 @@ public class FManEntityManager {
             try {
                 db.execSQL("update ACCOUNTCATEGORY set CATEGORYNAME='Cash & Investments' where CATEGORYNAME='Assets'");
                 db.execSQL("update ACCOUNTCATEGORY set CATEGORYNAME='Credit & Loans' where CATEGORYNAME='Liability'");
+                db.execSQL("update ACCOUNTCATEGORY set CATEGORYNAME='Miscellaneous' where CATEGORYNAME='Misc Purchases'");                
             }
             catch (Exception e) {
                 Log.e(TAG, MiscUtils.stackTrace2String(e));
