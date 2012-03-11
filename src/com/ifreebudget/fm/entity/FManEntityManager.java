@@ -455,7 +455,7 @@ public class FManEntityManager {
             q.append("OFFSET ");
             q.append(offset);
         }
-        Log.i(TAG, q.toString());
+        //Log.i(TAG, q.toString());
         return executeFilterQuery(q.toString(), type);
     }
     
