@@ -21,6 +21,8 @@ import android.os.Handler;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,6 +49,8 @@ import com.ifreebudget.fm.R;
 import com.ifreebudget.fm.iFreeBudget;
 import com.ifreebudget.fm.actions.ActionRequest;
 import com.ifreebudget.fm.actions.ActionResponse;
+import com.ifreebudget.fm.actions.DeleteAccountAction;
+import com.ifreebudget.fm.actions.DeleteCategoryAction;
 import com.ifreebudget.fm.actions.DeleteTransactionAction;
 import com.ifreebudget.fm.activities.ListTransactionsActivity.TxHolder;
 import com.ifreebudget.fm.activities.utils.DialogCallback;
@@ -89,6 +93,37 @@ public class AccountsActivity extends Activity {
 
     private static final int PAGE_SIZE = 25;
     private static final String TAG = "AccountsActivity";
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+            ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+
+        inflater.inflate(R.menu.acct_ctxt_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info;
+        try {
+            info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        }
+        catch (ClassCastException e) {
+            Log.e(TAG, "bad menuInfo", e);
+            return true;
+        }
+
+        FManEntity obj = (FManEntity) gallery.getAdapter().getItem(
+                info.position);
+        if (item.getItemId() == R.id.edit_item) {
+            doEditGalleryItemAction(obj);
+        }
+        else if (item.getItemId() == R.id.delete_item) {
+            doDeleteGalleryItemAction(obj);
+        }
+        return true;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -153,6 +188,7 @@ public class AccountsActivity extends Activity {
                 }
             }
         });
+        registerForContextMenu(gallery);
 
         txListAdapter = new MyArrayAdapter(this, R.layout.tx_list_layout);
         listView = (ListView) findViewById(R.id.list_panel);
@@ -394,6 +430,117 @@ public class AccountsActivity extends Activity {
         Transaction a = entity.t;
         Intent intent = new Intent(this, AddReminderActivity.class);
         intent.putExtra(UpdateTransactionActivity.TXID, a.getTxId());
+        startActivity(intent);
+    }
+
+    private void doEditGalleryItemAction(FManEntity entity) {
+        if (entity instanceof Account) {
+            startEditAccountActivity(entity);
+        }
+        else {
+            startEditCategoryActivity(entity);
+        }
+    }
+
+    private void doDeleteGalleryItemAction(FManEntity obj) {
+        if (obj instanceof Account) {
+            deleteAccount(obj);
+        }
+        else {
+            deleteCategory(obj);
+        }
+    }
+
+    private void deleteCategory(FManEntity entity) {
+        if (categoryIdStack.empty()) {
+            return;
+        }
+        long catId = categoryIdStack.peek();
+        ActionRequest req = new ActionRequest();
+        req.setProperty("ACCOUNTCATEGORY", entity);
+
+        DeleteCategoryAction action = new DeleteCategoryAction();
+        try {
+            ActionResponse resp = action.executeAction(req);
+            if (resp.getErrorCode() == ActionResponse.NOERROR) {
+                Intent intent = new Intent(this, ManageAccountsActivity.class);
+
+                intent.putExtra(ManageAccountsActivity.PARENTCATEGORYIDKEY,
+                        catId);
+
+                startActivity(intent);
+            }
+            else {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        resp.getErrorMessage(), Toast.LENGTH_LONG);
+                toast.show();
+                return;
+            }
+        }
+        catch (Exception e) {
+            Log.e(TAG, MiscUtils.stackTrace2String(e));
+        }
+    }
+
+    private void deleteAccount(FManEntity entity) {
+        if (categoryIdStack.empty()) {
+            return;
+        }
+        long catId = categoryIdStack.peek();
+
+        ActionRequest req = new ActionRequest();
+        req.setProperty("ACCOUNTID", entity.getPK());
+
+        DeleteAccountAction action = new DeleteAccountAction();
+        try {
+            ActionResponse resp = action.executeAction(req);
+            if (resp.getErrorCode() == ActionResponse.NOERROR) {
+                Intent intent = new Intent(this, ManageAccountsActivity.class);
+
+                intent.putExtra(ManageAccountsActivity.PARENTCATEGORYIDKEY,
+                        catId);
+
+                startActivity(intent);
+            }
+            else {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        resp.getErrorMessage(), Toast.LENGTH_SHORT);
+                toast.show();
+                return;
+            }
+        }
+        catch (Exception e) {
+            Log.e(TAG, MiscUtils.stackTrace2String(e));
+        }
+    }
+
+    private void startEditAccountActivity(FManEntity entity) {
+        if (categoryIdStack.empty()) {
+            return;
+        }
+        long catId = categoryIdStack.peek();
+
+        Account a = (Account) entity;
+        Intent intent = new Intent(this, UpdateAccountActivity.class);
+        intent.putExtra(ManageAccountsActivity.PARENTCATEGORYIDKEY, catId);
+        intent.putExtra(ManageAccountsActivity.PARENTCATEGORYIDPATH,
+                categoryPathTf.getText());
+        intent.putExtra(ManageAccountsActivity.ACCOUNTIDKEY, a.getAccountId());
+        startActivity(intent);
+    }
+
+    private void startEditCategoryActivity(FManEntity entity) {
+        if (categoryIdStack.empty()) {
+            return;
+        }
+        long catId = categoryIdStack.peek();
+
+        AccountCategory a = (AccountCategory) entity;
+        Intent intent = new Intent(this, UpdateCategoryActivity.class);
+        intent.putExtra(ManageAccountsActivity.PARENTCATEGORYIDKEY, catId);
+        intent.putExtra(ManageAccountsActivity.PARENTCATEGORYIDPATH,
+                categoryPathTf.getText());
+        intent.putExtra(ManageAccountsActivity.CATEGORYIDKEY, a.getCategoryId());
         startActivity(intent);
     }
 

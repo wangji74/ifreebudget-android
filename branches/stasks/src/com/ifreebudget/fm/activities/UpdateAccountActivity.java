@@ -122,11 +122,13 @@ public class UpdateAccountActivity extends Activity {
 
         if (account != null) {
             if (updateAccount()) {
-                intent = new Intent(this, ManageAccountsActivity.class);
-
-                intent.putExtra(iFreeBudget.PARENTCATEGORYIDKEY, catId);
-
-                startActivity(intent);
+//                intent = new Intent(this, ManageAccountsActivity.class);
+//
+//                intent.putExtra(iFreeBudget.PARENTCATEGORYIDKEY, catId);
+//
+//                startActivity(intent);
+                
+                finish();
             }
         }
     }
