@@ -138,7 +138,8 @@ public class iFreeBudget extends Activity {
             manageAccounts(view);
             return;
         case 1:
-            manageTransactions(view);
+            //manageTransactions(view);
+            addTransaction(view);
             return;
         case 2:
             manageBudgets(view);
@@ -348,7 +349,8 @@ public class iFreeBudget extends Activity {
 
         private Integer[] mThumbIds = { 
                 R.drawable.gitem_accounts,
-                R.drawable.gitem_transactions, 
+//                R.drawable.gitem_transactions,
+                R.drawable.gitem_newtx,
                 R.drawable.gitem_budgets,
                 R.drawable.gitem_reports, 
 //                R.drawable.gitem_newtx, 

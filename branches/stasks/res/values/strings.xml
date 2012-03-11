@@ -223,7 +223,7 @@
 	<string-array
 		name="grid_items">
 		<item>Accounts</item>
-		<item>Transactions</item>
+		<item>Add transaction</item>
 		<item>Budgets</item>
 		<item>Reports</item>
 		<item>Reminders</item>
