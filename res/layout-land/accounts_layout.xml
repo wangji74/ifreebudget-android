@@ -38,6 +38,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:orientation="horizontal" >
+                <ImageButton
+                    android:id="@+id/add_tx_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/list_add_selector"
+                    android:gravity="center"
+                    android:onClick="@string/add_tx_action" />
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
@@ -79,7 +86,7 @@
 
         <GridView
             android:id="@+id/acct_gallery"
-            android:layout_width="200dp"
+            android:layout_width="225dp"
             android:layout_height="fill_parent"
             android:layout_below="@id/category_path_panel"
             android:columnWidth="90dp"
