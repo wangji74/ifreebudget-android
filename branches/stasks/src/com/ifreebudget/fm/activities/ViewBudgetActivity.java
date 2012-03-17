@@ -119,33 +119,11 @@ public class ViewBudgetActivity extends ListActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.budget_viewer_menu, menu);
-        return true;
-    }
-
-    @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
             ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.budget_ctxt_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-        case R.id.del_budget:
-            deleteBudget();
-            return true;
-        case R.id.mItemHome:
-            startHomeActivity();
-            return true;
-        default:
-            return super.onOptionsItemSelected(item);
-        }
     }
 
     public void gotoHomeScreen(View view) {
@@ -155,22 +133,6 @@ public class ViewBudgetActivity extends ListActivity {
     private void startHomeActivity() {
         Intent intent = new Intent(this, iFreeBudget.class);
         startActivity(intent);
-    }
-
-    private void deleteBudget() {
-        FManEntityManager em = FManEntityManager.getInstance();
-        em.beginTransaction();
-        try {
-            em.setTransactionSuccessful();
-            em.deleteBudget(budget.getId());
-            super.finish();
-        }
-        catch (Exception e) {
-            Log.e(TAG, MiscUtils.stackTrace2String(e));
-        }
-        finally {
-            em.endTransaction();
-        }
     }
 
     @Override
