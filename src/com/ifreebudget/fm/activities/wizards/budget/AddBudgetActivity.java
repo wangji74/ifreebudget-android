@@ -68,6 +68,8 @@ public class AddBudgetActivity extends Activity {
 
     private TextView title = null;
 
+    private TextView totalLbl = null;
+    
     private BigDecimal runningTotal = null;
 
     public void gotoHomeScreen(View view) {
@@ -82,6 +84,8 @@ public class AddBudgetActivity extends Activity {
 
         grid = (GridView) findViewById(R.id.budget_accts_grid);
         title = (TextView) findViewById(R.id.budget_name_lbl);
+        totalLbl = (TextView) findViewById(R.id.budget_amt_lbl);
+        
         runningTotal = new BigDecimal(0d);
 
         grid.setOnItemClickListener(new OnItemClickListener() {
@@ -110,7 +114,7 @@ public class AddBudgetActivity extends Activity {
         }
 
         String typeStr = Budget.getTypeAsString(type);
-        title.setText(name + "\t( " + typeStr + " )");
+        title.setText(name);
 
         FManEntityManager em = FManEntityManager.getInstance();
         int[] expenseTypes = { AccountTypes.ACCT_TYPE_EXPENSE };
@@ -141,8 +145,10 @@ public class AddBudgetActivity extends Activity {
 
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-        alert.setTitle(getString(R.string.alloc));
-        alert.setMessage(getString(R.string.amt));
+        //alert.setTitle(getString(R.string.alloc));
+        //alert.setMessage(getString(R.string.amt));
+        alert.setTitle(obj.getAccountName());
+        alert.setMessage(getString(R.string.alloc));
 
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
@@ -160,7 +166,7 @@ public class AddBudgetActivity extends Activity {
                 TextView tv = (TextView) v
                         .findViewById(R.id.budget_acct_name_tf);
                 tv.setText(getDisplayString(obj));
-
+                
                 setRunningTotal();
             }
         });
@@ -187,10 +193,9 @@ public class AddBudgetActivity extends Activity {
         String totalStr = NumberFormat.getCurrencyInstance(
                 SessionManager.getCurrencyLocale()).format(runningTotal);
 
-        StringBuilder typeStr = new StringBuilder(name).append("\t ( ")
-                .append(Budget.getTypeAsString(type)).append(" )\t Total: ")
+        StringBuilder typeStr = new StringBuilder().append("Total: ")
                 .append(totalStr);
-        title.setText(typeStr);
+        totalLbl.setText(typeStr);
     }
 
     public void doCancelAction(View view) {
