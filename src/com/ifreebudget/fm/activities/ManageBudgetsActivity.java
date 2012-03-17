@@ -21,7 +21,12 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -41,31 +46,53 @@ public class ManageBudgetsActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.manage_budgets_layout);
+        this.registerForContextMenu(this.getListView());
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+            ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.budget_viewer_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+                .getMenuInfo();
+        switch (item.getItemId()) {
+        case R.id.del_budget:
+            deleteBudget(info.position);
+            return true;
+        default:
+            return super.onContextItemSelected(item);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        FManEntityManager em = FManEntityManager.getInstance();
         try {
-            List<FManEntity> budgets = em.getList(Budget.class);
-            if (budgets != null) {
-                FManEntity[] arr = new FManEntity[budgets.size()];
-                budgets.toArray(arr);
-                for (FManEntity fe : budgets) {
-                    Budget b = (Budget) fe;
-                }
-                this.setListAdapter(new ArrayAdapter<FManEntity>(this,
-                        R.layout.budget_list_row,
-                        // android.R.layout.simple_list_item_1,
-                        arr));
-            }
+            loadItems();
         }
         catch (DBException e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
         }
         catch (Exception e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
+        }
+    }
+    
+    private void loadItems() throws Exception {
+        FManEntityManager em = FManEntityManager.getInstance();
+        List<FManEntity> budgets = em.getList(Budget.class);
+        if (budgets != null) {
+            FManEntity[] arr = new FManEntity[budgets.size()];
+            budgets.toArray(arr);
+            this.setListAdapter(new ArrayAdapter<FManEntity>(this,
+                    R.layout.budget_list_row,
+                    arr));        
         }
     }
 
@@ -92,5 +119,28 @@ public class ManageBudgetsActivity extends ListActivity {
     public void addBudget(View view) {
         Intent txIntent = new Intent(this, BudgetDetailsActivity.class);
         startActivity(txIntent);
+    }
+
+    private void deleteBudget(int position) {
+        if (position < 0) {
+            return;
+        }
+        FManEntity budget = (FManEntity) this.getListAdapter()
+                .getItem(position);
+        FManEntityManager em = FManEntityManager.getInstance();
+        em.beginTransaction();
+        try {
+            em.setTransactionSuccessful();
+            int num = em.deleteBudget((Long) budget.getPK());
+            if (num == 1) {
+                loadItems();
+            }
+        }
+        catch (Exception e) {
+            Log.e(TAG, MiscUtils.stackTrace2String(e));
+        }
+        finally {
+            em.endTransaction();
+        }
     }
 }
