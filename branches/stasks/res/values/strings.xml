@@ -1,279 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright 2011 ifreebudget@gmail.com Licensed under the Apache License, 
+<!--
+     Copyright 2011 ifreebudget@gmail.com Licensed under the Apache License, 
 	Version 2.0 (the "License"); you may not use this file except in compliance 
 	with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
 	Unless required by applicable law or agreed to in writing, software distributed 
 	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
 	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
-	the specific language governing permissions and limitations under the License. -->
+	the specific language governing permissions and limitations under the License.
+-->
 <resources>
-	<string
-		name="app_name">iFreeBudget</string>
-	<string
-		name="newTxHandler">newTxHandler</string>
-	<string
-		name="acct_name_lbl">* Name</string>
-	<string
-		name="add_acct_name">Add account</string>
-	<string
-		name="acct_number_lbl">Account number</string>
-	<string
-		name="acct_start_bal_lbl">Starting balance</string>
-	<string
-		name="acct_notes_lbl">Notes</string>
-	<string
-		name="save">Save</string>
-	<string
-		name="cancel">Cancel</string>
-	<string
-		name="save_account">saveAccount</string>
-	<string
-		name="parent_categoryid_key">PARENTCATEGORYID</string>
-	<string
-		name="edit">Edit</string>
-	<string
-		name="delete">Delete</string>
-	<string
-		name="update_account">updateAccount</string>
-	<string
-		name="acct_current_bal_lbl">Current balance</string>
-	<string
-		name="name_lbl">Name</string>
-	<string
-		name="save_category">saveCategory</string>
-	<string
-		name="net_assets_lbl">Assets</string>
-	<string
-		name="net_liabs_lbl">Liabilities</string>
-	<string
-		name="net_worth_lbl">Net worth</string>
-	<string
-		name="manage_accounts_btn">Accounts</string>
-	<string
-		name="manage_tx_btn">Transactions</string>
-	<string
-		name="summary_lbl">Summary</string>
-	<string
-		name="manage_accounts_actv">manageAccounts</string>
-	<string
-		name="type_lbl">Type</string>
-	<string
-		name="from_acct_lbl">Account</string>
-	<string
-		name="to_acct_lbl">Payee</string>
-	<string
-		name="tx_tags_lbl">Tags</string>
-	<string
-		name="tx_tagged_lbl">Tagged</string>
-	<string
-		name="save_tx">Save</string>
-	<string
-		name="tx_type_prompt">Type</string>
-	<string-array
-		name="tx_types">
-		<item>Expense</item>
-		<item>Income</item>
-		<item>Transfer</item>
-	</string-array>
-	<string
-		name="date_lbl">Date</string>
-	<string
-		name="tx_amt_lbl">Amount</string>
-	<string
-		name="launch_date_dlg">showDatePickerDialog</string>
-	<string
-		name="tx_type_exp">Expense</string>
-	<string
-		name="tx_type_inc">Income</string>
-	<string
-		name="tx_type_trans">Transfer</string>
-	<string
-		name="save_tx_action">saveTransaction</string>
-	<string
-		name="update_tx_action">updateTransaction</string>
-	<string
-		name="goto_home">gotoHomeScreen</string>
-	<string
-		name="cancel_action">doCancelAction</string>
-	<string
-		name="add_account_lbl">Add account</string>
-	<string
-		name="add_category_lbl">Add category</string>
-	<string
-		name="home_lbl">Home</string>
-	<string
-		name="add_account_action">addAccount</string>
-	<string
-		name="add_category_action">addCategory</string>
-	<string
-		name="add_tx_action">addTransaction</string>
-	<string
-		name="add_tx_lbl">Add transaction</string>
-	<string
-		name="delete_tx_action">deleteTransaction</string>
-	<string
-		name="delete_rem_action">deleteReminder</string>
-	<string
-		name="default_color">#6F8BBA</string>
-	<string
-		name="add_acct_title_lbl">Account details</string>
-	<string
-		name="manage_accts_title_lbl">Manage accounts and categories</string>
-	<string
-		name="add_category_title_lbl">Category details</string>
-	<string
-		name="view_tx_title_lbl">Transaction details</string>
-	<string
-		name="view_rem_title_lbl">Reminder details</string>
-	<string
-		name="tx_list_lbl">Transactions</string>
-	<string
-		name="back">Back</string>
-	<string
-		name="list_tx_for_acct">View transactions</string>
-	<string
-		name="today_filter">Today</string>
-	<string
-		name="last_week_filter">Last 7 days</string>
-	<string
-		name="last_month_filter">Last 30 days</string>
-	<string
-		name="all_fltr">All</string>
-	<string
-		name="budget_type_prompt">Type</string>
-	<string-array
-		name="budget_types">
-		<item>Weekly</item>
-		<item>Bi-weekly</item>
-		<item>Monthly</item>
-	</string-array>
-	<string
-		name="manage_budgets_lbl">Budgets</string>
-	<string
-		name="allocate_amts_lbl">Allocate amounts</string>
-	<string
-		name="add_budget_title_lbl">Budget details</string>
-	<string
-		name="save_budget_action">saveBudget</string>
-	<string
-		name="budgets_title_lbl">Budgets</string>
-	<string
-		name="manage_budgets_title_lbl">Manage budgets</string>
-	<string
-		name="add_budget_action">addBudget</string>
-	<string
-		name="add_budget_lbl">New budget</string>
-	<string
-		name="view_budget_title_lbl">Budget details</string>
-	<string
-		name="space">
+
+    <string name="app_name">iFreeBudget</string>
+    <string name="newTxHandler">newTxHandler</string>
+    <string name="acct_name_lbl">* Name</string>
+    <string name="add_acct_name">Add account</string>
+    <string name="acct_number_lbl">Account number</string>
+    <string name="acct_start_bal_lbl">Starting balance</string>
+    <string name="acct_notes_lbl">Notes</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="save_account">saveAccount</string>
+    <string name="parent_categoryid_key">PARENTCATEGORYID</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="update_account">updateAccount</string>
+    <string name="acct_current_bal_lbl">Current balance</string>
+    <string name="name_lbl">Name</string>
+    <string name="save_category">saveCategory</string>
+    <string name="net_assets_lbl">Assets</string>
+    <string name="net_liabs_lbl">Liabilities</string>
+    <string name="net_worth_lbl">Net worth</string>
+    <string name="manage_accounts_btn">Accounts</string>
+    <string name="manage_tx_btn">Transactions</string>
+    <string name="summary_lbl">Summary</string>
+    <string name="manage_accounts_actv">manageAccounts</string>
+    <string name="type_lbl">Type</string>
+    <string name="from_acct_lbl">Account</string>
+    <string name="to_acct_lbl">Payee</string>
+    <string name="tx_tags_lbl">Tags</string>
+    <string name="tx_tagged_lbl">Tagged</string>
+    <string name="save_tx">Save</string>
+    <string name="tx_type_prompt">Type</string>
+
+    <string-array name="tx_types">
+        <item>Expense</item>
+        <item>Income</item>
+        <item>Transfer</item>
+    </string-array>
+
+    <string name="date_lbl">Date</string>
+    <string name="tx_amt_lbl">Amount</string>
+    <string name="launch_date_dlg">showDatePickerDialog</string>
+    <string name="tx_type_exp">Expense</string>
+    <string name="tx_type_inc">Income</string>
+    <string name="tx_type_trans">Transfer</string>
+    <string name="save_tx_action">saveTransaction</string>
+    <string name="update_tx_action">updateTransaction</string>
+    <string name="goto_home">gotoHomeScreen</string>
+    <string name="cancel_action">doCancelAction</string>
+    <string name="add_account_lbl">Add account</string>
+    <string name="add_category_lbl">Add category</string>
+    <string name="home_lbl">Home</string>
+    <string name="add_account_action">addAccount</string>
+    <string name="add_category_action">addCategory</string>
+    <string name="add_tx_action">addTransaction</string>
+    <string name="add_tx_lbl">Add transaction</string>
+    <string name="delete_tx_action">deleteTransaction</string>
+    <string name="delete_rem_action">deleteReminder</string>
+    <string name="default_color">#6F8BBA</string>
+    <string name="add_acct_title_lbl">Account details</string>
+    <string name="add_tx_title_lbl">Transaction details</string>
+    <string name="manage_accts_title_lbl">Accounts and transactions</string>
+    <string name="add_category_title_lbl">Category details</string>
+    <string name="view_tx_title_lbl">Transaction details</string>
+    <string name="add_rem_title_lbl">Reminder details</string>
+    <string name="view_rem_title_lbl">Reminder details</string>
+    <string name="manage_rem_title_lbl">Reminders</string>
+    <string name="manage_notif_title_lbl">Reminder notifications</string>
+    <string name="tx_list_lbl">Transactions</string>
+    <string name="back">Back</string>
+    <string name="list_tx_for_acct">View transactions</string>
+    <string name="today_filter">Today</string>
+    <string name="last_week_filter">Last 7 days</string>
+    <string name="last_month_filter">Last 30 days</string>
+    <string name="all_fltr">All</string>
+    <string name="budget_type_prompt">Type</string>
+
+    <string-array name="budget_types">
+        <item>Weekly</item>
+        <item>Bi-weekly</item>
+        <item>Monthly</item>
+    </string-array>
+
+    <string name="manage_budgets_lbl">Budgets</string>
+    <string name="allocate_amts_lbl">Allocate amounts</string>
+    <string name="add_budget_title_lbl">Budget details</string>
+    <string name="save_budget_action">saveBudget</string>
+    <string name="budgets_title_lbl">Budgets</string>
+    <string name="manage_budgets_title_lbl">Budgets</string>
+    <string name="add_budget_action">addBudget</string>
+    <string name="add_budget_lbl">New budget</string>
+    <string name="view_budget_title_lbl">Budget details</string>
+    <string name="space"></string>
+    <string name="remove_acct_from_budget">Remove from budget</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="do_previous">doPrevious</string>
+    <string name="do_next">doNext</string>
+    <string name="budget_alloc_lbl">Allocated</string>
+    <string name="budget_savings_lbl">Savings</string>
+    <string name="budget_actual_lbl">Spent</string>
+    <string name="shortcut_string">Shortcuts</string>
+    <string name="nw_summary">Summary</string>
+    <string name="total_spe_for_period_lbl">Expenses</string>
+    <string name="total_inc_for_period_lbl">Income</string>
+    <string name="view_report_title_lbl">Cash flow</string>
+    <string name="name">Name</string>
+    <string name="total">Total</string>
+
+    <string-array name="exp_report_table_items">
+        <item>Name</item>
+        <item>Total</item>
+        <item>Max</item>
+    </string-array>
+    <string-array name="budget_report_table_items">
+        <item>Account</item>
+        <item>Allocated</item>
+        <item>Spent</item>
+    </string-array>
+
+    <string name="manage_db_title_lbl">Database backups</string>
+    <string name="backup_db">Backup database</string>
+    <string name="backup_db_action">backupDatabase</string>
+    <string name="use_backup">Use this backup</string>
+    <string name="delete_backup">Delete</string>
+    <string name="add">Add</string>
+
+    <string-array name="grid_items">
+        <item>Accounts</item>
+        <item>Add transaction</item>
+        <item>Budgets</item>
+        <item>Reports</item>
+        <item>Reminders</item>
+        <item>Backups</item>
+    </string-array>
+
+    <string name="reminder">Reminder</string>
+    <string name="show_filter_selector">showFilterSelector</string>
+    <string name="set_budget_amt_action">setBudgetAmount</string>
+    <string name="default_budget_alloc_lbl">Tap account to allocate amounts</string>
+    <string name="amt">Amount</string>
+    <string name="alloc">Set amount</string>
+    <string name="search_hint">Search transactions</string>
+
+    <color name="title_color">#202020</color>
+    <color name="sub_title_color">#eaeaea</color>
+
+    <string name="doc_url">http://www.ifreebudget.com/2011/08/ifreebudget-android-documentation.html
 	</string>
-	<string
-		name="remove_acct_from_budget">Remove from budget</string>
-	<string
-		name="previous">Previous</string>
-	<string
-		name="next">Next</string>
-	<string
-		name="do_previous">doPrevious</string>
-	<string
-		name="do_next">doNext</string>
-	<string
-		name="budget_alloc_lbl">Allocated</string>
-	<string
-		name="budget_savings_lbl">Savings</string>
-	<string
-		name="budget_actual_lbl">Spent</string>
-	<string
-		name="shortcut_string">Shortcuts</string>
-	<string
-		name="nw_summary">Summary</string>
-	<string
-		name="total_spe_for_period_lbl">Expenses</string>
-	<string
-		name="total_inc_for_period_lbl">Income</string>
-	<string
-		name="view_report_title_lbl">Cash flow</string>
-	<string
-		name="name">Name</string>
-	<string
-		name="total">Total</string>
-	<string-array
-		name="exp_report_table_items">
-		<item>Name</item>
-		<item>Total</item>
-		<item>Max</item>
-	</string-array>
-	<string-array
-		name="budget_report_table_items">
-		<item>Account</item>
-		<item>Allocated</item>
-		<item>Spent</item>
-	</string-array>
-	<string
-		name="backup_db">Backup database</string>
-	<string
-		name="backup_db_action">backupDatabase</string>
-	<string
-		name="use_backup">Use this backup</string>
-	<string
-		name="delete_backup">Delete</string>
-	<string
-		name="add">Add</string>
-	<string-array
-		name="grid_items">
-		<item>Accounts</item>
-		<item>Add transaction</item>
-		<item>Budgets</item>
-		<item>Reports</item>
-		<item>Reminders</item>
-		<item>Backups</item>
-	</string-array>
-	<string
-		name="reminder">Reminder</string>
-	<string
-		name="show_filter_selector">showFilterSelector</string>
-	<string
-		name="set_budget_amt_action">setBudgetAmount</string>
-	<string
-		name="default_budget_alloc_lbl">Tap account to allocate amounts</string>
-	<string
-		name="amt">Amount</string>
-	<string
-		name="alloc">Set amount</string>
-	<string
-		name="search_hint">Search transactions</string>
-	<color
-		name="title_color">#202020</color>
-	<color
-		name="sub_title_color">#eaeaea</color>
-	<string
-		name="doc_url">http://www.ifreebudget.com/2011/08/ifreebudget-android-documentation.html
-	</string>
-	<string
-		name="Start">Start</string>
-	<string
-		name="End">End</string>
-	<string
-		name="repeats_lbl">Repeats</string>
-	<string
-		name="repeat_daily">Daily</string>
-	<string
-		name="repeat_weekly">Weekly</string>
-	<string
-		name="repeat_monthly">Monthly</string>
-	<string-array
-		name="repeats_types">
-		<item>@string/repeat_daily</item>
-		<item>@string/repeat_weekly</item>
-		<item>@string/repeat_monthly</item>
-	</string-array>
-	<string
-		name="title_lbl">Title</string>
-	<string name="save_reminder_action">saveReminder</string>
-	<string name="refresh">Refresh</string>
-	<string name="edit_tx_action">editTransaction</string>
-	<string name="add_rem_action">addReminder</string>
-	<color name="tx_grp_bg">#eaeaea</color>
-	<color name="info_panel_bg">#336699</color>
+    <string name="Start">Start</string>
+    <string name="End">End</string>
+    <string name="repeats_lbl">Repeats</string>
+    <string name="repeat_daily">Daily</string>
+    <string name="repeat_weekly">Weekly</string>
+    <string name="repeat_monthly">Monthly</string>
+
+    <string-array name="repeats_types">
+        <item>@string/repeat_daily</item>
+        <item>@string/repeat_weekly</item>
+        <item>@string/repeat_monthly</item>
+    </string-array>
+
+    <string name="title_lbl">Title</string>
+    <string name="save_reminder_action">saveReminder</string>
+    <string name="refresh">Refresh</string>
+    <string name="edit_tx_action">editTransaction</string>
+    <string name="add_rem_action">addReminder</string>
+
+    <color name="tx_grp_bg">#eaeaea</color>
+    <color name="info_panel_bg">#336699</color>
+
+    <string name="add_budget_details_title">Budget details</string>
+    <string name="alloc_budget_amts_title">Allocate amounts</string>
+
 </resources>

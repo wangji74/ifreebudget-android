@@ -11,7 +11,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ifreebudget.fm"
     android:versionCode="44"
-    android:versionName="5.3" >
+    android:versionName="5.4" >
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -19,9 +19,7 @@
 
     <application
         android:debuggable="false"
-        android:icon="@drawable/icon"
-        android:label="@string/app_name"
-        android:theme="@android:style/Theme.NoTitleBar" >
+        android:icon="@drawable/icon">
         <provider
             android:authorities="com.ifreebudget.fm.TxSearchSuggestionProvider"
             android:name=".activities.TxSearchSuggestionProvider" />
