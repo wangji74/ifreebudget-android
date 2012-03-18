@@ -84,14 +84,15 @@
             android:padding="5dip" >
 
             <TextView
+                style="@style/SimpleTextView"
                 android:id="@+id/name_lbl"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/subtitle_lbl"
-                android:text="@string/acct_name_lbl"
-                android:textColor="#000000" />
+                android:text="@string/acct_name_lbl"/>
 
             <EditText
+                style="@style/SimpleEditText"
                 android:id="@+id/catgr_name_tf"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

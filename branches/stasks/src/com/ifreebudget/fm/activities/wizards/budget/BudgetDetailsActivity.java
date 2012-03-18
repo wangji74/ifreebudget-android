@@ -40,7 +40,7 @@ public class BudgetDetailsActivity extends Activity {
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this, R.array.budget_types,
-                android.R.layout.simple_spinner_item);
+                R.layout.my_spinner_txt_layout);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         bTypeSpinner.setAdapter(adapter);
     }

@@ -103,7 +103,7 @@ public class UpdateTransactionActivity extends Activity {
         fromAcctVal = (TextView) findViewById(R.id.from_acct_val);
 
         toSpinnerAdapter = new ArrayAdapter<FManEntity>(this,
-                android.R.layout.simple_spinner_item);
+                R.layout.my_spinner_txt_layout);
         toAcctSpinner = (Spinner) findViewById(R.id.to_acct_spinner);
         toSpinnerAdapter
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -166,7 +166,7 @@ public class UpdateTransactionActivity extends Activity {
 
     public void gotoHomeScreen(View view) {
         startHomeActivity();
-    }    
+    }
 
     protected void loadToAccounts(FManEntity fromAccount, FManEntity toAccount) {
         List<Long> matches = null;
@@ -269,10 +269,10 @@ public class UpdateTransactionActivity extends Activity {
     };
 
     public void updateTransaction(View view) {
-//        boolean del = deleteTransaction(tx.getTxId());
-//        if (del) {
-//            saveTransaction(view);
-//        }
+        // boolean del = deleteTransaction(tx.getTxId());
+        // if (del) {
+        // saveTransaction(view);
+        // }
         saveTransaction(view);
     }
 
@@ -292,6 +292,7 @@ public class UpdateTransactionActivity extends Activity {
             }
         }
     }
+
     private BigDecimal parseAmountAsNumber(String txt) throws Exception {
         BigDecimal txAmt = null;
         txAmt = new BigDecimal(nf.parse(txt).doubleValue());
@@ -303,14 +304,14 @@ public class UpdateTransactionActivity extends Activity {
         txAmt = new BigDecimal(txt);
         return txAmt;
     }
-    
+
     public void saveTransaction(View view) {
         Account to = (Account) toAcctSpinner.getSelectedItem();
 
         String txAmtStr = amountTf.getText().toString();
         BigDecimal txAmt = parseAmount(txAmtStr);
-        
-        if(txAmt == null) {
+
+        if (txAmt == null) {
             return;
         }
 
@@ -343,7 +344,7 @@ public class UpdateTransactionActivity extends Activity {
             toast.show();
             return;
         }
-        
+
         String txTagsStr = tagsTf.getText().toString();
         Transaction t = new Transaction();
         t.setFromAccountId(from.getAccountId());
@@ -351,14 +352,14 @@ public class UpdateTransactionActivity extends Activity {
         t.setTxDate(txDate.getTime());
         t.setTxAmount(txAmt);
         t.setTxNotes(txTagsStr);
-        
+
         /*
          * Set the tx id of the existing transction, the action will properly
          * delete the old and insert new based on this id in a single db
          * transaction
          */
         t.setTxId(tx.getTxId());
-        
+
         List<Transaction> txList = new ArrayList<Transaction>(1);
         txList.add(t);
 
