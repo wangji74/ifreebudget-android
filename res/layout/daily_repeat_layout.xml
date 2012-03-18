@@ -20,12 +20,11 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" />
 		<EditText
+			style="@style/NumbersEditText"	
 			android:id="@+id/daily_repeat_unit_tf"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
-			android:singleLine="true"
 			android:paddingLeft="5dip"
-			android:inputType="number"
 			android:minWidth="60dip"
 			android:layout_gravity="center_vertical|center_horizontal" />
 		<TextView

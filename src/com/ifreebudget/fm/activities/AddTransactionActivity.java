@@ -86,7 +86,7 @@ public class AddTransactionActivity extends Activity {
         tagsTf = (EditText) findViewById(R.id.tx_tags_tf);
 
         fromSpinnerAdapter = new ArrayAdapter<FManEntity>(this,
-                android.R.layout.simple_spinner_item);
+                R.layout.my_spinner_txt_layout);
         fromAcctSpinner = (Spinner) findViewById(R.id.from_acct_spinner);
         fromSpinnerAdapter
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -112,7 +112,7 @@ public class AddTransactionActivity extends Activity {
         });
 
         toSpinnerAdapter = new ArrayAdapter<FManEntity>(this,
-                android.R.layout.simple_spinner_item);
+                R.layout.my_spinner_txt_layout);
         toAcctSpinner = (Spinner) findViewById(R.id.to_acct_spinner);
         toSpinnerAdapter
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -120,7 +120,7 @@ public class AddTransactionActivity extends Activity {
 
         txTypeSpinner = (Spinner) findViewById(R.id.tx_type_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this, R.array.tx_types, android.R.layout.simple_spinner_item);
+                this, R.array.tx_types, R.layout.my_spinner_txt_layout);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         txTypeSpinner.setAdapter(adapter);
         txTypeSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {

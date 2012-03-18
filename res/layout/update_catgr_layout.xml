@@ -71,10 +71,9 @@
 		android:layout_height="wrap_content"
 		android:textColor="#000000" />
 	<EditText
+		style="@style/SimpleEditText"		    
 		android:id="@+id/catgr_name_tf"
 		android:width="200px"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:singleLine="true"
-		android:editable="true" />
+		android:layout_height="wrap_content"/>
 </LinearLayout>

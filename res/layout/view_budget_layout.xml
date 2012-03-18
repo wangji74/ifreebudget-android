@@ -136,6 +136,7 @@
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true">
 		<Button
+		    style="@style/SimpleButton"
 			android:id="@+id/previous_budget_period_button"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
@@ -144,6 +145,7 @@
 			android:width="80px"
 			android:onClick="@string/do_previous" />
 		<Button
+		    style="@style/SimpleButton"
 			android:id="@+id/next_budget_period_button"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"

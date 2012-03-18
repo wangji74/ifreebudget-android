@@ -1,55 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:id="@+id/daily_repeat_panel">
-	<LinearLayout
-		android:id="@+id/top_panel"
-		android:orientation="horizontal"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center"
-		android:layout_gravity="center_horizontal">
-		<TextView
-			android:text="Day "
-			android:paddingLeft="5dip"
-			android:textColor="#000000"
-			android:layout_gravity="center_vertical|center_horizontal"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
-		<EditText
-			android:id="@+id/monthly_repeat_dom_tf"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:singleLine="true"
-			android:paddingLeft="5dip"
-			android:inputType="number"
-			android:minWidth="60dip"
-			android:layout_gravity="center_vertical|center_horizontal" />
-		<TextView
-			android:text=" of every "
-			android:paddingLeft="5dip"
-			android:textColor="#000000"
-			android:layout_gravity="center_vertical|center_horizontal"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
-		<EditText
-			android:id="@+id/monthly_repeat_unit"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:singleLine="true"
-			android:paddingLeft="5dip"
-			android:inputType="number"
-			android:minWidth="60dip"
-			android:layout_gravity="center_vertical|center_horizontal" />
-		<TextView
-			android:text=" month(s)"
-			android:paddingLeft="5dip"
-			android:textColor="#000000"
-			android:layout_gravity="center_vertical|center_horizontal"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
-	</LinearLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/daily_repeat_panel"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/top_panel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:paddingLeft="5dip"
+            android:text="Day "
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/monthly_repeat_dom_tf"
+            style="@style/NumbersEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:minWidth="60dip"
+            android:paddingLeft="5dip" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:paddingLeft="5dip"
+            android:text=" of every "
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/monthly_repeat_unit"
+            style="@style/NumbersEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:inputType="number"
+            android:minWidth="60dip"
+            android:paddingLeft="5dip"
+            android:singleLine="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:paddingLeft="5dip"
+            android:text=" month(s)"
+            android:textColor="#000000" />
+    </LinearLayout>
+
 </LinearLayout>

@@ -78,34 +78,30 @@
 				android:layout_height="wrap_content"
 				android:textColor="#000000" />
 			<EditText
+				style="@style/SimpleEditText"	
 				android:id="@+id/acct_name_tf"
 				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:singleLine="true"
-				android:editable="true" />
+				android:layout_height="wrap_content"/>
 			<TextView
 				android:text="@string/acct_number_lbl"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:textColor="#000000" />
 			<EditText
+				style="@style/SimpleEditText"	
 				android:id="@+id/acct_number_tf"
 				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:singleLine="true"
-				android:editable="true" />
+				android:layout_height="wrap_content"/>
 			<TextView
 				android:text="@string/acct_current_bal_lbl"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:textColor="#000000" />
 			<EditText
+				style="@style/DecimalEditText"	
 				android:id="@+id/acct_start_bal_tf"
 				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:singleLine="true"
-				android:editable="true"
-				android:numeric="decimal" />
+				android:layout_height="wrap_content"/>
 			<LinearLayout
 				android:orientation="vertical"
 				android:layout_width="fill_parent"
@@ -119,10 +115,10 @@
 					android:layout_weight="0.2"
 					android:textColor="#000000" />
 				<EditText
+					style="@style/SimpleEditTextArea"	
 					android:id="@+id/acct_notes_tf"
 					android:layout_width="fill_parent"
 					android:layout_height="fill_parent"
-					android:minLines="5"
 					android:layout_weight="0.8"
 					android:editable="true"
 					android:gravity="top" />

@@ -31,10 +31,10 @@
 		android:paddingBottom="5dip"
 		android:layout_below="@id/account_name_lbl" />
 	<EditText
+		style="@style/SimpleEditText"	
 		android:id="@+id/allocated_amt_tf"
 		android:layout_height="wrap_content"
 		android:layout_width="fill_parent"
-		android:singleLine="true"
 		android:layout_weight="0.5"
 		android:layout_below="@id/subtitle_lbl" />
 	<LinearLayout
@@ -46,6 +46,7 @@
 		android:layout_span="2"
 		android:layout_alignParentBottom="true">
 		<Button
+		    style="@style/SimpleButton"
 			android:id="@+id/save_button"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
@@ -54,6 +55,7 @@
 			android:width="80dip"
 			android:onClick="@string/set_budget_amt_action" />
 		<Button
+		    android="@style/SimpleButton"
 			android:id="@+id/cancel_button"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"

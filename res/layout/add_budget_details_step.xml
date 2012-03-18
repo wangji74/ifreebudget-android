@@ -1,97 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:background="#ffffff">
-	<LinearLayout
-		android:id="@+id/info_panel"
-		android:orientation="vertical"
-		android:layout_width="fill_parent"
-		android:layout_height="60dip"
-		android:background="@color/info_panel_bg"
-		android:paddingRight="5dip"
-		android:paddingTop="5dip"
-		android:paddingBottom="5dip">
-		<RelativeLayout
-			android:id="@+id/title_panel"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-			<TextView
-				android:id="@+id/title_lbl"
-				android:text="@string/add_budget_details_title"
-				android:layout_width="wrap_content"
-				android:layout_height="fill_parent"
-				android:textStyle="bold"
-				android:textSize="18sp"
-				android:gravity="center_vertical"
-				android:paddingLeft="5dip"
-				android:textColor="#FFFFFF"
-				android:clickable="true"
-				android:onClick="@string/goto_home" />
-			<LinearLayout
-				android:id="@+id/button_panel"
-				android:orientation="horizontal"
-				android:gravity="fill_vertical"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_alignParentRight="true">
-			</LinearLayout>
-		</RelativeLayout>
-	</LinearLayout>
-	<TextView
-		android:id="@+id/type_lbl"
-		android:text="@string/type_lbl"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:paddingLeft="5dip"
-		android:textColor="#000000"
-		android:layout_below="@id/info_panel" />
-	<Spinner
-		android:id="@+id/budget_type_spinner"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:paddingLeft="5dip"
-		android:prompt="@string/budget_type_prompt"
-		android:layout_below="@id/type_lbl" />
-	<TextView
-		android:id="@+id/name_lbl"
-		android:text="@string/name_lbl"
-		android:paddingLeft="5dip"
-		android:textColor="#000000"
-		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-		android:layout_below="@id/budget_type_spinner" />
-	<EditText
-		android:id="@+id/budget_name_tf"
-		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-		android:singleLine="true"
-		android:layout_weight="0.5"
-		android:layout_below="@id/name_lbl" />
-	<LinearLayout
-		android:id="@+id/south_panel"
-		android:orientation="horizontal"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_weight="0.1"
-		android:layout_span="2"
-		android:layout_below="@id/budget_name_tf">
-		<Button
-			android:id="@+id/cancel_button"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:text="@string/cancel"
-			android:layout_weight="0.5"
-			android:width="80dip"
-			android:onClick="@string/cancel_action" />
-		<Button
-			android:id="@+id/next_button"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:text="@string/next"
-			android:layout_weight="0.5"
-			android:width="80dip"
-			android:onClick="@string/do_next" />
-	</LinearLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff" >
+
+    <LinearLayout
+        android:id="@+id/info_panel"
+        android:layout_width="fill_parent"
+        android:layout_height="60dip"
+        android:background="@color/info_panel_bg"
+        android:orientation="vertical"
+        android:paddingBottom="5dip"
+        android:paddingRight="5dip"
+        android:paddingTop="5dip" >
+
+        <RelativeLayout
+            android:id="@+id/title_panel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/title_lbl"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:onClick="@string/goto_home"
+                android:paddingLeft="5dip"
+                android:text="@string/add_budget_details_title"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/button_panel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="fill_vertical"
+                android:orientation="horizontal" >
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/type_lbl"
+        style="@style/SimpleTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/info_panel"
+        android:paddingLeft="5dip"
+        android:text="@string/type_lbl" />
+
+    <Spinner
+        android:id="@+id/budget_type_spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/type_lbl"
+        android:paddingLeft="5dip"
+        android:prompt="@string/budget_type_prompt" />
+
+    <TextView
+        android:id="@+id/name_lbl"
+        style="@style/SimpleTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/budget_type_spinner"
+        android:paddingLeft="5dip"
+        android:text="@string/name_lbl" />
+
+    <EditText
+        android:id="@+id/budget_name_tf"
+        style="@style/SimpleEditText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name_lbl"
+        android:layout_weight="0.5" />
+
+    <LinearLayout
+        android:id="@+id/south_panel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/budget_name_tf"
+        android:layout_span="2"
+        android:layout_weight="0.1"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/cancel_button"
+            style="@style/SimpleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="@string/cancel_action"
+            android:text="@string/cancel"
+            android:width="80dip" />
+
+        <Button
+            android:id="@+id/next_button"
+            style="@style/SimpleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="@string/do_next"
+            android:text="@string/next"
+            android:width="80dip" />
+    </LinearLayout>
+
 </RelativeLayout>
