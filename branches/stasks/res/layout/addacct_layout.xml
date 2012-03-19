@@ -83,17 +83,19 @@
             android:padding="5dip" >
 
             <TextView
-                style="@style/SimpleTextView"
                 android:id="@+id/name_lbl"
+                style="@style/SimpleTextView"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-	            android:text="@string/acct_name_lbl"/>
+                android:padding="5dip"
+                android:text="@string/acct_name_lbl" />
 
             <EditText
                 android:id="@+id/acct_name_tf"
                 style="@style/SimpleEditText"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:padding="5dip" />
         </LinearLayout>
 
         <LinearLayout
@@ -105,12 +107,13 @@
             android:padding="5dip" >
 
             <TextView
-                style="@style/SimpleTextView"
                 android:id="@+id/num_lbl"
+                style="@style/SimpleTextView"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/acct_name_tf"
-                android:text="@string/acct_number_lbl"/>
+                android:padding="5dip"
+                android:text="@string/acct_number_lbl" />
 
             <EditText
                 android:id="@+id/acct_number_tf"
@@ -118,7 +121,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/num_lbl"
-                android:editable="true" />
+                android:editable="true"
+                android:padding="5dip" />
         </LinearLayout>
 
         <LinearLayout
@@ -130,19 +134,21 @@
             android:padding="5dip" >
 
             <TextView
-                style="@style/SimpleTextView"
                 android:id="@+id/start_bal"
+                style="@style/SimpleTextView"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/acct_number_tf"
-                android:text="@string/acct_start_bal_lbl"/>
+                android:padding="5dip"
+                android:text="@string/acct_start_bal_lbl" />
 
             <EditText
                 android:id="@+id/acct_start_bal_tf"
                 style="@style/DecimalEditText"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/start_bal"/>
+                android:layout_below="@id/start_bal"
+                android:padding="5dip" />
         </LinearLayout>
 
         <LinearLayout
@@ -157,7 +163,8 @@
                 style="@style/SimpleTextView"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/acct_notes_lbl"/>
+                android:padding="5dip"
+                android:text="@string/acct_notes_lbl" />
 
             <EditText
                 android:id="@+id/acct_notes_tf"
@@ -166,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="top"
                 android:minLines="5"
-                android:padding="6dip" />
+                android:padding="5dip" />
         </LinearLayout>
     </RelativeLayout>
 

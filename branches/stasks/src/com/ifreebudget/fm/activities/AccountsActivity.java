@@ -80,7 +80,7 @@ public class AccountsActivity extends Activity {
 
     private FilterBuilderUtils filterUtil;
 
-    private Button filterButton;
+    //private Button filterButton;
     private ImageButton upBtn;
 
     private TextView categoryPathTf = null;
@@ -136,14 +136,27 @@ public class AccountsActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-        case R.id.mItemHome:
-            gotoHomeScreen();
-            break;
         case R.id.mItemAddAcct:
             startAddAccountActivity();
             break;
         case R.id.mItemAddCatgr:
             startAddCategoryActivity();
+            break;
+        case R.id.mItemTxToday:
+            filterUtil.setDateRange(0);
+            loadCategory();
+            break;
+        case R.id.mItemTxLastWeek:
+            filterUtil.setDateRange(1);
+            loadCategory();
+            break;
+        case R.id.mItemTxLastMonth:
+            filterUtil.setDateRange(2);
+            loadCategory();
+            break;
+        case R.id.mItemTxAll:
+            filterUtil.setDateRange(3);
+            loadCategory();
             break;
         default:
             return true;
@@ -239,7 +252,6 @@ public class AccountsActivity extends Activity {
 
         categoryPathPanel = findViewById(R.id.category_path_panel);
         categoryPathTf = (TextView) findViewById(R.id.category_path_lbl);
-        filterButton = (Button) findViewById(R.id.filter_button);
     }
 
     @Override
@@ -315,7 +327,7 @@ public class AccountsActivity extends Activity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         filterUtil.setDateRange(item);
-                        filterButton.setText(items[item]);
+                        //filterButton.setText(items[item]);
                         resetState();
                         retrieveTxList(filterUtil.buildFilter(getIntent()));
                         dialog.dismiss();
@@ -344,7 +356,7 @@ public class AccountsActivity extends Activity {
                 text = res.getString(R.string.all_fltr);
             }
         }
-        filterButton.setText(text);
+        //filterButton.setText(text);
     }
 
     private boolean retrieveInProgress = false;

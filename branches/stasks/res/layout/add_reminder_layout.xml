@@ -63,7 +63,8 @@
 			android:orientation="vertical"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:layout_below="@id/info_panel">
+			android:layout_below="@id/info_panel"
+			android:padding="5dip">
 			<TextView
 			    style="@style/SimpleTextView"
 				android:text="@string/title_lbl"
@@ -83,11 +84,10 @@
 			android:orientation="vertical"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingBottom="5dip"
+			android:padding="5dip"
 			android:layout_below="@id/name_panel">
 			<TableLayout
 				android:layout_width="fill_parent"
-				android:stretchColumns="1"
 				android:layout_height="wrap_content">
 				<TableRow>
 					<TextView
@@ -143,14 +143,14 @@
 			android:id="@+id/spacer"
 			android:layout_width="fill_parent"
 			android:layout_height="2dip"
-			android:background="#000000"
+			android:background="#c0c0c0"
 			android:layout_below="@id/reminder_dates_panel" />
 		<LinearLayout
 			android:id="@+id/repeat_type_panel"
 			android:orientation="vertical"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="5dip"
+			android:padding="5dip"
 			android:layout_below="@id/spacer">
 			<TextView
 			    style="@style/SimpleTextView"
@@ -192,6 +192,7 @@
 			android:orientation="vertical"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
+			android:padding="5dip"			
 			android:layout_below="@id/repeat_type_panel">
 		</LinearLayout>
 	</RelativeLayout>
