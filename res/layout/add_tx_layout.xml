@@ -179,8 +179,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:numeric="decimal"
-                    android:padding="5dip"
-                    android:singleLine="true" />
+                    android:padding="5dip" />
             </TableRow>
         </TableLayout>
 
