@@ -76,8 +76,7 @@
 				android:id="@+id/rem_title_tf"
 				android:layout_height="wrap_content"
 				android:layout_width="fill_parent"
-				android:layout_gravity="bottom"
-				android:layout_weight="0.5" />
+				android:padding="5dip"/>
 		</LinearLayout>
 		<LinearLayout
 			android:id="@+id/reminder_dates_panel"
