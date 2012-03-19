@@ -18,7 +18,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:debuggable="false"
+        android:debuggable="true"
         android:icon="@drawable/icon">
         <provider
             android:authorities="com.ifreebudget.fm.TxSearchSuggestionProvider"

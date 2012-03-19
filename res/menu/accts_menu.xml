@@ -14,18 +14,43 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/mItemHome"
-        android:title="Home"
-        android:titleCondensed="Home"></item>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
     <item
         android:id="@+id/mItemAddAcct"
         android:title="Add account"
         android:titleCondensed="Add account"></item>
+
     <item
         android:id="@+id/mItemAddCatgr"
         android:title="Add category"
         android:titleCondensed="Add category"></item>
+
+    <item
+        android:id="@+id/mItemTx"
+        android:title="Transactions"
+        android:titleCondensed="Transactions">
+<menu >
+
+            <item
+                android:id="@+id/mItemTxToday"
+                android:title="Today"
+                android:titleCondensed="Today"/>
+
+            <item
+                android:id="@+id/mItemTxLastWeek"
+                android:title="Last 7 days"
+                android:titleCondensed="Last 7 days"/>
+
+            <item
+                android:id="@+id/mItemTxLastMonth"
+                android:title="Last 30 days"
+                android:titleCondensed="Last 30 days"/>
+
+            <item
+                android:id="@+id/mItemTxAll"
+                android:title="All"
+                android:titleCondensed="Last 30 days"/>
+        </menu></item>
+
 </menu>

@@ -113,7 +113,7 @@
         android:cacheColorHint="#ffffff"
         android:fadingEdge="none" />
 
-    <RelativeLayout
+    <!-- RelativeLayout
         android:id="@+id/south_panel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -132,6 +132,6 @@
             android:text="@string/last_week_filter"
             android:textSize="10dip"
             android:textStyle="bold" />
-    </RelativeLayout>
+    </RelativeLayout-->
 
 </RelativeLayout>

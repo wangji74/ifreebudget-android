@@ -43,48 +43,63 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/type_lbl"
-        style="@style/SimpleTextView"
+    <LinearLayout
+        android:id="@+id/budget_type_panel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/info_panel"
-        android:paddingLeft="5dip"
-        android:text="@string/type_lbl" />
+        android:orientation="vertical"
+        android:padding="5dip" >
 
-    <Spinner
-        android:id="@+id/budget_type_spinner"
+        <TextView
+            android:id="@+id/type_lbl"
+            style="@style/SimpleTextView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dip"
+            android:text="@string/type_lbl" />
+
+        <Spinner
+            android:id="@+id/budget_type_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dip"
+            android:prompt="@string/budget_type_prompt" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/budget_name_panel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/type_lbl"
-        android:paddingLeft="5dip"
-        android:prompt="@string/budget_type_prompt" />
+        android:layout_below="@id/budget_type_panel"
+        android:orientation="vertical"
+        android:padding="5dip" >
 
-    <TextView
-        android:id="@+id/name_lbl"
-        style="@style/SimpleTextView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/budget_type_spinner"
-        android:paddingLeft="5dip"
-        android:text="@string/name_lbl" />
+        <TextView
+            android:id="@+id/name_lbl"
+            style="@style/SimpleTextView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dip"
+            android:text="@string/name_lbl" />
 
-    <EditText
-        android:id="@+id/budget_name_tf"
-        style="@style/SimpleEditText"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/name_lbl"
-        android:layout_weight="0.5" />
+        <EditText
+            android:id="@+id/budget_name_tf"
+            style="@style/SimpleEditText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dip" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/south_panel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/budget_name_tf"
+        android:layout_below="@id/budget_name_panel"
         android:layout_span="2"
         android:layout_weight="0.1"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:padding="5dip" >
 
         <Button
             android:id="@+id/cancel_button"
