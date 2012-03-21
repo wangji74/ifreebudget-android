@@ -70,15 +70,15 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/info_panel"
-            android:orientation="vertical" 
-            android:padding="5dip">
+            android:orientation="vertical"
+            android:padding="5dip" >
 
             <TextView
                 style="@style/SimpleTextView"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dip"
-                android:text="@string/type_lbl"/>
+                android:text="@string/type_lbl" />
 
             <Spinner
                 android:id="@+id/tx_type_spinner"
@@ -101,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dip"
-                android:text="@string/from_acct_lbl"/>
+                android:text="@string/from_acct_lbl" />
 
             <Spinner
                 android:id="@+id/from_acct_spinner"
@@ -125,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dip"
-                android:text="@string/to_acct_lbl"/>
+                android:text="@string/to_acct_lbl" />
 
             <Spinner
                 android:id="@+id/to_acct_spinner"
@@ -136,67 +136,51 @@
                 android:prompt="@string/to_acct_lbl" />
         </LinearLayout>
 
-        <TableLayout
+        <LinearLayout
             android:id="@+id/details_panel"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/to_acct_panel" >
+            android:layout_below="@id/to_acct_panel" 
+            android:orientation="horizontal"
+            android:padding="5dip">
 
-            <TableRow android:padding="5dip" >
+            <Button
+                android:id="@+id/tx_date_btn"
+                style="@style/SimpleButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:layout_weight="1"
+                android:onClick="@string/launch_date_dlg"
+                android:textSize="13sp"
+                android:padding="5dip" />
 
-                <TextView
-	                style="@style/SimpleTextView"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:paddingLeft="5dip"
-                    android:text="@string/date_lbl"/>
-
-                <TextView
-	                style="@style/SimpleTextView"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="@string/tx_amt_lbl"/>
-            </TableRow>
-
-            <TableRow android:padding="5dip" >
-
-                <Button
-                    android:id="@+id/tx_date_btn"
-                    style="@style/SimpleButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="@string/launch_date_dlg"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:layout_weight="0.5"
-                    android:padding="5dip" />
-
-                <EditText
-                    android:id="@+id/tx_amt_tf"
-                    style="@style/DecimalEditText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:layout_weight="0.5"
-                    android:padding="5dip" />
-            </TableRow>
-        </TableLayout>
+            <EditText
+                android:id="@+id/tx_amt_tf"
+                style="@style/DecimalEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:layout_weight="1"
+                android:text="Amount"
+                android:textSize="13sp"
+                android:padding="5dip" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/notes_panel"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/details_panel"
-            android:orientation="vertical" 
-            android:padding="10dip">
+            android:orientation="vertical"
+            android:padding="10dip" >
 
             <TextView
                 style="@style/SimpleTextView"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dip"
-                android:text="@string/tx_tags_lbl"/>
+                android:text="@string/tx_tags_lbl" />
 
             <EditText
                 android:id="@+id/tx_tags_tf"
@@ -204,7 +188,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:gravity="top"
-                android:minLines="5"/>
+                android:minLines="5" />
         </LinearLayout>
     </RelativeLayout>
 
