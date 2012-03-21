@@ -19,11 +19,11 @@
 			android:id="@+id/info_panel"
 			android:orientation="vertical"
 			android:layout_width="fill_parent"
-			android:layout_height="60dip"
+			android:layout_height="36dip"
 			android:background="@color/info_panel_bg"
-			android:paddingRight="5dip"
-			android:paddingTop="5dip"
-			android:paddingBottom="5dip">
+	        android:paddingBottom="2dip"
+    	    android:paddingRight="2dip"
+        	android:paddingTop="2dip" >
 			<RelativeLayout
 				android:id="@+id/title_panel"
 				android:layout_width="fill_parent"
@@ -34,7 +34,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="fill_parent"
 					android:textStyle="bold"
-					android:textSize="18sp"
+					android:textSize="13sp"
 					android:gravity="center_vertical"
 					android:paddingLeft="5dip"
 					android:textColor="#FFFFFF"
@@ -49,8 +49,8 @@
 					android:layout_alignParentRight="true">
 					<ImageButton
 						android:id="@+id/cancel_notif_btn"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
+						android:layout_width="32dip"
+						android:layout_height="32dip"
 						android:background="@drawable/document_close_selector"
 						android:gravity="center"
 						android:onClick="cancelTxNotification"/>
@@ -60,8 +60,8 @@
 						android:layout_height="fill_parent"/>
 					<ImageButton
 						android:id="@+id/add_tx_btn"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
+						android:layout_width="32dip"
+						android:layout_height="32dip"
 						android:background="@drawable/document_save_selector"
 						android:gravity="center"
 						android:onClick="@string/save_tx_action"/>

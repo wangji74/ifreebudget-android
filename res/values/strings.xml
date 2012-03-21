@@ -183,4 +183,7 @@
     <string name="add_budget_details_title">Budget details</string>
     <string name="alloc_budget_amts_title">Allocate amounts</string>
 
+    <string name="info_panel_ht">48dip</string>
+    <string name="info_panel_txt_sz">14sp</string>
+        
 </resources>
