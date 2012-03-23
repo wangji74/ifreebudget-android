@@ -89,11 +89,18 @@
             android:gravity="right"/>
         </LinearLayout>
 
+    <ExpandableListView
+        android:id="@+id/budget_accts_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/budget_details_panel"
+        android:cacheColorHint="#ffffff" />
+        
     <GridView
         android:id="@+id/budget_accts_grid"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/budget_details_panel"
+        android:layout_below="@+id/budget_accts_list"
         android:columnWidth="60dp"
         android:gravity="center_vertical|center_horizontal"
         android:horizontalSpacing="10dp"

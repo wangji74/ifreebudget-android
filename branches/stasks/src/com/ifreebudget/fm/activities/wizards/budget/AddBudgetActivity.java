@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,14 +38,18 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ifreebudget.fm.R;
 import com.ifreebudget.fm.iFreeBudget;
 import com.ifreebudget.fm.activities.ManageBudgetsActivity;
+import com.ifreebudget.fm.activities.utils.AccountsExpandableListAdapter;
 import com.ifreebudget.fm.constants.AccountTypes;
 import com.ifreebudget.fm.entity.DBException;
 import com.ifreebudget.fm.entity.FManEntityManager;
@@ -61,6 +66,10 @@ public class AddBudgetActivity extends Activity {
     private FManEntity[] budgetedAccounts = null;
 
     private GridView grid = null;
+    
+    private ExpandableListView list = null;
+    
+    private AccountsExpandableListAdapter listAdapter;
 
     private String name = null;
 
@@ -82,6 +91,15 @@ public class AddBudgetActivity extends Activity {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.add_budget_layout);
 
+        list = (ExpandableListView) findViewById(R.id.budget_accts_list);
+        
+        Display newDisplay = getWindowManager().getDefaultDisplay(); 
+        int width = newDisplay.getWidth();
+        list.setIndicatorBounds(width-50, width);
+        
+        listAdapter = new AccountsExpandableListAdapter(this);
+        list.setAdapter(listAdapter);
+        
         grid = (GridView) findViewById(R.id.budget_accts_grid);
         title = (TextView) findViewById(R.id.budget_name_lbl);
         totalLbl = (TextView) findViewById(R.id.budget_amt_lbl);
@@ -116,10 +134,12 @@ public class AddBudgetActivity extends Activity {
         String typeStr = Budget.getTypeAsString(type);
         title.setText(name);
 
-        FManEntityManager em = FManEntityManager.getInstance();
+        FManEntityManager em = FManEntityManager.getInstance(this);
         int[] expenseTypes = { AccountTypes.ACCT_TYPE_EXPENSE };
         try {
             List<FManEntity> list = em.getAccountsForTypes(expenseTypes);
+            listAdapter.setData(list);
+            
             budgetedAccounts = new FManEntity[list.size()];
             int sz = list.size();
             for (int i = 0; i < sz; i++) {
