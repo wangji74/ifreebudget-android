@@ -65,7 +65,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/info_panel"
-        android:orientation="horizontal">
+        android:orientation="horizontal" >
 
         <TextView
             android:id="@+id/budget_name_lbl"
@@ -73,21 +73,22 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:background="@color/sub_title_color"
+            android:gravity="left"
             android:padding="5dip"
             android:textColor="#000000"
-            android:textStyle="bold" 
-            android:gravity="left"/>
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/budget_amt_lbl"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:background="@color/sub_title_color"
+            android:gravity="right"
             android:padding="5dip"
             android:textColor="#000000"
-            android:textStyle="bold" 
-            android:gravity="right"/>
-        </LinearLayout>
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <ExpandableListView
         android:id="@+id/budget_accts_list"
@@ -95,8 +96,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/budget_details_panel"
         android:cacheColorHint="#ffffff" />
-        
-    <GridView
+
+    <!--
+         GridView
         android:id="@+id/budget_accts_grid"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -107,6 +109,7 @@
         android:numColumns="2"
         android:padding="10dp"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="60dp" />
+        android:verticalSpacing="60dp" /
+    -->
 
 </RelativeLayout>

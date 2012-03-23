@@ -137,10 +137,20 @@ public class AccountsExpandableListAdapter extends BaseExpandableListAdapter {
         tv.setTextColor(Color.BLACK);
         if (groupPosition < groups.size()) {
             AccountCategory ac = groups.get(groupPosition);
-            tv.setText(ac.getCategoryName());
+            
+            List<BudgetedAccount> list = entries.get(ac);
+            
+            BigDecimal val = new BigDecimal(0d);
+            for(BudgetedAccount a : list) {
+                val = val.add(a.getAllocatedAmount());
+            }
+
+            String totalVal = NumberFormat.getCurrencyInstance(
+                    SessionManager.getCurrencyLocale()).format(val);
+            tv.setText(ac.getCategoryName() + " - " + totalVal);
         }
-        // int color = context.getResources().getColor(R.colo);
-        // tv.setBackgroundColor(color);
+        int color = context.getResources().getColor(R.color.tx_grp_bg);
+        tv.setBackgroundColor(color);
         return tv;
     }
 
@@ -161,11 +171,14 @@ public class AccountsExpandableListAdapter extends BaseExpandableListAdapter {
         AccountCategory ac = groups.get(groupPosition);
         return entries.get(ac);
     }
-
-    public void setData(List<FManEntity> list) {
+    
+    public BudgetedAccount[] setData(List<FManEntity> list) {
         entries.clear();
         groups.clear();
 
+        BudgetedAccount[] ret = new BudgetedAccount[list.size()];
+        
+        int i = 0;
         for (FManEntity e : list) {
             Account a = (Account) e;
             AccountCategory ac = getCategory(a.getCategoryId());
@@ -183,8 +196,11 @@ public class AccountsExpandableListAdapter extends BaseExpandableListAdapter {
             ba.setAllocatedAmount(new BigDecimal(0d));
             ba.setAccountId(a.getAccountId());
 
+            ret[i++] = ba;
             values.add(ba);
         }
+        
+        return ret;
     }
 
     private AccountCategory getCategory(long catId) {
