@@ -39,6 +39,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -65,10 +66,8 @@ public class AddBudgetActivity extends Activity {
 
     private FManEntity[] budgetedAccounts = null;
 
-    private GridView grid = null;
-    
     private ExpandableListView list = null;
-    
+
     private AccountsExpandableListAdapter listAdapter;
 
     private String name = null;
@@ -78,7 +77,7 @@ public class AddBudgetActivity extends Activity {
     private TextView title = null;
 
     private TextView totalLbl = null;
-    
+
     private BigDecimal runningTotal = null;
 
     public void gotoHomeScreen(View view) {
@@ -91,28 +90,30 @@ public class AddBudgetActivity extends Activity {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.add_budget_layout);
 
-        list = (ExpandableListView) findViewById(R.id.budget_accts_list);
-        
-        Display newDisplay = getWindowManager().getDefaultDisplay(); 
+        Display newDisplay = getWindowManager().getDefaultDisplay();
         int width = newDisplay.getWidth();
-        list.setIndicatorBounds(width-50, width);
-        
-        listAdapter = new AccountsExpandableListAdapter(this);
-        list.setAdapter(listAdapter);
-        
-        grid = (GridView) findViewById(R.id.budget_accts_grid);
-        title = (TextView) findViewById(R.id.budget_name_lbl);
-        totalLbl = (TextView) findViewById(R.id.budget_amt_lbl);
-        
-        runningTotal = new BigDecimal(0d);
 
-        grid.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                    int position, long id) {
+        list = (ExpandableListView) findViewById(R.id.budget_accts_list);
+        list.setIndicatorBounds(width - 50, width);
+        list.setOnChildClickListener(new OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                    int groupPosition, int childPosition, long id) {
 
-                handleGridItemClick(parent, v, position, id);
+                Log.i(TAG, "Clicked...");
+                handleListItemClick(parent, v, groupPosition, childPosition, id);
+
+                return true;
             }
         });
+
+        listAdapter = new AccountsExpandableListAdapter(this);
+        list.setAdapter(listAdapter);
+
+        title = (TextView) findViewById(R.id.budget_name_lbl);
+        totalLbl = (TextView) findViewById(R.id.budget_amt_lbl);
+
+        runningTotal = new BigDecimal(0d);
     }
 
     @Override
@@ -138,35 +139,22 @@ public class AddBudgetActivity extends Activity {
         int[] expenseTypes = { AccountTypes.ACCT_TYPE_EXPENSE };
         try {
             List<FManEntity> list = em.getAccountsForTypes(expenseTypes);
-            listAdapter.setData(list);
-            
-            budgetedAccounts = new FManEntity[list.size()];
-            int sz = list.size();
-            for (int i = 0; i < sz; i++) {
-                Account a = (Account) list.get(i);
-                BudgetedAccount ba = new BudgetedAccount();
-                ba.setAccountName(a.getAccountName());
-                ba.setAllocatedAmount(new BigDecimal(0d));
-                ba.setAccountId(a.getAccountId());
-                budgetedAccounts[i] = ba;
-            }
-            grid.setAdapter(new BudgetAccountAdapter(this,
-                    R.layout.budget_acct_layout, R.id.label, budgetedAccounts));
+            budgetedAccounts = listAdapter.setData(list);
         }
         catch (Exception e) {
             Log.e(TAG, MiscUtils.stackTrace2String(e));
         }
     }
 
-    protected void handleGridItemClick(AdapterView<?> l, final View v,
-            int position, long id) {
-        final BudgetedAccount obj = (BudgetedAccount) grid.getAdapter()
-                .getItem(position);
+    protected void handleListItemClick(ExpandableListView l, final View v,
+            int groupPosition, int childPosition, long id) {
+
+        
+        final BudgetedAccount obj = (BudgetedAccount) listAdapter.getChild(
+                groupPosition, childPosition);
 
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-        //alert.setTitle(getString(R.string.alloc));
-        //alert.setMessage(getString(R.string.amt));
         alert.setTitle(obj.getAccountName());
         alert.setMessage(getString(R.string.alloc));
 
@@ -183,9 +171,14 @@ public class AddBudgetActivity extends Activity {
                 BigDecimal bd = new BigDecimal(val);
                 obj.setAllocatedAmount(bd);
 
-                TextView tv = (TextView) v
-                        .findViewById(R.id.budget_acct_name_tf);
-                tv.setText(getDisplayString(obj));
+//                String amt = NumberFormat.getCurrencyInstance(
+//                        SessionManager.getCurrencyLocale()).format(
+//                        obj.getAllocatedAmount());
+//
+//                TextView tv = (TextView) v.findViewById(R.id.budget_amt_lbl);
+//                tv.setText(amt);
+
+                listAdapter.notifyDataSetChanged();
                 
                 setRunningTotal();
             }
@@ -213,8 +206,8 @@ public class AddBudgetActivity extends Activity {
         String totalStr = NumberFormat.getCurrencyInstance(
                 SessionManager.getCurrencyLocale()).format(runningTotal);
 
-        StringBuilder typeStr = new StringBuilder().append("Total: ")
-                .append(totalStr);
+        StringBuilder typeStr = new StringBuilder().append("Total: ").append(
+                totalStr);
         totalLbl.setText(typeStr);
     }
 
@@ -271,47 +264,4 @@ public class AddBudgetActivity extends Activity {
         Intent intent = new Intent(this, ManageBudgetsActivity.class);
         startActivity(intent);
     }
-
-    private String getDisplayString(BudgetedAccount a) {
-        StringBuilder ret = new StringBuilder(a.getAccountName());
-        BigDecimal allocatedAmount = a.getAllocatedAmount();
-        if (allocatedAmount != null && allocatedAmount.doubleValue() > 0d) {
-            ret.append("\n");
-            ret.append(NumberFormat.getCurrencyInstance(
-                    SessionManager.getCurrencyLocale()).format(allocatedAmount));
-            ret.append("");
-        }
-
-        return ret.toString();
-    }
-
-    /* Row adapter for budgeted account grid */
-    class BudgetAccountAdapter extends ArrayAdapter<FManEntity> {
-        private FManEntity[] items;
-
-        BudgetAccountAdapter(Context context, int resource, int label,
-                FManEntity[] items) {
-            super(AddBudgetActivity.this, R.layout.budget_acct_layout,
-                    R.id.label, items);
-            this.items = items;
-        }
-
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View v;
-            if (convertView == null) {
-                LayoutInflater li = getLayoutInflater();
-                v = li.inflate(R.layout.budget_acct_layout, null);
-            }
-            else {
-                v = convertView;
-            }
-            ImageView icon = (ImageView) v.findViewById(R.id.budget_acct_icon);
-            FManEntity entity = items[position];
-            icon.setImageResource(R.drawable.account);
-            TextView tv = (TextView) v.findViewById(R.id.budget_acct_name_tf);
-            tv.setText(getDisplayString((BudgetedAccount) entity));
-            return v;
-        }
-    }
-    /* End row adapter inner class */
 }
