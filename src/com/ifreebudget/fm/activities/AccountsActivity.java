@@ -80,7 +80,7 @@ public class AccountsActivity extends Activity {
 
     private FilterBuilderUtils filterUtil;
 
-    //private Button filterButton;
+    // private Button filterButton;
     private ImageButton upBtn;
 
     private TextView categoryPathTf = null;
@@ -327,7 +327,7 @@ public class AccountsActivity extends Activity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         filterUtil.setDateRange(item);
-                        //filterButton.setText(items[item]);
+                        // filterButton.setText(items[item]);
                         resetState();
                         retrieveTxList(filterUtil.buildFilter(getIntent()));
                         dialog.dismiss();
@@ -356,7 +356,7 @@ public class AccountsActivity extends Activity {
                 text = res.getString(R.string.all_fltr);
             }
         }
-        //filterButton.setText(text);
+        // filterButton.setText(text);
     }
 
     private boolean retrieveInProgress = false;
@@ -769,6 +769,7 @@ public class AccountsActivity extends Activity {
             else {
                 v = convertView;
             }
+
             ImageView icon = (ImageView) v.findViewById(R.id.icon_image);
             FManEntity entity = super.getItem(position);
             if (entity instanceof AccountCategory) {
@@ -779,7 +780,7 @@ public class AccountsActivity extends Activity {
             }
 
             TextView tv = (TextView) v.findViewById(R.id.icon_text);
-            tv.setText(entity.toString());
+            tv.setText(getDisplayString(entity));
             return v;
         }
 
@@ -825,6 +826,26 @@ public class AccountsActivity extends Activity {
             }
             else {
                 return R.drawable.default_category;
+            }
+        }
+
+        private String getDisplayString(FManEntity entity) {
+            if (entity instanceof Account) {
+                Account a = (Account) entity;
+                StringBuilder ret = new StringBuilder(a.getAccountName());
+
+                if (a.getCurrentBalance() != null) {
+                    ret.append("\n");
+                    ret.append(NumberFormat.getCurrencyInstance(
+                            SessionManager.getCurrencyLocale()).format(
+                            a.getCurrentBalance()));
+                    ret.append("");
+                }
+
+                return ret.toString();
+            }
+            else {
+                return entity.toString();
             }
         }
     }
