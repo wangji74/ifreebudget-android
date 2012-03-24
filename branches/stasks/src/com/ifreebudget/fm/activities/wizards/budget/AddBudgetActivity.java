@@ -171,13 +171,6 @@ public class AddBudgetActivity extends Activity {
                 BigDecimal bd = new BigDecimal(val);
                 obj.setAllocatedAmount(bd);
 
-//                String amt = NumberFormat.getCurrencyInstance(
-//                        SessionManager.getCurrencyLocale()).format(
-//                        obj.getAllocatedAmount());
-//
-//                TextView tv = (TextView) v.findViewById(R.id.budget_amt_lbl);
-//                tv.setText(amt);
-
                 listAdapter.notifyDataSetChanged();
                 
                 setRunningTotal();

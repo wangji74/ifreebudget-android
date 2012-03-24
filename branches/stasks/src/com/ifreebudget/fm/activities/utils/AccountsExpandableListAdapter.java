@@ -3,6 +3,8 @@ package com.ifreebudget.fm.activities.utils;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +58,8 @@ public class AccountsExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        BudgetedAccount entry = (BudgetedAccount) getChild(groupPosition, childPosition);
+        BudgetedAccount entry = (BudgetedAccount) getChild(groupPosition,
+                childPosition);
         if (entry == null) {
             return 0l;
         }
@@ -137,11 +140,11 @@ public class AccountsExpandableListAdapter extends BaseExpandableListAdapter {
         tv.setTextColor(Color.BLACK);
         if (groupPosition < groups.size()) {
             AccountCategory ac = groups.get(groupPosition);
-            
+
             List<BudgetedAccount> list = entries.get(ac);
-            
+
             BigDecimal val = new BigDecimal(0d);
-            for(BudgetedAccount a : list) {
+            for (BudgetedAccount a : list) {
                 val = val.add(a.getAllocatedAmount());
             }
 
@@ -171,13 +174,13 @@ public class AccountsExpandableListAdapter extends BaseExpandableListAdapter {
         AccountCategory ac = groups.get(groupPosition);
         return entries.get(ac);
     }
-    
+
     public BudgetedAccount[] setData(List<FManEntity> list) {
         entries.clear();
         groups.clear();
 
         BudgetedAccount[] ret = new BudgetedAccount[list.size()];
-        
+
         int i = 0;
         for (FManEntity e : list) {
             Account a = (Account) e;
@@ -199,7 +202,14 @@ public class AccountsExpandableListAdapter extends BaseExpandableListAdapter {
             ret[i++] = ba;
             values.add(ba);
         }
-        
+        Collections.sort(groups, new Comparator<AccountCategory>() {
+
+            @Override
+            public int compare(AccountCategory object1, AccountCategory object2) {
+                return object1.getCategoryName().compareTo(
+                        object2.getCategoryName());
+            }
+        });
         return ret;
     }
 
