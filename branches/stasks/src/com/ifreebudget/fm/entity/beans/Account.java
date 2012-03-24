@@ -132,16 +132,17 @@ public class Account implements FManEntity, Cloneable, Comparable<Account> {
 
     @Override
     public String toString() {
-        StringBuilder ret = new StringBuilder(accountName);
+        return accountName;
+        // StringBuilder ret = new StringBuilder(accountName);
 
-        if (currentBalance != null) {
-            ret.append("\n");
-            ret.append(NumberFormat.getCurrencyInstance(
-                    SessionManager.getCurrencyLocale()).format(currentBalance));
-            ret.append("");
-        }
+        // if (currentBalance != null) {
+        // ret.append("\n");
+        // ret.append(NumberFormat.getCurrencyInstance(
+        // SessionManager.getCurrencyLocale()).format(currentBalance));
+        // ret.append("");
+        // }
 
-        return ret.toString();
+        // return ret.toString();
     }
 
     @Override

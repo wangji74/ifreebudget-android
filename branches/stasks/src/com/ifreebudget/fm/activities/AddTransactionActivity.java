@@ -26,8 +26,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -251,11 +253,11 @@ public class AddTransactionActivity extends Activity {
             }
         }
     }
-    
+
     public void gotoHomeScreen(View view) {
         Intent intent = new Intent(this, iFreeBudget.class);
         startActivity(intent);
-    }    
+    }
 
     public void showDatePickerDialog(View view) {
         super.showDialog(DATE_DIALOG_ID);
@@ -343,7 +345,8 @@ public class AddTransactionActivity extends Activity {
                 // Intent intent = new Intent(this,
                 // ListTransactionsActivity.class);
                 // startActivity(intent);
-                super.finish();
+                //super.finish();
+                nagAndClose();
             }
         }
         catch (Exception e) {
@@ -405,5 +408,30 @@ public class AddTransactionActivity extends Activity {
         editor.putString(key, val);
         editor.commit();
         //
+    }
+
+    private boolean nagAndClose() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    amountTf.setText("");
+                    tagsTf.setText("");
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    AddTransactionActivity.this.finish();
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                AddTransactionActivity.this);
+        builder.setTitle("Add more transactions");
+        builder.setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+
+        return false;
     }
 }
