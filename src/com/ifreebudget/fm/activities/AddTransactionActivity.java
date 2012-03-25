@@ -21,9 +21,11 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Currency;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -44,6 +46,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ifreebudget.fm.R;
@@ -71,19 +74,26 @@ public class AddTransactionActivity extends Activity {
     private Spinner toAcctSpinner;
     private ArrayAdapter<FManEntity> toSpinnerAdapter;
 
+    private TextView currencyTf;
+    
     private EditText amountTf;
 
     private EditText tagsTf;
 
     private static final String TAG = "AddTransactionActivity";
 
-    private static final String LastTxDate = "LastTxDate";
+    private static final String LastTxDate = "LastTxDate";    
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_tx_layout);
 
+        currencyTf = (TextView) findViewById(R.id.currency_tf);
+        Locale l = SessionManager.getCurrencyLocale();
+        Currency c = Currency.getInstance(l);
+        currencyTf.setText(c.getSymbol());
+        
         amountTf = (EditText) findViewById(R.id.tx_amt_tf);
         tagsTf = (EditText) findViewById(R.id.tx_tags_tf);
 

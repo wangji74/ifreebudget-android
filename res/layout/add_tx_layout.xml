@@ -140,9 +140,9 @@
             android:id="@+id/details_panel"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/to_acct_panel" 
+            android:layout_below="@id/to_acct_panel"
             android:orientation="horizontal"
-            android:padding="5dip">
+            android:padding="5dip" >
 
             <Button
                 android:id="@+id/tx_date_btn"
@@ -152,20 +152,20 @@
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:layout_weight="48"
                 android:onClick="@string/launch_date_dlg"
-                android:textSize="13sp"
-                android:padding="5dip" />
+                android:padding="5dip"
+                android:textSize="13sp" />
 
             <TextView
+                android:id="@+id/currency_tf"
                 style="@style/SimpleTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
                 android:layout_gravity="center_vertical|center_horizontal"
+                android:layout_weight="4"
                 android:gravity="right"
                 android:paddingLeft="2dip"
-                android:paddingRight="2dip"
-                android:text="$" />
-            
+                android:paddingRight="2dip" />
+
             <EditText
                 android:id="@+id/tx_amt_tf"
                 style="@style/DecimalEditText"
@@ -173,8 +173,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:layout_weight="48"
-                android:textSize="13sp"
-                android:padding="5dip" />
+                android:padding="5dip"
+                android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
