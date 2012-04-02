@@ -49,7 +49,7 @@ public class Table {
     }
 
     public String getCreateSql() {
-        StringBuilder ret = new StringBuilder("CREATE TABLE ");
+        StringBuilder ret = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
         ret.append(tableName);
 
         int sz = fields.size();

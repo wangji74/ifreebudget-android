@@ -150,7 +150,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:layout_weight="48"
+                android:layout_weight="45"
                 android:onClick="@string/launch_date_dlg"
                 android:padding="5dip"
                 android:textSize="13sp" />
@@ -161,7 +161,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:layout_weight="4"
+                android:layout_weight="10"
                 android:gravity="right"
                 android:paddingLeft="2dip"
                 android:paddingRight="2dip" />
@@ -172,9 +172,17 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:layout_weight="48"
+                android:layout_weight="45"
                 android:padding="5dip"
                 android:textSize="13sp" />
+
+            <ImageButton
+                android:id="@+id/add_img_btn"
+                android:layout_width="48dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:background="@drawable/camera_selector"
+                android:gravity="center" />
         </LinearLayout>
 
         <LinearLayout
@@ -185,12 +193,30 @@
             android:orientation="vertical"
             android:padding="5dip" >
 
-            <TextView
-                style="@style/SimpleTextView"
+            <LinearLayout
+                android:id="@+id/notes_panel"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dip"
-                android:text="@string/tx_tags_lbl" />
+                android:layout_below="@id/details_panel"
+                android:orientation="horizontal"
+                android:padding="5dip" >
+
+                <TextView
+                    style="@style/SimpleTextView"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:text="@string/tx_tags_lbl" />
+                <TextView                    
+                    style="@style/SimpleTextView"                    
+                    android:id="@+id/attchmnt_lbl"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:gravity="right"
+                    android:layout_gravity="right"
+                    android:visibility="invisible" />
+                </LinearLayout>
 
             <EditText
                 android:id="@+id/tx_tags_tf"

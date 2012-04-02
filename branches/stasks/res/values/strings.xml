@@ -184,5 +184,8 @@
     <string name="alloc_budget_amts_title">Allocate amounts</string>
     <string name="info_panel_ht">48dip</string>
     <string name="info_panel_txt_sz">14sp</string>
-
+    <string name="del_attchmnt"><a href=''>Remove attachment</a></string>
+    <string name="attachment">Attachment</string>
+    <string name="remove_attachment">Remove attachment</string>
+        
 </resources>

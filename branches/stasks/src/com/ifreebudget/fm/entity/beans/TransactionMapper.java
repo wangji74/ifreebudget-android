@@ -36,13 +36,13 @@ public class TransactionMapper extends AbstractTableMapper {
             + "FROMACCOUNTENDINGBAL DECIMAL(10, 5),"
             + "TOACCOUNTENDINGBAL DECIMAL(10, 5)," + "TXNOTES VARCHAR(512),"
             + "TXDATE BIGINT," + "CREATEDATE BIGINT," + "TXSTATUS INTEGER,"
-            + "PARENTTXID INTEGER" + ")";
+            + "PARENTTXID INTEGER," + "ATTCHMNTPATH VARCHAR(255)" + ")";
 
     private final String INSERT_SQL = "(" + "TXID, " + "FITID, "
             + "FROMACCOUNTID, " + "TOACCOUNTID, " + "TXAMOUNT, "
             + "FROMACCOUNTENDINGBAL, " + "TOACCOUNTENDINGBAL, " + "TXNOTES, "
             + "TXDATE, " + "CREATEDATE, " + "TXSTATUS, "
-            + "PARENTTXID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "PARENTTXID, ATTCHMNTPATH) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private final String RETRIEVE_SQL = "SELECT * FROM " + TABLE_NAME;
 
@@ -59,7 +59,7 @@ public class TransactionMapper extends AbstractTableMapper {
     public String getCreateSql() {
         StringBuilder ret = new StringBuilder();
 
-        ret.append("CREATE TABLE " + TABLE_NAME);
+        ret.append("CREATE TABLE IF NOT EXISTS " + TABLE_NAME);
         ret.append(" ");
         ret.append(CREATE_SQL);
         return ret.toString();
@@ -76,28 +76,29 @@ public class TransactionMapper extends AbstractTableMapper {
     }
 
     public Object doInsert(SQLiteDatabase database, FManEntity entity) {
-        Transaction account = (Transaction) entity;
+        Transaction tx = (Transaction) entity;
 
         SQLiteStatement stmt = database.compileStatement(getInsertSql());
 
         stmt.clearBindings();
 
         stmt.bindNull(1);
-        safeBindString(stmt, 2, account.getFitid());
-        safeBindLong(stmt, 3, account.getFromAccountId());
-        safeBindLong(stmt, 4, account.getToAccountId());
-        safeBindBigDecimal(stmt, 5, account.getTxAmount());
-        safeBindBigDecimal(stmt, 6, account.getFromAccountEndingBal());
-        safeBindBigDecimal(stmt, 7, account.getToAccountEndingBal());
-        safeBindString(stmt, 8, account.getTxNotes());
-        safeBindLong(stmt, 9, account.getTxDate());
-        safeBindLong(stmt, 10, account.getCreateDate());
-        safeBindInt(stmt, 11, account.getTxStatus());
-        safeBindLong(stmt, 12, account.getParentTxId());
+        safeBindString(stmt, 2, tx.getFitid());
+        safeBindLong(stmt, 3, tx.getFromAccountId());
+        safeBindLong(stmt, 4, tx.getToAccountId());
+        safeBindBigDecimal(stmt, 5, tx.getTxAmount());
+        safeBindBigDecimal(stmt, 6, tx.getFromAccountEndingBal());
+        safeBindBigDecimal(stmt, 7, tx.getToAccountEndingBal());
+        safeBindString(stmt, 8, tx.getTxNotes());
+        safeBindLong(stmt, 9, tx.getTxDate());
+        safeBindLong(stmt, 10, tx.getCreateDate());
+        safeBindInt(stmt, 11, tx.getTxStatus());
+        safeBindLong(stmt, 12, tx.getParentTxId());
+        safeBindString(stmt, 13, tx.getAttachmentPath());
 
         Long id = stmt.executeInsert();
 
-        account.setTxId(id);
+        tx.setTxId(id);
 
         return id;
     }
@@ -134,6 +135,8 @@ public class TransactionMapper extends AbstractTableMapper {
 
         setField(cursor, a, "PARENTTXID", "setParentTxID", Long.class);
 
+        setField(cursor, a, "ATTCHMNTPATH", "setAttachmentPath", String.class);
+        
         return a;
     }
 

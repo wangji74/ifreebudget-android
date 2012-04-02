@@ -267,7 +267,7 @@ public class AccountsActivity extends Activity {
                 return;
             }
             long catId = categoryIdStack.peek();
-            List<FManEntity> catgs = FManEntityManager.getInstance()
+            List<FManEntity> catgs = FManEntityManager.getInstance(this)
                     .getChildren(catId);
             adapter.clear();
             for (FManEntity e : catgs) {
@@ -716,6 +716,14 @@ public class AccountsActivity extends Activity {
         String txAmt = nf.format(item.t.getTxAmount());
         TextView txAmtView = (TextView) v.findViewById(R.id.tx_amt_lbl);
         txAmtView.setText(txAmt);
+        
+        ImageView attchmntIcon = (ImageView) v.findViewById(R.id.attchmnt_icon);
+        if(item.t.getAttachmentPath() != null) {
+            attchmntIcon.setVisibility(View.VISIBLE);
+        }        
+        else {
+            attchmntIcon.setVisibility(View.INVISIBLE);
+        }
     }
 
     private String getCategoryPath(long currentCategoryId) {

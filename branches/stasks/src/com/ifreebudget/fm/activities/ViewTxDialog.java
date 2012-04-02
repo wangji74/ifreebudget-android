@@ -1,27 +1,30 @@
 package com.ifreebudget.fm.activities;
 
+import java.io.File;
 import java.text.NumberFormat;
 import java.util.Date;
-
-import com.ifreebudget.fm.R;
-import com.ifreebudget.fm.actions.ActionRequest;
-import com.ifreebudget.fm.actions.ActionResponse;
-import com.ifreebudget.fm.actions.DeleteTransactionAction;
-import com.ifreebudget.fm.activities.ListTransactionsActivity.TxHolder;
-import com.ifreebudget.fm.activities.utils.DialogCallback;
-import com.ifreebudget.fm.entity.beans.Account;
-import com.ifreebudget.fm.services.SessionManager;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.ifreebudget.fm.R;
+import com.ifreebudget.fm.activities.ListTransactionsActivity.TxHolder;
+import com.ifreebudget.fm.activities.utils.DialogCallback;
+import com.ifreebudget.fm.entity.beans.Account;
+import com.ifreebudget.fm.services.SessionManager;
 
 public class ViewTxDialog extends Dialog {
     private TxHolder holder;
@@ -64,6 +67,15 @@ public class ViewTxDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 nagAndDelete(v);
+            }
+        });
+
+        ImageButton attchmntBtn = (ImageButton) findViewById(R.id.attachmnt_btn);
+        attchmntBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                showAttachment(v);
             }
         });
     }
@@ -119,6 +131,23 @@ public class ViewTxDialog extends Dialog {
 
         TextView tagsTf = (TextView) findViewById(R.id.tx_tags_tf);
         tagsTf.setText(holder.t.getTxNotes());
+
+        // TextView attachmentTf = (TextView) findViewById(R.id.attchmnt_val);
+        // attachmentTf.setMovementMethod(LinkMovementMethod.getInstance());
+        // Spannable txt = new SpannableString(getContext().getResources()
+        // .getString(R.string.attachment));
+        // txt.setSpan(new UnderlineSpan(), 0, txt.length(), 0);
+        // attachmentTf.setText(txt);
+
+        // Log.i("ViewTxDialog", "Attachment" + holder.t.getAttachmentPath());
+        // if (holder.t.getAttachmentPath() != null) {
+        // attachmentTf.setVisibility(View.VISIBLE);
+        // }
+        // else {
+        // attachmentTf.setVisibility(View.GONE);
+        // }
+        // Log.i("ViewTxDialog", "Text field is " +
+        // attachmentTf.getVisibility());
     }
 
     private void editTransaction(View view) {
@@ -135,4 +164,40 @@ public class ViewTxDialog extends Dialog {
         dismiss();
         callback.onDismiss(DELETE_TX, holder);
     }
+    
+    private void showAttachment(View view) {
+        if(holder == null) {
+            Toast toast = Toast.makeText(getContext(),
+                    "Unable to show attachment, try again", Toast.LENGTH_SHORT);
+            
+            return;
+        }
+        
+        String file = holder.t.getAttachmentPath();
+        if(file == null || file.length() == 0) {
+            Toast toast = Toast.makeText(getContext(),
+                    "Attachment not found", Toast.LENGTH_SHORT);
+            
+            return;
+        }
+        
+        File f = new File(file);
+        if(!f.exists()) {
+            Toast toast = Toast.makeText(getContext(),
+                    "Attachment not found", Toast.LENGTH_SHORT);
+            
+            return;
+        }
+        
+        Bitmap bm = BitmapFactory.decodeFile(f.getAbsolutePath());
+        
+        LayoutInflater inflater = this.getLayoutInflater();
+        View layout = inflater.inflate(R.layout.image_viewer_layout, null);
+        
+        ImageView iv = (ImageView) layout.findViewById(R.id.img_holder);
+        iv.setImageBitmap(bm);
+        AlertDialog.Builder adb = new AlertDialog.Builder(this.getContext());
+        adb.setView(layout);
+        adb.show();
+    }    
 }

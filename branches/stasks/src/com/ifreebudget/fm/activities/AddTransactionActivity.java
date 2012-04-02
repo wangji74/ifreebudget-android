@@ -17,8 +17,11 @@ package com.ifreebudget.fm.activities;
 
 import static com.ifreebudget.fm.utils.Messages.tr;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Currency;
@@ -34,17 +37,25 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,6 +77,7 @@ import com.ifreebudget.fm.utils.MiscUtils;
 public class AddTransactionActivity extends Activity {
     private static final int DATE_DIALOG_ID = 0;
     private Button dateBtn;
+    private ImageButton cameraBtn;
     private Spinner txTypeSpinner;
 
     private Spinner fromAcctSpinner;
@@ -75,14 +87,24 @@ public class AddTransactionActivity extends Activity {
     private ArrayAdapter<FManEntity> toSpinnerAdapter;
 
     private TextView currencyTf;
-    
+
+    private TextView attchmntTf;
+
     private EditText amountTf;
 
     private EditText tagsTf;
 
     private static final String TAG = "AddTransactionActivity";
 
-    private static final String LastTxDate = "LastTxDate";    
+    private static final String LastTxDate = "LastTxDate";
+
+    private static final int PIC_REQUEST_CODE = 1010;
+
+    private static final String ATTACHMENTS_DIR = "ifb_attachments";
+
+    private static final String DATE_FORMAT = "yyMMddHHmmssS";
+
+    private String attachmentPath = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,7 +115,7 @@ public class AddTransactionActivity extends Activity {
         Locale l = SessionManager.getCurrencyLocale();
         Currency c = Currency.getInstance(l);
         currencyTf.setText(c.getSymbol());
-        
+
         amountTf = (EditText) findViewById(R.id.tx_amt_tf);
         tagsTf = (EditText) findViewById(R.id.tx_tags_tf);
 
@@ -157,6 +179,53 @@ public class AddTransactionActivity extends Activity {
 
         dateBtn = (Button) findViewById(R.id.tx_date_btn);
         dateBtn.setGravity(Gravity.CENTER);
+
+        cameraBtn = (ImageButton) findViewById(R.id.add_img_btn);
+        cameraBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cameraIntent = new Intent(
+                        android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, PIC_REQUEST_CODE);
+            }
+        });
+
+        attchmntTf = (TextView) findViewById(R.id.attchmnt_lbl);
+        attchmntTf.setMovementMethod(LinkMovementMethod.getInstance());
+        Spannable txt = new SpannableString(getResources().getString(
+                R.string.remove_attachment));
+        txt.setSpan(new UnderlineSpan(), 0, txt.length(), 0);
+        attchmntTf.setText(txt);
+        attchmntTf.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (attachmentPath != null) {
+                    deleteAttachmentFile(attachmentPath);
+                    attchmntTf.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PIC_REQUEST_CODE) {
+            if (data == null || !data.getExtras().containsKey("data")) {
+                return;
+            }
+            try {
+                Bitmap pic = (Bitmap) data.getExtras().get("data");
+                saveAttachment(pic);
+                attchmntTf.setVisibility(View.VISIBLE);
+            }
+            catch (Exception e) {
+                Log.e(TAG, MiscUtils.stackTrace2String(e));
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Unable to save attachment", Toast.LENGTH_SHORT);
+                toast.show();
+                return;
+            }
+        }
     }
 
     @Override
@@ -334,6 +403,7 @@ public class AddTransactionActivity extends Activity {
         t.setTxDate(txDate.getTime());
         t.setTxAmount(txAmt);
         t.setTxNotes(txTagsStr);
+        t.setAttachmentPath(this.attachmentPath);
 
         List<Transaction> txList = new ArrayList<Transaction>(1);
         txList.add(t);
@@ -355,7 +425,7 @@ public class AddTransactionActivity extends Activity {
                 // Intent intent = new Intent(this,
                 // ListTransactionsActivity.class);
                 // startActivity(intent);
-                //super.finish();
+                // super.finish();
                 nagAndClose();
             }
         }
@@ -443,5 +513,70 @@ public class AddTransactionActivity extends Activity {
                 .setNegativeButton("No", dialogClickListener).show();
 
         return false;
+    }
+
+    private void saveAttachment(Bitmap data) throws Exception {
+        File sd = validateSDStorage();
+        if (sd == null) {
+            return;
+        }
+
+        File dirPath = new File(sd, ATTACHMENTS_DIR);
+
+        if (!dirPath.exists()) {
+            if (!dirPath.mkdir()) {
+                return;
+            }
+        }
+
+        File file = new File(dirPath, buildFileName());
+        Log.i(TAG, "Saving attachment file: " + file.getAbsolutePath());
+        FileOutputStream out = new FileOutputStream(file);
+        data.compress(Bitmap.CompressFormat.PNG, 90, out);
+
+        attachmentPath = file.getAbsolutePath();
+        attchmntTf.setVisibility(View.VISIBLE);
+        attchmntTf.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    private File validateSDStorage() {
+        File sd = Environment.getExternalStorageDirectory();
+
+        if (sd == null) {
+            return null;
+        }
+
+        String state = Environment.getExternalStorageState();
+
+        if (!Environment.MEDIA_MOUNTED.equals(state)) {
+            Toast.makeText(getApplicationContext(), "SD card is not available",
+                    Toast.LENGTH_SHORT).show();
+            return null;
+        }
+
+        if (!sd.canWrite()) {
+            Toast.makeText(getApplicationContext(), "SD card is not writeable",
+                    Toast.LENGTH_SHORT).show();
+            return null;
+        }
+        return sd;
+    }
+
+    private String buildFileName() {
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        String fn = sdf.format(new Date());
+        fn += ".png";
+        return fn;
+    }
+
+    private void deleteAttachmentFile(String filePath) {
+        File f = new File(filePath);
+        if (f.exists()) {
+            f.delete();
+            Log.i(TAG, "Deleted file: " + f.getAbsolutePath());
+        }
+        else {
+            Log.i(TAG, "File does not exist " + f.getAbsolutePath());
+        }
     }
 }
