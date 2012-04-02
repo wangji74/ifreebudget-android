@@ -7,38 +7,57 @@
         android:id="@+id/tx_icon"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_alignParentTop="true" 
-        android:padding="10dip"/>
+        android:layout_alignParentTop="true"
+        android:padding="10dip" />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/tx_details_panel"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@id/tx_icon" 
-        android:padding="10dip">
+        android:layout_toRightOf="@id/tx_icon"
+        android:padding="10dip" >
 
         <TextView
             android:id="@+id/tx_details_lbl"
-            android:layout_width="wrap_content"
+            android:layout_width="0dip"
             android:layout_height="fill_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="false"
-            android:textColor="#000000"
-            android:textSize="15dip" />
-
-        <TextView
-            android:id="@+id/tx_amt_lbl"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_toRightOf="@id/tx_details_lbl"
+            android:layout_weight="50"
+            android:gravity="left|top"
             android:textColor="#000000"
-            android:gravity="right"
-            android:textStyle="bold" />
-    </RelativeLayout>
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:id="@+id/tx_amt_panel"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_toRightOf="@id/tx_details_lbl"
+            android:layout_weight="50"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tx_amt_lbl"
+                android:layout_width="fill_parent"
+                android:layout_height="0dip"
+                android:layout_weight="70"
+                android:gravity="right"
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/attchmnt_icon"
+                android:layout_width="fill_parent"
+                android:layout_height="0dip"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:layout_weight="30"
+                android:scaleType="fitEnd"
+                android:src="@drawable/attachment" 
+                android:visibility="invisible"/>
+        </LinearLayout>
+    </LinearLayout>
     <!--
     LinearLayout
         android:id="@+id/edit_tx_ctrl_panel"

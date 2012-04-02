@@ -155,17 +155,41 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_span="2"
-                android:layout_weight="1"
                 android:orientation="vertical" >
 
-                <TextView
+                <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="0.2"
-                    android:padding="5px"
-                    android:text="@string/tx_tagged_lbl"
-                    android:textColor="#000000"
-                    android:textStyle="bold" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="50"
+                        android:padding="5px"
+                        android:text="@string/tx_tags_lbl"
+                        android:textColor="#000000"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/attachmnt_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/attachment"
+                        android:gravity="center"
+                        android:layout_gravity="right"
+                        android:paddingLeft="5dip" />
+
+                    <!-- TextView
+                        android:id="@+id/attchmnt_val"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="50"
+                        android:gravity="right"
+                        android:padding="5px"
+                        android:textColor="#000000"
+                        android:visibility="visible" /-->
+                </LinearLayout>
 
                 <View
                     android:layout_width="fill_parent"

@@ -63,7 +63,7 @@ public class FManEntityManager {
     private static final String TAG = "DBHelper";
 
     public static final String DATABASE_NAME = "com.ifreebudget.db";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 8;
 
     private static FManEntityManager em = null;
 
@@ -868,18 +868,34 @@ public class FManEntityManager {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//            db.execSQL(new TaskEntityMapper().getCreateSql());
-//            Log.i(TAG, "Created ScheduledTask table...Success");
-//            db.execSQL(new ScheduleEntityMapper().getCreateSql());
-//            Log.i(TAG, "Created Schedule table...Success");
-//            db.execSQL(new ConstraintEntityMapper().getCreateSql());
-//            Log.i(TAG, "Created Constraint table...Success");
-//            db.execSQL(new TaskNotificationMapper().getCreateSql());
-//            Log.i(TAG, "Created TaskNotification table...Success");
+            Log.i(TAG, "On upgrade o:" + oldVersion + ", n:" + newVersion);
+            if (oldVersion < 5) {
+                db.execSQL(new TaskEntityMapper().getCreateSql());
+                Log.i(TAG, "Created ScheduledTask table...Success");
+                db.execSQL(new ScheduleEntityMapper().getCreateSql());
+                Log.i(TAG, "Created Schedule table...Success");
+                db.execSQL(new ConstraintEntityMapper().getCreateSql());
+                Log.i(TAG, "Created Constraint table...Success");
+                db.execSQL(new TaskNotificationMapper().getCreateSql());
+                Log.i(TAG, "Created TaskNotification table...Success");
+            }
+            if (oldVersion < 6) {
+                try {
+                    db.execSQL("update ACCOUNTCATEGORY set CATEGORYNAME='Cash & Investments' where CATEGORYNAME='Assets'");
+                    db.execSQL("update ACCOUNTCATEGORY set CATEGORYNAME='Credit & Loans' where CATEGORYNAME='Liability'");
+                    db.execSQL("update ACCOUNTCATEGORY set CATEGORYNAME='Miscellaneous' where CATEGORYNAME='Misc Purchases'");
+                }
+                catch (Exception e) {
+                    Log.e(TAG, MiscUtils.stackTrace2String(e));
+                }
+            }
+
             try {
-                db.execSQL("update ACCOUNTCATEGORY set CATEGORYNAME='Cash & Investments' where CATEGORYNAME='Assets'");
-                db.execSQL("update ACCOUNTCATEGORY set CATEGORYNAME='Credit & Loans' where CATEGORYNAME='Liability'");
-                db.execSQL("update ACCOUNTCATEGORY set CATEGORYNAME='Miscellaneous' where CATEGORYNAME='Misc Purchases'");                
+                String sql = "alter table "
+                        + new TransactionMapper().getTableName()
+                        + " add column ATTCHMNTPATH VARCHAR(255)";
+                Log.i(TAG, sql);
+                db.execSQL(sql);
             }
             catch (Exception e) {
                 Log.e(TAG, MiscUtils.stackTrace2String(e));

@@ -40,6 +40,8 @@ public class Transaction implements FManEntity {
     BigDecimal toAccountEndingBal;
 
     private int isParent;
+    
+    String attachmentPath;
 
     public int getTxStatus() {
         return txStatus;
@@ -143,6 +145,14 @@ public class Transaction implements FManEntity {
 
     public void setIsParent(int isParent) {
         this.isParent = isParent;
+    }
+
+    public String getAttachmentPath() {
+        return attachmentPath;
+    }
+
+    public void setAttachmentPath(String attachmentPath) {
+        this.attachmentPath = attachmentPath;
     }
 
     // Interface methods - FManEntity
